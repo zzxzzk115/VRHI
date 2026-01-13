@@ -539,7 +539,7 @@ public:
 ### 1. 检查返回值
 
 ```cpp
-// ✅ 好
+// ✅ Good - always check return values
 auto result = VRHI::CreateDevice(config);
 if (!result) {
     HandleError(result.error());
@@ -547,33 +547,33 @@ if (!result) {
 }
 auto device = std::move(*result);
 
-// ❌ 避免
-auto device = VRHI::CreateDevice(config).value();  // 可能抛出
+// ❌ Avoid - may throw if creation fails
+auto device = VRHI::CreateDevice(config).value();
 ```
 
 ### 2. 在销毁前等待
 
 ```cpp
-// ✅ 好
+// ✅ Good - wait before cleanup
 device->WaitIdle();
 resources.clear();
 device.reset();
 
-// ❌ 避免
-resources.clear();  // 资源可能仍在使用中
+// ❌ Avoid - resources may still be in use
+resources.clear();
 ```
 
 ### 3. 重用命令缓冲
 
 ```cpp
-// ✅ 好
+// ✅ Good - reuse command buffers
 std::vector<std::unique_ptr<CommandBuffer>> cmdPool;
 for (int i = 0; i < kFramesInFlight; ++i) {
     cmdPool.push_back(device->CreateCommandBuffer());
 }
 
-// ❌ 避免每帧创建
-auto cmd = device->CreateCommandBuffer();  // 每帧分配
+// ❌ Avoid - allocating every frame
+auto cmd = device->CreateCommandBuffer();
 ```
 
 ### 4. 监控资源

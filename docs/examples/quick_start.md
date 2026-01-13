@@ -268,7 +268,13 @@ if (result) {
 
 ```cpp
 // VRHI 自动选择最佳后端
-auto device = VRHI::CreateDevice();
+auto result = VRHI::CreateDevice();
+if (!result) {
+    std::cerr << "Failed to create device: " 
+              << result.error().message << "\n";
+    return -1;
+}
+auto device = std::move(*result);
 ```
 
 ### 手动选择
@@ -276,7 +282,13 @@ auto device = VRHI::CreateDevice();
 ```cpp
 VRHI::DeviceConfig config;
 config.preferredBackend = VRHI::BackendType::Vulkan;
-auto device = VRHI::CreateDevice(config);
+
+auto result = VRHI::CreateDevice(config);
+if (!result) {
+    std::cerr << "Failed: " << result.error().message << "\n";
+    return -1;
+}
+auto device = std::move(*result);
 ```
 
 ### 查看可用后端
@@ -291,7 +303,11 @@ for (const auto& backend : backends) {
 ## 特性检测
 
 ```cpp
-auto device = VRHI::CreateDevice().value();
+auto result = VRHI::CreateDevice();
+if (!result) {
+    return -1;
+}
+auto device = std::move(*result);
 
 // 检查单个特性
 if (device->IsFeatureSupported(VRHI::Feature::Compute)) {
