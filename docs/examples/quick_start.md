@@ -131,7 +131,12 @@ int main() {
     vertexShaderDesc.codeSize = strlen(vertexShaderSource);
     vertexShaderDesc.debugName = "Vertex Shader";
     
-    auto vertexShader = device->CreateShader(vertexShaderDesc).value();
+    auto vertexShaderResult = device->CreateShader(vertexShaderDesc);
+    if (!vertexShaderResult) {
+        std::cerr << "Failed to create vertex shader\n";
+        return 1;
+    }
+    auto vertexShader = std::move(*vertexShaderResult);
     
     VRHI::ShaderDesc fragmentShaderDesc;
     fragmentShaderDesc.stage = VRHI::ShaderStage::Fragment;
@@ -139,7 +144,12 @@ int main() {
     fragmentShaderDesc.codeSize = strlen(fragmentShaderSource);
     fragmentShaderDesc.debugName = "Fragment Shader";
     
-    auto fragmentShader = device->CreateShader(fragmentShaderDesc).value();
+    auto fragmentShaderResult = device->CreateShader(fragmentShaderDesc);
+    if (!fragmentShaderResult) {
+        std::cerr << "Failed to create fragment shader\n";
+        return 1;
+    }
+    auto fragmentShader = std::move(*fragmentShaderResult);
     
     // 4. 创建图形管线
     VRHI::PipelineDesc pipelineDesc;
@@ -156,10 +166,18 @@ int main() {
         { 0, sizeof(Vertex), VRHI::VertexInputRate::Vertex },
     };
     
-    auto pipeline = device->CreatePipeline(pipelineDesc).value();
+    auto pipelineResult = device->CreatePipeline(pipelineDesc);
+    if (!pipelineResult) {
+        std::cerr << "Failed to create pipeline\n";
+        return 1;
+    }
+    auto pipeline = std::move(*pipelineResult);
     
     // 5. 渲染循环
-    while (!WindowShouldClose()) {
+    // 注意: WindowShouldClose() 和 PollEvents() 是窗口系统函数的示例
+    // 实际使用时需要根据平台使用 GLFW、SDL 或原生窗口 API
+    bool running = true;
+    while (running) {
         // 创建命令缓冲
         auto cmd = device->CreateCommandBuffer();
         
@@ -188,8 +206,10 @@ int main() {
         // 呈现
         device->Present();
         
-        // 处理窗口事件
-        PollEvents();
+        // 处理窗口事件 (使用 GLFW/SDL 或平台特定 API)
+        // 例如使用 GLFW:
+        // glfwPollEvents();
+        // running = !glfwWindowShouldClose(window);
     }
     
     // 6. 清理

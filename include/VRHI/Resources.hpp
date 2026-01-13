@@ -38,6 +38,16 @@ constexpr BufferUsage operator&(BufferUsage lhs, BufferUsage rhs) noexcept {
     );
 }
 
+constexpr BufferUsage& operator|=(BufferUsage& lhs, BufferUsage rhs) noexcept {
+    lhs = lhs | rhs;
+    return lhs;
+}
+
+constexpr BufferUsage& operator&=(BufferUsage& lhs, BufferUsage rhs) noexcept {
+    lhs = lhs & rhs;
+    return lhs;
+}
+
 enum class MemoryAccess {
     GpuOnly,      // GPU only access
     CpuToGpu,     // CPU write, GPU read
@@ -169,6 +179,16 @@ constexpr TextureUsage operator&(TextureUsage lhs, TextureUsage rhs) noexcept {
     return static_cast<TextureUsage>(
         static_cast<uint32_t>(lhs) & static_cast<uint32_t>(rhs)
     );
+}
+
+constexpr TextureUsage& operator|=(TextureUsage& lhs, TextureUsage rhs) noexcept {
+    lhs = lhs | rhs;
+    return lhs;
+}
+
+constexpr TextureUsage& operator&=(TextureUsage& lhs, TextureUsage rhs) noexcept {
+    lhs = lhs & rhs;
+    return lhs;
 }
 
 struct TextureDesc {
