@@ -28,7 +28,7 @@ Welcome to the VRHI (Versatile Render Hardware Interface) documentation.
 
 VRHI is a modern rendering hardware abstraction layer designed to:
 
-- **Multi-Backend Support**: Supports Vulkan and multiple OpenGL versions (3.3, 2.0, 4.3, 4.6, ES 2.0, ES 3.0, ES 3.1)
+- **Multi-Backend Support**: Supports Vulkan and multiple OpenGL versions (3.3, 2.0, 4.1, 4.6, ES 2.0, ES 3.0, ES 3.1)
 - **Smart Backend Selection**: Automatically detects and scores backends based on hardware features
 - **Modern C++**: Uses C++23 standard features
 - **RAII Resource Management**: Automatic resource lifecycle management prevents memory leaks

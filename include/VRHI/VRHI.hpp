@@ -34,7 +34,7 @@ class SwapChain;
 enum class BackendType {
     Vulkan,
     OpenGL46,
-    OpenGL43,
+    OpenGL41,
     OpenGL33,
     OpenGL20,
     OpenGLES31,

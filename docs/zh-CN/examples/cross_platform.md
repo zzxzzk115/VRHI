@@ -8,8 +8,8 @@ VRHI 设计之初就考虑了跨平台支持。本指南帮助开发者在多个
 
 | 平台 | 架构 | 推荐后端 | 备选后端 |
 |------|------|----------|----------|
-| **Windows 10/11** | x64, ARM64 | Vulkan | OpenGL 4.6/4.3/3.3 |
-| **Linux** | x64, ARM64 | Vulkan | OpenGL 4.6/4.3/3.3 |
+| **Windows 10/11** | x64, ARM64 | Vulkan | OpenGL 4.6/4.1/3.3 |
+| **Linux** | x64, ARM64 | Vulkan | OpenGL 4.6/4.1/3.3 |
 | **macOS** | x64, ARM64 | OpenGL 3.3 | - |
 | **Android** | ARM64, ARM | Vulkan | OpenGL ES 3.1/3.0/2.0 |
 | **iOS** | ARM64 | OpenGL ES 3.0 | OpenGL ES 2.0 |

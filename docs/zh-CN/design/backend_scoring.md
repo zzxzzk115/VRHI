@@ -74,7 +74,7 @@ enum class Feature {
 **性能排序** (从高到低):
 1. Vulkan (最低开销，最高性能)
 2. OpenGL 4.6 (现代 OpenGL，DSA 支持)
-3. OpenGL 4.3 (计算着色器支持)
+3. OpenGL 4.1 (完整现代特性，macOS 最大支持)
 4. OpenGL ES 3.1 (移动端高性能)
 5. OpenGL 3.3 (传统桌面 GL)
 6. OpenGL ES 3.0 (主流移动端)

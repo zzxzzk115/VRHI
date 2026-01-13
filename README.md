@@ -9,7 +9,7 @@ A modern Render Hardware Interface (RHI) supporting multiple graphics backends, 
 
 ## ✨ Features
 
-- 🎯 **Multi-Backend Support**: Vulkan, OpenGL 3.3/4.3/4.6, OpenGL ES 2.0/3.0/3.1
+- 🎯 **Multi-Backend Support**: Vulkan, OpenGL 3.3/4.1/4.6, OpenGL ES 2.0/3.0/3.1
 - 🤖 **Smart Backend Selection**: Automatically detects hardware features and scores backends to select the optimal one
 - 🔒 **Modern C++23**: Leverages the latest C++ standard features
 - 🛡️ **RAII Resource Management**: Automated resource lifecycle management to prevent leaks
@@ -149,7 +149,7 @@ target_link_libraries(your_app PRIVATE VRHI::VRHI)
 |---------|----------|-------------|---------------|----------|
 | **Vulkan** | Windows, Linux, Android | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | High-performance PC, modern mobile devices |
 | **OpenGL 4.6** | Windows, Linux | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | High-end PC |
-| **OpenGL 4.3** | Windows, Linux | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | Mid to high-end PC |
+| **OpenGL 4.1** | Windows, Linux, macOS | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | Mid to high-end PC, macOS |
 | **OpenGL 3.3** | Windows, Linux, macOS | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | General PC, older hardware |
 | **OpenGL ES 3.1** | Android, iOS | ⭐⭐⭐⭐ | ⭐⭐⭐ | Modern mobile devices |
 | **OpenGL ES 3.0** | Android, iOS | ⭐⭐⭐ | ⭐⭐⭐⭐ | Mainstream mobile devices |

@@ -126,9 +126,9 @@ public:
    - 目标: 高端 PC
    - 优势: 完整的现代 OpenGL 特性
 
-3. **OpenGL 4.3 Backend**
-   - 目标: 中高端 PC
-   - 优势: 计算着色器支持
+3. **OpenGL 4.1 Backend**
+   - 目标: 中高端 PC、macOS
+   - 优势: 完整的现代 OpenGL 特性、macOS 最大支持版本
 
 4. **OpenGL 3.3 Backend**
    - 目标: 较老的 PC 和笔记本

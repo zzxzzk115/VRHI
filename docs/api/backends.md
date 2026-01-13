@@ -20,9 +20,9 @@ All backends implement the `IBackend` interface.
 - **Platforms**: Windows, Linux
 - **Features**: Modern OpenGL features, Direct State Access (DSA)
 
-### 3. OpenGL 4.3 Backend
-- **Platforms**: Windows, Linux
-- **Features**: Compute shader support
+### 3. OpenGL 4.1 Backend
+- **Platforms**: Windows, Linux, macOS
+- **Features**: Compute shader support, maximum version for macOS
 
 ### 4. OpenGL 3.3 Backend
 - **Platforms**: Windows, Linux, macOS

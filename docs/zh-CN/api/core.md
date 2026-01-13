@@ -24,7 +24,7 @@ namespace VRHI {
 enum class BackendType {
     Vulkan,         // Vulkan 后端
     OpenGL46,       // OpenGL 4.6
-    OpenGL43,       // OpenGL 4.3
+    OpenGL41,       // OpenGL 4.1
     OpenGL33,       // OpenGL 3.3
     OpenGL20,       // OpenGL 2.0
     OpenGLES31,     // OpenGL ES 3.1

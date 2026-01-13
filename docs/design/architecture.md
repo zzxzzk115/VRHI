@@ -71,7 +71,7 @@ All backends implement a unified interface, created through a factory pattern.
 
 1. **Vulkan Backend** - High-performance PC and modern mobile devices
 2. **OpenGL 4.6 Backend** - High-end PC
-3. **OpenGL 4.3 Backend** - Mid to high-end PC
+3. **OpenGL 4.1 Backend** - Mid to high-end PC, macOS
 4. **OpenGL 3.3 Backend** - Older PCs and laptops
 5. **OpenGL 2.0 Backend** - Legacy hardware
 6. **OpenGL ES 3.1 Backend** - Modern mobile devices

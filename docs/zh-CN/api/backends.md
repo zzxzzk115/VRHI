@@ -88,22 +88,23 @@ auto device = VRHI::CreateDevice(config);
 - 高端 PC
 - 需要 OpenGL 工具链的开发
 
-### 3. OpenGL 4.3 Backend
+### 3. OpenGL 4.1 Backend
 
-**目标平台**: Windows, Linux
+**目标平台**: Windows, Linux, macOS
 
 **特点**:
-- ✅ 计算着色器支持
-- ✅ 多重间接绘制
-- ✅ 着色器存储缓冲
-- ✅ 更广泛的硬件支持
-- ⚠️ 某些高级特性缺失
+- ✅ 完整的现代 OpenGL 特性
+- ✅ macOS 最大支持版本
+- ✅ 良好的性能
+- ✅ 广泛的工具支持
+- ⚠️ 部分高级特性不可用（相比 4.6）
 
-**最低要求**: OpenGL 4.3
+**最低要求**: OpenGL 4.1
 
 **推荐场景**:
 - 中高端 PC
-- 需要计算着色器的应用
+- macOS 应用开发
+- 需要跨平台兼容性
 
 ### 4. OpenGL 3.3 Backend
 
@@ -214,7 +215,7 @@ auto device = VRHI::CreateDevice(config);
 优先级:
 1. Vulkan (如果可用)
 2. OpenGL 4.6
-3. OpenGL 4.3
+3. OpenGL 4.1
 4. OpenGL 3.3
 ```
 
@@ -223,14 +224,15 @@ auto device = VRHI::CreateDevice(config);
 优先级:
 1. Vulkan (如果可用)
 2. OpenGL 4.6
-3. OpenGL 4.3
+3. OpenGL 4.1
 4. OpenGL 3.3
 ```
 
 #### macOS
 ```
 优先级:
-1. OpenGL 3.3 Core (macOS 不支持 OpenGL 4.x)
+1. OpenGL 4.1 (macOS 最大支持版本)
+2. OpenGL 3.3 Core (兼容模式)
 注: 未来可能添加 Metal 后端
 ```
 
@@ -264,7 +266,7 @@ auto device = VRHI::CreateDevice(config);
 
 ## 后端特性对照表
 
-| 特性 | Vulkan | GL 4.6 | GL 4.3 | GL 3.3 | GL ES 3.1 | GL ES 3.0 | GL ES 2.0 |
+| 特性 | Vulkan | GL 4.6 | GL 4.1 | GL 3.3 | GL ES 3.1 | GL ES 3.0 | GL ES 2.0 |
 |------|--------|--------|--------|--------|-----------|-----------|-----------|
 | 计算着色器 | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ | ❌ |
 | 几何着色器 | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
