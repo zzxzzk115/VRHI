@@ -23,4 +23,52 @@ VRHI's feature detection system queries hardware and driver support for various 
 - Advanced Features
 - Memory and Performance Features
 
-For detailed documentation including feature structures, detection flow, and implementation examples, please refer to the [Chinese version](../zh-CN/design/feature_detection.md).
+## Required Feature Validation
+
+### Validation Mechanism
+
+Feature detection is not only used for backend scoring but also for validating application's required features:
+
+```cpp
+// Application defines required features
+FeatureRequirements requirements;
+requirements.required = {
+    Feature::Compute,
+    Feature::Texture3D,
+};
+
+// VRHI validates during initialization
+auto deviceResult = VRHI::CreateDevice(requirements);
+
+if (!deviceResult) {
+    // Error: No backend supports all required features
+    std::cerr << deviceResult.error().message << "\n";
+    // Application should exit or downgrade functionality
+}
+```
+
+### Handling Validation Failures
+
+When required features are not satisfied, applications should:
+
+1. **Identify failure reason**: Check error message to see which features are unsupported
+2. **Notify user**: Explain hardware doesn't meet requirements
+3. **Provide alternatives**: If possible, downgrade to basic functionality
+4. **Log diagnostics**: Help with troubleshooting
+
+### Runtime Feature Checks
+
+While required features are validated at initialization, optional features can be checked at runtime:
+
+```cpp
+auto device = VRHI::CreateDevice(requirements).value();
+
+// Runtime check for optional features
+if (device->IsFeatureSupported(Feature::RayTracing)) {
+    EnableRayTracedShadows();
+} else {
+    UseTraditionalShadows();
+}
+```
+
+For detailed documentation including feature structures, detection flow, implementation examples, and best practices, please refer to the [Chinese version](../zh-CN/design/feature_detection.md).

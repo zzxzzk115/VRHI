@@ -146,7 +146,178 @@ enum class StabilityLevel {
    ↓
 4. 选择得分最高的后端
    ↓
-5. 返回选中的后端及评分详情
+5. 如果没有后端满足所有必需特性 → 返回错误
+   ↓
+6. 返回选中的后端及评分详情
+```
+
+## 必需特性验证机制
+
+### 设计原则
+
+对于明确需要特定功能的应用程序，VRHI 提供严格的必需特性验证机制：
+
+1. **严格验证**: 所有在 `required` 列表中的特性都必须被选中的后端支持
+2. **早期失败**: 如果没有后端能满足所有必需特性，立即返回错误，不进行初始化
+3. **明确错误信息**: 清楚地指出哪些必需特性不被任何后端支持
+4. **应用控制**: 由应用开发者决定哪些特性是必需的，而非 VRHI
+
+### 验证流程
+
+```
+1. 应用指定必需特性列表
+   ↓
+2. VRHI 枚举所有可用后端
+   ↓
+3. 对每个后端检查:
+   是否支持所有必需特性?
+   ├─ 是 → 保留此后端，继续评分
+   └─ 否 → 排除此后端
+   ↓
+4. 检查候选后端列表:
+   ├─ 为空 → 返回 Error::NoCompatibleBackend
+   │          包含缺失特性的详细信息
+   └─ 非空 → 继续后端评分和选择
+```
+
+### 错误处理
+
+当没有后端满足所有必需特性时，`CreateDevice` 返回错误：
+
+**错误码**: `Error::Code::NoCompatibleBackend`
+
+**错误信息包含**:
+- 缺失的必需特性列表
+- 每个后端不支持的特性详情
+- 建议的替代方案（如降级某些特性需求）
+
+### 代码示例
+
+```cpp
+// 定义严格的特性需求
+FeatureRequirements requirements;
+requirements.required = {
+    Feature::Compute,           // 必需：计算着色器
+    Feature::Texture3D,         // 必需：3D 纹理
+    Feature::MultiDrawIndirect, // 必需：间接多重绘制
+};
+
+auto deviceResult = VRHI::CreateDevice(requirements);
+
+if (!deviceResult) {
+    // 处理必需特性不满足的情况
+    const auto& error = deviceResult.error();
+    
+    if (error.code == Error::Code::NoCompatibleBackend) {
+        std::cerr << "错误：没有后端支持所有必需特性\n";
+        std::cerr << error.message << "\n";
+        
+        // 应用应该:
+        // 1. 通知用户硬件不满足最低要求
+        // 2. 提供替代方案（如禁用某些功能）
+        // 3. 或直接退出
+        
+        return EXIT_FAILURE;
+    }
+}
+
+auto device = std::move(*deviceResult);
+// 此时保证设备支持所有必需特性
+```
+
+### 验证保证
+
+一旦 `CreateDevice` 成功返回，应用可以确信：
+
+1. **所有必需特性可用**: `required` 列表中的所有特性都被选中的后端支持
+2. **运行时安全**: 可以直接使用这些特性，无需额外检查
+3. **一致性**: 在设备生命周期内，这些特性始终可用
+
+```cpp
+// CreateDevice 成功后
+auto device = VRHI::CreateDevice(requirements).value();
+
+// 可以安全地使用必需特性，无需检查
+auto computeShader = device->CreateComputeShader(source);  // 保证成功
+auto texture3D = device->CreateTexture3D(desc);             // 保证成功
+```
+
+### 最佳实践
+
+1. **明确必需特性**: 只将真正必需的特性列入 `required`
+   ```cpp
+   // ✅ 好 - 只列出真正必需的
+   requirements.required = {
+       Feature::Texture2D,
+       Feature::VertexBuffers,
+   };
+   
+   // ❌ 避免 - 列出所有想要的特性
+   requirements.required = {
+       Feature::RayTracing,        // 可能过于严格
+       Feature::MeshShading,       // 大多数设备不支持
+       Feature::BindlessResources,
+   };
+   ```
+
+2. **使用可选特性**: 对于非关键功能，使用 `optional`
+   ```cpp
+   requirements.required = {
+       Feature::Texture2D,  // 必须有
+   };
+   requirements.optional = {
+       Feature::Compute,    // 有最好，没有也能工作
+       Feature::Geometry,
+   };
+   ```
+
+3. **提供降级路径**: 准备备用实现方案
+   ```cpp
+   auto device = VRHI::CreateDevice(highEndRequirements);
+   
+   if (!device) {
+       // 尝试降级需求
+       auto fallbackDevice = VRHI::CreateDevice(basicRequirements);
+       if (fallbackDevice) {
+           // 使用基础功能模式
+       }
+   }
+   ```
+
+4. **错误信息本地化**: 向最终用户展示友好的错误信息
+   ```cpp
+   if (error.code == Error::Code::NoCompatibleBackend) {
+       ShowUserDialog(
+           "硬件不支持",
+           "您的显卡不支持运行此应用所需的功能。\n"
+           "最低要求：支持计算着色器的 GPU"
+       );
+   }
+   ```
+
+### 调试支持
+
+启用详细日志以查看特性验证详情：
+
+```cpp
+VRHI::SetLogLevel(LogLevel::Debug);
+
+auto device = VRHI::CreateDevice(requirements);
+
+// 日志输出示例:
+// [VRHI] Checking required features...
+// [VRHI]   Required: Compute - checking...
+// [VRHI]     Vulkan: ✅ Supported
+// [VRHI]     OpenGL 4.6: ✅ Supported
+// [VRHI]     OpenGL 4.1: ✅ Supported
+// [VRHI]     OpenGL 3.3: ❌ Not supported
+// [VRHI]   Required: MultiDrawIndirect - checking...
+// [VRHI]     Vulkan: ✅ Supported
+// [VRHI]     OpenGL 4.6: ✅ Supported
+// [VRHI]     OpenGL 4.1: ✅ Supported
+// [VRHI]     OpenGL 3.3: ❌ Not supported
+// [VRHI] Backends passing required features: Vulkan, OpenGL 4.6, OpenGL 4.1
+// [VRHI] Selected: Vulkan (score: 95.0)
 ```
 
 ## 代码示例

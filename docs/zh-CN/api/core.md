@@ -72,14 +72,14 @@ struct DeviceConfig {
 struct Error {
     enum class Code {
         Success = 0,
-        InvalidConfig,
-        NoCompatibleBackend,
-        InitializationFailed,
-        DeviceLost,
-        OutOfMemory,
-        ValidationError,
-        CompilationError,
-        UnsupportedFeature,
+        InvalidConfig,           // 配置无效
+        NoCompatibleBackend,     // 没有兼容的后端（常见于必需特性不满足）
+        InitializationFailed,    // 初始化失败
+        DeviceLost,             // 设备丢失
+        OutOfMemory,            // 内存不足
+        ValidationError,        // 验证错误
+        CompilationError,       // 编译错误
+        UnsupportedFeature,     // 不支持的特性
     };
     
     Code code = Code::Success;
@@ -88,6 +88,21 @@ struct Error {
     operator bool() const { return code == Code::Success; }
 };
 ```
+
+**错误码说明**:
+
+- **`Success`**: 操作成功
+- **`InvalidConfig`**: 提供的配置无效（如窗口句柄为空）
+- **`NoCompatibleBackend`**: 没有后端能满足所有必需特性
+  - 发生于应用指定了 `FeatureRequirements.required`，但没有任何可用后端支持所有这些特性
+  - 错误消息会详细说明哪些必需特性不被支持
+  - 应用应该通知用户硬件不满足要求，并考虑降级功能或退出
+- **`InitializationFailed`**: 后端初始化失败（如驱动问题）
+- **`DeviceLost`**: 设备丢失（如驱动崩溃、GPU 超时）
+- **`OutOfMemory`**: 内存分配失败
+- **`ValidationError`**: 验证层检测到错误（调试模式）
+- **`CompilationError`**: 着色器编译失败
+- **`UnsupportedFeature`**: 运行时尝试使用不支持的特性
 
 ## 全局函数
 
@@ -109,7 +124,7 @@ CreateDevice(const DeviceConfig& config = {});
 
 **示例**:
 ```cpp
-// 自动选择最佳后端
+// 示例 1: 自动选择最佳后端
 auto result = VRHI::CreateDevice();
 if (result) {
     auto device = std::move(*result);
@@ -118,13 +133,71 @@ if (result) {
     std::cerr << "Failed: " << result.error().message << "\n";
 }
 
-// 指定后端和特性
+// 示例 2: 指定后端和特性
 DeviceConfig config;
 config.preferredBackend = BackendType::Vulkan;
 config.enableValidation = true;
 config.features.required = {Feature::Compute};
 
 auto device = VRHI::CreateDevice(config);
+
+// 示例 3: 严格的必需特性验证
+DeviceConfig strictConfig;
+strictConfig.features.required = {
+    Feature::Compute,
+    Feature::Texture3D,
+    Feature::MultiDrawIndirect,
+};
+
+auto strictResult = VRHI::CreateDevice(strictConfig);
+
+if (!strictResult) {
+    // 处理必需特性不满足
+    if (strictResult.error().code == Error::Code::NoCompatibleBackend) {
+        std::cerr << "硬件不支持所需的功能:\n";
+        std::cerr << strictResult.error().message << "\n";
+        
+        // 应用应该:
+        // 1. 显示友好的错误消息给用户
+        // 2. 提供系统需求信息
+        // 3. 考虑降级到基础功能或退出
+        
+        ShowUserMessage(
+            "硬件不满足要求",
+            "您的显卡不支持本程序需要的高级功能。\n"
+            "需要支持：计算着色器、3D 纹理、间接绘制"
+        );
+        
+        return EXIT_FAILURE;
+    }
+}
+
+// 成功后，保证支持所有必需特性
+auto device = std::move(*strictResult);
+// 可以安全地使用计算着色器等功能
+
+// 示例 4: 降级策略
+auto highEndResult = VRHI::CreateDevice(highEndConfig);
+
+if (!highEndResult) {
+    std::cout << "高级功能不可用，尝试基础模式...\n";
+    
+    // 尝试降级配置
+    DeviceConfig basicConfig;
+    basicConfig.features.required = {
+        Feature::Texture2D,
+        Feature::VertexBuffers,
+    };
+    
+    auto basicResult = VRHI::CreateDevice(basicConfig);
+    if (basicResult) {
+        useBasicRenderPath = true;
+        device = std::move(*basicResult);
+    } else {
+        std::cerr << "硬件完全不支持\n";
+        return EXIT_FAILURE;
+    }
+}
 ```
 
 ### EnumerateBackends

@@ -469,6 +469,94 @@ bool SupportsFeatureGroup(FeatureGroup group) const {
 4. **日志记录**: 记录检测结果，便于调试
 5. **优雅降级**: 缺少特性时提供替代方案
 
+## 特性验证与应用需求
+
+### 必需特性验证
+
+特性检测不仅用于后端评分，还用于验证应用的必需特性需求：
+
+```cpp
+// 应用定义必需特性
+FeatureRequirements requirements;
+requirements.required = {
+    Feature::Compute,
+    Feature::Texture3D,
+};
+
+// VRHI 在初始化时验证
+auto deviceResult = VRHI::CreateDevice(requirements);
+
+if (!deviceResult) {
+    // 错误：没有后端支持所有必需特性
+    std::cerr << deviceResult.error().message << "\n";
+    // 应用应退出或降级功能
+}
+```
+
+### 验证失败处理
+
+当必需特性不满足时，应用应该：
+
+1. **明确失败原因**: 查看错误信息了解哪些特性不支持
+   ```cpp
+   if (error.code == Error::Code::NoCompatibleBackend) {
+       // 错误信息包含具体缺失的特性
+       LogError("硬件不满足要求: {}", error.message);
+   }
+   ```
+
+2. **通知用户**: 向用户解释硬件不满足要求
+   ```cpp
+   ShowMessageBox(
+       "硬件不支持",
+       "您的显卡不支持本程序需要的功能\n"
+       "需要支持：计算着色器、3D 纹理"
+   );
+   ```
+
+3. **提供替代方案**: 如果可能，降级到基础功能
+   ```cpp
+   // 尝试高级功能
+   auto highEnd = VRHI::CreateDevice(advancedRequirements);
+   
+   if (!highEnd) {
+       // 降级到基础功能
+       auto basic = VRHI::CreateDevice(basicRequirements);
+       if (basic) {
+           useBasicRenderingPath = true;
+       }
+   }
+   ```
+
+4. **记录诊断信息**: 帮助问题排查
+   ```cpp
+   if (!deviceResult) {
+       // 记录系统信息用于支持
+       LogSystemInfo();
+       LogError("Device creation failed: {}", error.message);
+   }
+   ```
+
+### 运行时特性检查
+
+虽然必需特性在初始化时验证，但也可以运行时检查可选特性：
+
+```cpp
+auto device = VRHI::CreateDevice(requirements).value();
+
+// 运行时检查可选特性
+if (device->IsFeatureSupported(Feature::RayTracing)) {
+    EnableRayTracedShadows();
+} else {
+    UseTraditionalShadows();
+}
+
+// 检查特性组
+if (SupportsFeatureGroup(FeatureGroup::Advanced)) {
+    EnableAdvancedGraphics();
+}
+```
+
 ## 性能考虑
 
 - 特性检测应在初始化阶段完成一次
