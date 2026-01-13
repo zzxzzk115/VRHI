@@ -1,40 +1,42 @@
-# VRHI 文档
+# VRHI Documentation
 
-欢迎使用 VRHI (Versatile Render Hardware Interface) 文档。
+Welcome to the VRHI (Versatile Render Hardware Interface) documentation.
 
-## 目录
+[中文文档](zh-CN/README.md)
 
-### 设计文档
-- [架构设计](design/architecture.md) - VRHI 的整体架构设计
-- [后端评分系统](design/backend_scoring.md) - 后端选择和评分机制
-- [特性检测](design/feature_detection.md) - 硬件特性检测系统
-- [RAII 设计原则](design/raii_principles.md) - 资源管理和 RAII 实现
+## Table of Contents
 
-### API 参考
-- [核心接口](api/core.md) - 核心 RHI 接口
-- [设备管理](api/device.md) - 设备和上下文管理
-- [资源管理](api/resources.md) - 缓冲区、纹理等资源
-- [命令记录](api/commands.md) - 命令缓冲区和提交
-- [后端接口](api/backends.md) - Vulkan 和 OpenGL 后端
+### Design Documents
+- [Architecture Design](design/architecture.md) - VRHI overall architecture
+- [Backend Scoring System](design/backend_scoring.md) - Backend selection and scoring mechanism
+- [Feature Detection](design/feature_detection.md) - Hardware feature detection system
+- [RAII Principles](design/raii_principles.md) - Resource management and RAII implementation
 
-### 示例和最佳实践
-- [快速入门](examples/quick_start.md) - 快速上手指南
-- [最佳实践](examples/best_practices.md) - 使用建议和最佳实践
-- [跨平台开发](examples/cross_platform.md) - 跨平台开发指南
+### API Reference
+- [Core Interface](api/core.md) - Core RHI interface
+- [Device Management](api/device.md) - Device and context management
+- [Resource Management](api/resources.md) - Buffers, textures, and other resources
+- [Command Recording](api/commands.md) - Command buffers and submission
+- [Backend Interfaces](api/backends.md) - Vulkan and OpenGL backends
 
-## 关于 VRHI
+### Examples and Best Practices
+- [Quick Start](examples/quick_start.md) - Getting started guide
+- [Best Practices](examples/best_practices.md) - Usage recommendations and best practices
+- [Cross-Platform Development](examples/cross_platform.md) - Cross-platform development guide
 
-VRHI 是一个现代化的渲染硬件抽象层，旨在：
+## About VRHI
 
-- **多后端支持**: 支持 Vulkan 和多个 OpenGL 版本 (3.3, 2.0, 4.3, 4.6, ES 2.0, ES 3.0, ES 3.1)
-- **智能后端选择**: 基于硬件特性自动评分并选择最优后端
-- **现代 C++**: 使用 C++23 标准，充分利用现代 C++ 特性
-- **RAII 资源管理**: 自动化资源生命周期管理，避免内存泄漏
-- **广泛兼容性**: 从高性能 PC 到树莓派、安卓手机的全平台支持
-- **性能优先**: 在保证兼容性的同时追求极致性能
+VRHI is a modern rendering hardware abstraction layer designed to:
 
-## 快速链接
+- **Multi-Backend Support**: Supports Vulkan and multiple OpenGL versions (3.3, 2.0, 4.3, 4.6, ES 2.0, ES 3.0, ES 3.1)
+- **Smart Backend Selection**: Automatically detects and scores backends based on hardware features
+- **Modern C++**: Uses C++23 standard features
+- **RAII Resource Management**: Automatic resource lifecycle management prevents memory leaks
+- **Wide Compatibility**: From high-performance PCs to Raspberry Pi and Android phones
+- **Performance First**: Pursues ultimate performance while ensuring compatibility
 
-- [项目主页](https://github.com/zzxzzk115/VRHI)
-- [问题追踪](https://github.com/zzxzzk115/VRHI/issues)
-- [贡献指南](../CONTRIBUTING.md)
+## Quick Links
+
+- [Project Homepage](https://github.com/zzxzzk115/VRHI)
+- [Issue Tracker](https://github.com/zzxzzk115/VRHI/issues)
+- [Contributing Guide](../CONTRIBUTING.md)

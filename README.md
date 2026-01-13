@@ -3,36 +3,38 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![C++23](https://img.shields.io/badge/C%2B%2B-23-blue.svg)](https://en.cppreference.com/w/cpp/23)
 
-一个现代化的渲染硬件抽象层 (Render Hardware Interface)，支持多图形后端，基于 C++23 设计。
+[中文文档](README_zh-CN.md)
 
-## ✨ 特性
+A modern Render Hardware Interface (RHI) supporting multiple graphics backends, designed with C++23.
 
-- 🎯 **多后端支持**: Vulkan、OpenGL 3.3/4.3/4.6、OpenGL ES 2.0/3.0/3.1
-- 🤖 **智能后端选择**: 自动检测硬件特性并评分，选择最优后端
-- 🔒 **现代 C++23**: 充分利用最新 C++ 标准特性
-- 🛡️ **RAII 资源管理**: 自动化资源生命周期，避免泄漏
-- 🌐 **跨平台**: Windows、Linux、macOS、Android、iOS、树莓派
-- ⚡ **高性能**: 零开销抽象，从高端 PC 到低端移动设备
-- 📦 **Header-Only**: 仅头文件库，易于集成
+## ✨ Features
 
-## 🚀 快速开始
+- 🎯 **Multi-Backend Support**: Vulkan, OpenGL 3.3/4.3/4.6, OpenGL ES 2.0/3.0/3.1
+- 🤖 **Smart Backend Selection**: Automatically detects hardware features and scores backends to select the optimal one
+- 🔒 **Modern C++23**: Leverages the latest C++ standard features
+- 🛡️ **RAII Resource Management**: Automated resource lifecycle management to prevent leaks
+- 🌐 **Cross-Platform**: Windows, Linux, macOS, Android, iOS, Raspberry Pi
+- ⚡ **High Performance**: Zero-overhead abstraction, from high-end PCs to low-end mobile devices
+- 📦 **Header-Only**: Header-only library for easy integration
 
-### 最小示例
+## 🚀 Quick Start
+
+### Minimal Example
 
 ```cpp
 #include <VRHI/VRHI.hpp>
 
 int main() {
-    // 创建设备（自动选择最佳后端）
+    // Create device (automatically selects best backend)
     auto device = VRHI::CreateDevice().value();
     
-    // 创建资源
+    // Create resources
     VRHI::BufferDesc desc;
     desc.size = 1024;
     desc.usage = VRHI::BufferUsage::Vertex;
     auto buffer = device->CreateBuffer(desc).value();
     
-    // 渲染循环
+    // Render loop
     while (!ShouldClose()) {
         auto cmd = device->CreateCommandBuffer();
         cmd->Draw(3);
@@ -45,92 +47,94 @@ int main() {
 }
 ```
 
-### 后端选择示例
+### Backend Selection Example
 
 ```cpp
-// 查看所有可用后端
+// View all available backends
 auto backends = VRHI::EnumerateBackends();
 for (const auto& backend : backends) {
     std::cout << backend.name << " (Score: " << backend.score << ")\n";
 }
 
-// 手动指定后端
+// Manually specify backend
 VRHI::DeviceConfig config;
 config.preferredBackend = VRHI::BackendType::Vulkan;
 auto device = VRHI::CreateDevice(config).value();
 ```
 
-## 📚 文档
+## 📚 Documentation
 
-完整文档请查看 [docs/](docs/) 目录：
+Complete documentation can be found in the [docs/](docs/) directory:
 
-- [架构设计](docs/design/architecture.md) - VRHI 整体架构
-- [后端评分系统](docs/design/backend_scoring.md) - 智能后端选择机制
-- [特性检测](docs/design/feature_detection.md) - 硬件特性检测
-- [RAII 原则](docs/design/raii_principles.md) - 资源管理设计
-- [API 参考](docs/api/core.md) - 核心 API 文档
-- [快速入门](docs/examples/quick_start.md) - 入门教程
-- [最佳实践](docs/examples/best_practices.md) - 使用建议
+- [Architecture Design](docs/design/architecture.md) - VRHI overall architecture
+- [Backend Scoring System](docs/design/backend_scoring.md) - Smart backend selection mechanism
+- [Feature Detection](docs/design/feature_detection.md) - Hardware feature detection
+- [RAII Principles](docs/design/raii_principles.md) - Resource management design
+- [API Reference](docs/api/core.md) - Core API documentation
+- [Quick Start](docs/examples/quick_start.md) - Getting started guide
+- [Best Practices](docs/examples/best_practices.md) - Usage recommendations and best practices
 
-## 🎯 核心设计
+[中文文档](docs/zh-CN/README.md)
 
-### 智能后端选择
+## 🎯 Core Design
 
-VRHI 的创新之处在于初始化时会：
+### Smart Backend Selection
 
-1. **检测所有可用后端** (Vulkan, OpenGL, OpenGL ES)
-2. **查询硬件特性支持** (计算着色器、光线追踪等)
-3. **综合评分** (特性支持度 40% + 性能 30% + 稳定性 20% + 兼容性 10%)
-4. **自动选择最优后端** 或由用户手动指定
+VRHI's innovation lies in its initialization process:
+
+1. **Detect all available backends** (Vulkan, OpenGL, OpenGL ES)
+2. **Query hardware feature support** (compute shaders, ray tracing, etc.)
+3. **Comprehensive scoring** (Feature support 40% + Performance 30% + Stability 20% + Compatibility 10%)
+4. **Automatically select optimal backend** or allow manual specification
 
 ```cpp
 VRHI::DeviceConfig config;
-config.features.required = {VRHI::Feature::Compute};  // 必需特性
-config.features.optional = {VRHI::Feature::RayTracing};  // 可选特性
+config.features.required = {VRHI::Feature::Compute};  // Required features
+config.features.optional = {VRHI::Feature::RayTracing};  // Optional features
 
 auto device = VRHI::CreateDevice(config).value();
-// 自动选择支持计算着色器且评分最高的后端
+// Automatically selects backend that supports compute shaders with highest score
 ```
 
-### RAII 资源管理
+### RAII Resource Management
 
-所有资源使用 RAII 和智能指针管理，无需手动释放：
+All resources use RAII and smart pointers for management, no manual release needed:
 
 ```cpp
 {
     auto buffer = device->CreateBuffer(desc).value();
     auto texture = device->CreateTexture(texDesc).value();
-    // 使用资源...
-} // 自动释放，即使发生异常也安全
+    // Use resources...
+} // Automatic release, safe even with exceptions
 ```
 
-### 现代错误处理
+### Modern Error Handling
 
-使用 C++23 的 `std::expected` 进行错误处理，避免异常开销：
+Uses C++23's `std::expected` for error handling, avoiding exception overhead:
 
 ```cpp
 auto result = device->CreateBuffer(desc);
 if (result) {
     auto buffer = std::move(*result);
-    // 使用 buffer
+    // Use buffer
 } else {
     std::cerr << "Error: " << result.error().message << "\n";
 }
 ```
 
-## 🔧 构建要求
+## 🔧 Build Requirements
 
-- **编译器**: GCC 13+, Clang 16+, MSVC 2022+
-- **C++ 标准**: C++23
+- **Compiler**: GCC 13+, Clang 16+, MSVC 2022+
+- **C++ Standard**: C++23
 - **CMake**: 3.20+
-- **平台**: Windows, Linux, macOS, Android, iOS, 树莓派
+- **Platform**: Windows, Linux, macOS, Android, iOS, Raspberry Pi
 
-### 依赖项
+### Dependencies
 
-- Vulkan SDK (可选，用于 Vulkan 后端)
-- OpenGL 驱动 (系统提供)
+- Vulkan SDK (optional, for Vulkan backend)
+- OpenGL drivers (system provided)
 
-## 📦 集成到项目
+## 📦 Integration
 
 ### CMake
 
@@ -139,40 +143,40 @@ add_subdirectory(external/VRHI)
 target_link_libraries(your_app PRIVATE VRHI::VRHI)
 ```
 
-## 🎨 支持的后端
+## 🎨 Supported Backends
 
-| 后端 | 平台 | 性能 | 兼容性 | 用途 |
-|------|------|------|--------|------|
-| **Vulkan** | Windows, Linux, Android | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | 高性能 PC、现代移动设备 |
-| **OpenGL 4.6** | Windows, Linux | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | 高端 PC |
-| **OpenGL 4.3** | Windows, Linux | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | 中高端 PC |
-| **OpenGL 3.3** | Windows, Linux, macOS | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | 通用 PC、老旧硬件 |
-| **OpenGL ES 3.1** | Android, iOS | ⭐⭐⭐⭐ | ⭐⭐⭐ | 现代移动设备 |
-| **OpenGL ES 3.0** | Android, iOS | ⭐⭐⭐ | ⭐⭐⭐⭐ | 主流移动设备 |
-| **OpenGL ES 2.0** | Android, 树莓派 | ⭐⭐ | ⭐⭐⭐⭐⭐ | 低端设备、嵌入式 |
+| Backend | Platform | Performance | Compatibility | Use Case |
+|---------|----------|-------------|---------------|----------|
+| **Vulkan** | Windows, Linux, Android | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | High-performance PC, modern mobile devices |
+| **OpenGL 4.6** | Windows, Linux | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | High-end PC |
+| **OpenGL 4.3** | Windows, Linux | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | Mid to high-end PC |
+| **OpenGL 3.3** | Windows, Linux, macOS | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | General PC, older hardware |
+| **OpenGL ES 3.1** | Android, iOS | ⭐⭐⭐⭐ | ⭐⭐⭐ | Modern mobile devices |
+| **OpenGL ES 3.0** | Android, iOS | ⭐⭐⭐ | ⭐⭐⭐⭐ | Mainstream mobile devices |
+| **OpenGL ES 2.0** | Android, Raspberry Pi | ⭐⭐ | ⭐⭐⭐⭐⭐ | Low-end devices, embedded |
 
-## 🤝 贡献
+## 🤝 Contributing
 
-欢迎贡献！请查看 [CONTRIBUTING.md](CONTRIBUTING.md)（待创建）。
+Contributions welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) (to be created).
 
-## 📄 许可证
+## 📄 License
 
-本项目采用 MIT 许可证。详见 [LICENSE](LICENSE)。
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
-## 🙏 致谢
+## 🙏 Acknowledgments
 
-VRHI 的设计灵感来自于：
+VRHI's design is inspired by:
 - Vulkan API
 - DirectX 12
 - Metal
 - WebGPU
 - bgfx
 
-## 📮 联系
+## 📮 Contact
 
-- 问题追踪: [GitHub Issues](https://github.com/zzxzzk115/VRHI/issues)
-- 讨论: [GitHub Discussions](https://github.com/zzxzzk115/VRHI/discussions)
+- Issue Tracker: [GitHub Issues](https://github.com/zzxzzk115/VRHI/issues)
+- Discussions: [GitHub Discussions](https://github.com/zzxzzk115/VRHI/discussions)
 
 ---
 
-**注意**: VRHI 目前处于设计阶段，文档和接口设计已完成，实现正在进行中。
+**Note**: VRHI is currently in the design phase. Documentation and interface design are complete, implementation is in progress.
