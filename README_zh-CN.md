@@ -15,7 +15,8 @@
 - 🌐 **跨平台**: Windows、Linux、macOS、Android、iOS、树莓派
 - ⚡ **高性能**: 零开销抽象，从高端 PC 到低端移动设备
 - 🎨 **后端可扩展性**: 抽象设计允许轻松扩展到新的图形 API (D3D12、Metal 等)
-- 📦 **Header-Only**: 仅头文件库，易于集成
+- 🪟 **窗口系统抽象**: 统一接口支持 SDL2、SDL3、GLFW、EGL，自动键码转换
+- 🔨 **CMake 构建系统**: 自包含 `external/` 目录，无需 submodule 或 CPM
 
 ## 🚀 快速开始
 
@@ -64,15 +65,20 @@ auto device = VRHI::CreateDevice(config).value();
 
 ## 📚 文档
 
-完整文档请查看 [docs/](docs/) 目录：
+完整文档请查看 [docs/zh-CN/](docs/zh-CN/) 目录：
 
-- [架构设计](docs/design/architecture.md) - VRHI 整体架构
-- [后端评分系统](docs/design/backend_scoring.md) - 智能后端选择机制
-- [特性检测](docs/design/feature_detection.md) - 硬件特性检测
-- [RAII 原则](docs/design/raii_principles.md) - 资源管理设计
-- [API 参考](docs/api/core.md) - 核心 API 文档
-- [快速入门](docs/examples/quick_start.md) - 入门教程
-- [最佳实践](docs/examples/best_practices.md) - 使用建议
+### 设计文档
+- [架构设计](docs/zh-CN/design/architecture.md) - VRHI 整体架构
+- [后端评分系统](docs/zh-CN/design/backend_scoring.md) - 智能后端选择机制
+- [特性检测](docs/zh-CN/design/feature_detection.md) - 硬件特性检测
+- [RAII 原则](docs/zh-CN/design/raii_principles.md) - 资源管理设计
+- [构建系统设计](docs/zh-CN/design/build_system.md) - CMake 构建系统和依赖管理
+- [窗口系统抽象](docs/zh-CN/design/window_system.md) - 多窗口库支持
+
+### API 参考与示例
+- [API 参考](docs/zh-CN/api/core.md) - 核心 API 文档
+- [快速入门](docs/zh-CN/examples/quick_start.md) - 入门教程
+- [最佳实践](docs/zh-CN/examples/best_practices.md) - 使用建议
 
 ## 🎯 核心设计
 
@@ -138,16 +144,49 @@ if (result) {
 }
 ```
 
-## 🔧 构建要求
+## 🔧 构建系统
+
+VRHI 使用 **CMake**，所有依赖都自包含在 `external/` 目录中：
+
+- **无 git submodule**: 所有第三方源代码直接包含
+- **无 CPM.cmake**: 完全控制依赖版本
+- **离线构建**: 无需网络连接
+- **模块化配置**: 每个子系统独立 CMakeLists.txt
+
+### 快速构建
+
+```bash
+# 配置
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+# 构建
+cmake --build build --config Release
+```
+
+### 构建选项
+
+```cmake
+# 后端选择
+option(VRHI_ENABLE_VULKAN "启用 Vulkan 后端" ON)
+option(VRHI_ENABLE_OPENGL "启用 OpenGL 后端" ON)
+option(VRHI_ENABLE_D3D12 "启用 D3D12 后端 (Windows)" ${WIN32})
+option(VRHI_ENABLE_METAL "启用 Metal 后端 (macOS)" ${APPLE})
+
+# 窗口系统支持
+option(VRHI_WINDOW_SDL2 "启用 SDL2 支持" ON)
+option(VRHI_WINDOW_SDL3 "启用 SDL3 支持" OFF)
+option(VRHI_WINDOW_GLFW "启用 GLFW 支持" ON)
+option(VRHI_WINDOW_EGL "启用 EGL 支持" OFF)
+```
+
+详见 [构建系统设计](docs/zh-CN/design/build_system.md) 获取完整文档。
+
+### 要求
 
 - **编译器**: GCC 13+, Clang 16+, MSVC 2022+
 - **C++ 标准**: C++23
-- **CMake**: 3.20+
+- **CMake**: 3.21+
 - **平台**: Windows, Linux, macOS, Android, iOS, 树莓派
-
-### 依赖项
-
-- Vulkan SDK (可选，用于 Vulkan 后端)
 - OpenGL 驱动 (系统提供)
 
 ## 📦 集成到项目

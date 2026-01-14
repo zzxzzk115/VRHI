@@ -17,7 +17,8 @@ A modern Render Hardware Interface (RHI) supporting multiple graphics backends, 
 - 🌐 **Cross-Platform**: Windows, Linux, macOS, Android, iOS, Raspberry Pi
 - ⚡ **High Performance**: Zero-overhead abstraction, from high-end PCs to low-end mobile devices
 - 🎨 **Backend Extensibility**: Abstract design allows easy extension to new graphics APIs (D3D12, Metal, etc.)
-- 📦 **Header-Only**: Header-only library for easy integration
+- 🪟 **Window System Abstraction**: Unified interface supporting SDL2, SDL3, GLFW, EGL with automatic key code translation
+- 🔨 **CMake Build System**: Self-contained `external/` directory, no submodules or CPM required
 
 ## 🚀 Quick Start
 
@@ -68,10 +69,15 @@ auto device = VRHI::CreateDevice(config).value();
 
 Complete documentation can be found in the [docs/](docs/) directory:
 
+### Design Documents
 - [Architecture Design](docs/design/architecture.md) - VRHI overall architecture
 - [Backend Scoring System](docs/design/backend_scoring.md) - Smart backend selection mechanism
 - [Feature Detection](docs/design/feature_detection.md) - Hardware feature detection
 - [RAII Principles](docs/design/raii_principles.md) - Resource management design
+- [Build System Design](docs/design/build_system.md) - CMake build system and dependency management
+- [Window System Abstraction](docs/design/window_system.md) - Multi-window-library support
+
+### API Reference & Examples
 - [API Reference](docs/api/core.md) - Core API documentation
 - [Quick Start](docs/examples/quick_start.md) - Getting started guide
 - [Best Practices](docs/examples/best_practices.md) - Usage recommendations and best practices
@@ -142,11 +148,48 @@ if (result) {
 }
 ```
 
-## 🔧 Build Requirements
+## 🔧 Build System
+
+VRHI uses **CMake** with all dependencies self-contained in the `external/` directory:
+
+- **No git submodules**: All third-party source code included directly
+- **No CPM.cmake**: Full control over dependency versions
+- **Offline builds**: No network connection required
+- **Modular configuration**: Independent CMakeLists.txt for each subsystem
+
+### Quick Build
+
+```bash
+# Configure
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+# Build
+cmake --build build --config Release
+```
+
+### Build Options
+
+```cmake
+# Backend selection
+option(VRHI_ENABLE_VULKAN "Enable Vulkan backend" ON)
+option(VRHI_ENABLE_OPENGL "Enable OpenGL backend" ON)
+option(VRHI_ENABLE_D3D12 "Enable D3D12 backend (Windows)" ${WIN32})
+option(VRHI_ENABLE_METAL "Enable Metal backend (macOS)" ${APPLE})
+
+# Window system support
+option(VRHI_WINDOW_SDL2 "Enable SDL2 support" ON)
+option(VRHI_WINDOW_SDL3 "Enable SDL3 support" OFF)
+option(VRHI_WINDOW_GLFW "Enable GLFW support" ON)
+option(VRHI_WINDOW_EGL "Enable EGL support" OFF)
+```
+
+See [Build System Design](docs/design/build_system.md) for complete documentation.
+
+### Requirements
 
 - **Compiler**: GCC 13+, Clang 16+, MSVC 2022+
 - **C++ Standard**: C++23
-- **CMake**: 3.20+
+- **CMake**: 3.21+
 - **Platform**: Windows, Linux, macOS, Android, iOS, Raspberry Pi
 
 ### Dependencies

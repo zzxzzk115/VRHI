@@ -11,6 +11,8 @@ Welcome to the VRHI (Versatile Render Hardware Interface) documentation.
 - [Backend Scoring System](design/backend_scoring.md) - Backend selection and scoring mechanism
 - [Feature Detection](design/feature_detection.md) - Hardware feature detection system
 - [RAII Principles](design/raii_principles.md) - Resource management and RAII implementation
+- [Build System Design](design/build_system.md) - CMake build system and dependency management
+- [Window System Abstraction](design/window_system.md) - Multi-window-library support and event handling
 
 ### API Reference
 - [Core Interface](api/core.md) - Core RHI interface

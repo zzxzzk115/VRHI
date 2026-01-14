@@ -9,6 +9,8 @@
 - [后端评分系统](design/backend_scoring.md) - 后端选择和评分机制
 - [特性检测](design/feature_detection.md) - 硬件特性检测系统
 - [RAII 设计原则](design/raii_principles.md) - 资源管理和 RAII 实现
+- [构建系统设计](design/build_system.md) - CMake 构建系统和依赖管理
+- [窗口系统抽象](design/window_system.md) - 多窗口库支持和事件处理
 
 ### API 参考
 - [核心接口](api/core.md) - 核心 RHI 接口
