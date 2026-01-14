@@ -56,39 +56,53 @@ SPIRV-Cross 转换为目标格式
 
 **GLAD 版本策略**：
 
-为每个 OpenGL 版本生成独立的 GLAD 加载器：
+为每个 OpenGL 和 OpenGL ES 版本生成独立的 GLAD 加载器：
 
 ```
 external/glad/
-├── glad_gl33/     # OpenGL 3.3 Core
+├── glad_gl33/      # OpenGL 3.3 Core
 │   ├── include/
 │   └── src/
-├── glad_gl41/     # OpenGL 4.1 Core
+├── glad_gl41/      # OpenGL 4.1 Core
 │   ├── include/
 │   └── src/
-└── glad_gl46/     # OpenGL 4.6 Core
+├── glad_gl46/      # OpenGL 4.6 Core
+│   ├── include/
+│   └── src/
+├── glad_gles30/    # OpenGL ES 3.0
+│   ├── include/
+│   └── src/
+└── glad_gles31/    # OpenGL ES 3.1
     ├── include/
     └── src/
 ```
 
 **配置参数**：
-- API: `gl=3.3/4.1/4.6`
+- API: 
+  - Desktop: `gl=3.3/4.1/4.6`
+  - Mobile: `gles2=3.0/3.1`
 - Profile: `core`
 - Extensions: 根据需要选择
 - Loader: `on`
 
 **运行时选择**：
 ```cpp
-// 根据选择的 OpenGL 后端版本加载对应的函数
+// 根据选择的 OpenGL/GLES 后端版本加载对应的函数
 switch (backendType) {
     case BackendType::OpenGL33:
-        gladLoadGL33();  // 加载 GL 3.3 函数
+        gladLoadGL33();      // 加载 GL 3.3 函数
         break;
     case BackendType::OpenGL41:
-        gladLoadGL41();  // 加载 GL 4.1 函数
+        gladLoadGL41();      // 加载 GL 4.1 函数
         break;
     case BackendType::OpenGL46:
-        gladLoadGL46();  // 加载 GL 4.6 函数
+        gladLoadGL46();      // 加载 GL 4.6 函数
+        break;
+    case BackendType::OpenGLES30:
+        gladLoadGLES30();    // 加载 GLES 3.0 函数
+        break;
+    case BackendType::OpenGLES31:
+        gladLoadGLES31();    // 加载 GLES 3.1 函数
         break;
 }
 ```
@@ -98,6 +112,13 @@ switch (backendType) {
 - ✅ 避免不必要的扩展检测
 - ✅ 更小的二进制体积（每个后端只链接所需版本）
 - ✅ 编译时类型安全
+- ✅ OpenGL 和 OpenGL ES 完全分离，避免符号冲突
+
+**为什么 GLES 也需要独立加载器**：
+- OpenGL ES 是独立的 API 规范，与 Desktop OpenGL 有不同的函数集
+- GLES 3.0 和 GLES 3.1 功能集不同（如 GLES 3.1 新增计算着色器）
+- 移动平台（Android/iOS）和嵌入式设备需要专门的 GLES 加载器
+- 分离可以避免与 Desktop GL 的符号命名冲突
 
 ### 2. 着色器语言选择
 
@@ -248,7 +269,8 @@ std::string glsl_source = compiler.compile();
 - 降低初期开发风险
 
 **OpenGL 函数加载**：多版本 GLAD
-- `glad_gl33`、`glad_gl41`、`glad_gl46` 独立加载器
+- Desktop: `glad_gl33`、`glad_gl41`、`glad_gl46` 独立加载器
+- Mobile: `glad_gles30`、`glad_gles31` 独立加载器
 - 编译时生成，运行时按需加载
 
 **编译工具链**：
@@ -284,9 +306,13 @@ std::string glsl_source = compiler.compile();
 ### v1.0 必需依赖
 
 **external/glad/** (多版本)
-- `glad_gl33/`: OpenGL 3.3 Core
-- `glad_gl41/`: OpenGL 4.1 Core
-- `glad_gl46/`: OpenGL 4.6 Core
+- Desktop OpenGL:
+  - `glad_gl33/`: OpenGL 3.3 Core
+  - `glad_gl41/`: OpenGL 4.1 Core
+  - `glad_gl46/`: OpenGL 4.6 Core
+- Mobile OpenGL ES:
+  - `glad_gles30/`: OpenGL ES 3.0
+  - `glad_gles31/`: OpenGL ES 3.1
 - 来源: https://glad.dav1d.de/
 - 许可: MIT/Public Domain
 
@@ -356,12 +382,41 @@ auto fs = module->GetShader("fragmentMain");
 ### CMake 配置
 
 ```cmake
-# GLAD 多版本
+# GLAD 多版本 - Desktop OpenGL
 add_library(glad_gl33 STATIC
     external/glad/glad_gl33/src/glad.c
 )
 target_include_directories(glad_gl33 PUBLIC
     external/glad/glad_gl33/include
+)
+
+add_library(glad_gl41 STATIC
+    external/glad/glad_gl41/src/glad.c
+)
+target_include_directories(glad_gl41 PUBLIC
+    external/glad/glad_gl41/include
+)
+
+add_library(glad_gl46 STATIC
+    external/glad/glad_gl46/src/glad.c
+)
+target_include_directories(glad_gl46 PUBLIC
+    external/glad/glad_gl46/include
+)
+
+# GLAD 多版本 - Mobile OpenGL ES
+add_library(glad_gles30 STATIC
+    external/glad/glad_gles30/src/glad.c
+)
+target_include_directories(glad_gles30 PUBLIC
+    external/glad/glad_gles30/include
+)
+
+add_library(glad_gles31 STATIC
+    external/glad/glad_gles31/src/glad.c
+)
+target_include_directories(glad_gles31 PUBLIC
+    external/glad/glad_gles31/include
 )
 
 # glslang
@@ -429,7 +484,9 @@ for (const auto& image : resources.sampled_images) {
 
 ### 关键决策
 
-1. **GLAD 版本**: 为每个 OpenGL 版本生成独立的 GLAD 加载器
+1. **GLAD 版本**: 为每个 OpenGL/GLES 版本生成独立的 GLAD 加载器
+   - Desktop: GL 3.3, 4.1, 4.6
+   - Mobile: GLES 3.0, 3.1
 2. **v1.0 着色器语言**: GLSL 4.5+（稳定、成熟）
 3. **v2.0 着色器语言**: Slang（现代、强大）
 4. **SPIRV-Cross**: 必需，用于跨平台着色器转换

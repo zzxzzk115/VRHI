@@ -34,13 +34,36 @@ Backend-Specific Formats (GLSL, MSL, HLSL)
 
 ### 1. GLAD Multi-Version Strategy
 
-Generate separate GLAD loaders for each OpenGL version:
+Generate separate GLAD loaders for each OpenGL and OpenGL ES version:
 
 ```
 external/glad/
-├── glad_gl33/     # OpenGL 3.3 Core
-├── glad_gl41/     # OpenGL 4.1 Core
-└── glad_gl46/     # OpenGL 4.6 Core
+├── glad_gl33/      # OpenGL 3.3 Core
+├── glad_gl41/      # OpenGL 4.1 Core
+├── glad_gl46/      # OpenGL 4.6 Core
+├── glad_gles30/    # OpenGL ES 3.0
+└── glad_gles31/    # OpenGL ES 3.1
+```
+
+**Runtime Selection**:
+```cpp
+switch (backendType) {
+    case BackendType::OpenGL33:
+        gladLoadGL33();      // Load GL 3.3 functions
+        break;
+    case BackendType::OpenGL41:
+        gladLoadGL41();      // Load GL 4.1 functions
+        break;
+    case BackendType::OpenGL46:
+        gladLoadGL46();      // Load GL 4.6 functions
+        break;
+    case BackendType::OpenGLES30:
+        gladLoadGLES30();    // Load GLES 3.0 functions
+        break;
+    case BackendType::OpenGLES31:
+        gladLoadGLES31();    // Load GLES 3.1 functions
+        break;
+}
 ```
 
 **Advantages**:
@@ -48,6 +71,13 @@ external/glad/
 - ✅ Smaller binary size per backend
 - ✅ Compile-time type safety
 - ✅ Avoid unnecessary extension checks
+- ✅ OpenGL and OpenGL ES fully separated (avoid symbol conflicts)
+
+**Why GLES needs separate loaders**:
+- OpenGL ES is an independent API specification with different function sets from Desktop OpenGL
+- GLES 3.0 and GLES 3.1 have different capabilities (e.g., GLES 3.1 adds compute shaders)
+- Mobile platforms (Android/iOS) and embedded devices require dedicated GLES loaders
+- Separation avoids symbol naming conflicts with Desktop GL
 
 ### 2. Shader Language Selection
 
@@ -86,7 +116,8 @@ external/glad/
 ### v1.0 Essential
 
 **external/glad/** (multi-version)
-- Separate loaders for GL 3.3, 4.1, 4.6
+- Desktop OpenGL: Separate loaders for GL 3.3, 4.1, 4.6
+- Mobile OpenGL ES: Separate loaders for GLES 3.0, 3.1
 - License: MIT/Public Domain
 
 **external/glslang/**
@@ -111,7 +142,9 @@ external/glad/
 
 ### Key Decisions
 
-1. **GLAD**: Multi-version loaders (GL 3.3, 4.1, 4.6)
+1. **GLAD**: Multi-version loaders
+   - Desktop: GL 3.3, 4.1, 4.6
+   - Mobile: GLES 3.0, 3.1
 2. **v1.0 Shader Language**: GLSL 4.5+ (stable, mature)
 3. **v2.0 Shader Language**: Slang (modern, powerful)
 4. **SPIRV-Cross**: Required for cross-platform conversion
