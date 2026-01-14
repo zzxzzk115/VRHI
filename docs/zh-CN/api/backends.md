@@ -210,7 +210,6 @@ auto device = VRHI::CreateDevice(config);
 1. Vulkan (Android 7.0+)
 2. OpenGL ES 3.1
 3. OpenGL ES 3.0
-4. OpenGL ES 2.0
 ```
 
 #### iOS

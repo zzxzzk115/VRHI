@@ -352,7 +352,7 @@ cmake -B build -G Ninja \
     -DVRHI_WINDOW_SDL3=ON \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo
 
-# Raspberry Pi - OpenGL ES 2.0, EGL
+# Raspberry Pi - OpenGL ES 3.0+, EGL
 cmake -B build \
     -DVRHI_ENABLE_OPENGL=OFF \
     -DVRHI_BACKEND_GLES_AVAILABLE=ON \

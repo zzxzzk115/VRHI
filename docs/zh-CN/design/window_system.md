@@ -809,7 +809,7 @@ int main() {
 
 - 支持 EGL/SDL2
 - 推荐：EGL（直接渲染）
-- OpenGL ES 2.0/3.0 后端
+- OpenGL ES 3.0/3.1 后端
 
 ## 总结
 

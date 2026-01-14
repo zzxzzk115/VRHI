@@ -99,17 +99,15 @@ Graphics and compute pipeline configuration.
 1. **Vulkan Backend** - High-performance PC and modern mobile devices (Windows, Linux, Android)
 2. **OpenGL 4.6 Backend** - High-end PC (Windows, Linux)
 3. **OpenGL 4.1 Backend** - Mid to high-end PC, macOS (maximum supported version)
-4. **OpenGL 3.3 Backend** - Older PCs and laptops
-5. **OpenGL 2.0 Backend** - Legacy hardware
-6. **OpenGL ES 3.1 Backend** - Modern mobile devices
-7. **OpenGL ES 3.0 Backend** - Mainstream mobile devices
-8. **OpenGL ES 2.0 Backend** - Older mobile devices, Raspberry Pi
+4. **OpenGL 3.3 Backend** - General PC support, minimum desktop GL version
+5. **OpenGL ES 3.1 Backend** - Modern mobile devices
+6. **OpenGL ES 3.0 Backend** - Mainstream mobile devices, minimum GLES version, embedded devices
 
 ### Planned Backends (v2.0)
 
-9. **Direct3D 12 Backend** 🚧 - Windows high-performance native API
-10. **Metal Backend** 🚧 - macOS/iOS high-performance native API
-11. **WebGPU Backend** 🚧 - Web browsers and cross-platform (v3.0)
+7. **Direct3D 12 Backend** 🚧 - Windows high-performance native API
+8. **Metal Backend** 🚧 - macOS/iOS high-performance native API
+9. **WebGPU Backend** 🚧 - Web browsers and cross-platform (v3.0)
 
 ### Cross-Backend Abstraction Mapping
 
@@ -126,16 +124,16 @@ Graphics and compute pipeline configuration.
 ## Platform Support
 
 ### Desktop
-- **Windows**: Vulkan, OpenGL 4.6/4.1/3.3/2.0, Direct3D 12 (planned v2.0)
-- **Linux**: Vulkan, OpenGL 4.6/4.1/3.3/2.0
+- **Windows**: Vulkan, OpenGL 4.6/4.1/3.3, Direct3D 12 (planned v2.0)
+- **Linux**: Vulkan, OpenGL 4.6/4.1/3.3
 - **macOS**: OpenGL 4.1/3.3, Metal (planned v2.0, recommended for performance)
 
 ### Mobile
-- **Android**: Vulkan, OpenGL ES 3.1/3.0/2.0
-- **iOS**: OpenGL ES 3.0/2.0, Metal (planned v2.0, recommended for performance)
+- **Android**: Vulkan, OpenGL ES 3.1/3.0
+- **iOS**: OpenGL ES 3.1/3.0, Metal (planned v2.0, recommended for performance)
 
 ### Embedded
-- Raspberry Pi (OpenGL ES 2.0)
+- Raspberry Pi (OpenGL ES 3.0+, Vulkan experimental on Pi 4+)
 - Other ARM Linux devices
 
 ### Web

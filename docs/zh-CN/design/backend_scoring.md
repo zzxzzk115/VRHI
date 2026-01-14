@@ -82,17 +82,15 @@ enum class Feature {
 4. OpenGL 4.6 (现代 OpenGL，DSA 支持)
 5. OpenGL 4.1 (完整现代特性，macOS 最大支持)
 6. OpenGL ES 3.1 (移动端高性能)
-7. OpenGL 3.3 (传统桌面 GL)
-8. OpenGL ES 3.0 (主流移动端)
-9. OpenGL ES 2.0 (基础移动端)
-10. OpenGL 2.0 (兼容模式)
+7. OpenGL 3.3 (传统桌面 GL，最低桌面版本)
+8. OpenGL ES 3.0 (主流移动端，最低 GLES 版本)
 
 **平台优先级**:
 - **Windows**: D3D12 (计划) > Vulkan > OpenGL 4.6
 - **macOS**: Metal (计划) > OpenGL 4.1
-- **iOS**: Metal (计划) > OpenGL ES 3.0
+- **iOS**: Metal (计划) > OpenGL ES 3.1 > OpenGL ES 3.0
 - **Linux**: Vulkan > OpenGL 4.6
-- **Android**: Vulkan > OpenGL ES 3.1
+- **Android**: Vulkan > OpenGL ES 3.1 > OpenGL ES 3.0
 
 **性能分数公式**:
 ```
@@ -434,16 +432,15 @@ auto device = VRHI::CreateDevice(
 
 ```cpp
 // Vulkan 优先 (Android 7.0+)
-// OpenGL ES 3.1 次选 (高端设备)
+// OpenGL ES 3.1 首选 (高端设备)
 // OpenGL ES 3.0 (主流设备)
-// OpenGL ES 2.0 (低端设备)
 ```
 
 ### 树莓派
 
 ```cpp
-// OpenGL ES 3.0 优先 (树莓派 4)
-// OpenGL ES 2.0 备选 (树莓派 3 及更早)
+// OpenGL ES 3.1 优先 (树莓派 4+, 最新固件)
+// OpenGL ES 3.0 (树莓派 3+)
 // Vulkan (实验性，树莓派 4)
 ```
 
