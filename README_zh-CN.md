@@ -7,7 +7,7 @@
 
 ## ✨ 特性
 
-- 🎯 **多后端支持**: Vulkan、OpenGL 3.3/4.1/4.6、OpenGL ES 2.0/3.0/3.1
+- 🎯 **多后端支持**: Vulkan、OpenGL 3.3/4.1/4.6、OpenGL ES 3.0/3.1
   - **计划中 (v2.0)**: Direct3D 12 (Windows)、Metal (macOS/iOS)、WebGPU
 - 🤖 **智能后端选择**: 自动检测硬件特性并评分，选择最优后端
 - 🔒 **现代 C++23**: 充分利用最新 C++ 标准特性
@@ -207,10 +207,9 @@ target_link_libraries(your_app PRIVATE VRHI::VRHI)
 | **Vulkan** | Windows, Linux, Android | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | 高性能 PC、现代移动设备 |
 | **OpenGL 4.6** | Windows, Linux | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | 高端 PC |
 | **OpenGL 4.1** | Windows, Linux, macOS | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | 中高端 PC、**macOS**（最高版本） |
-| **OpenGL 3.3** | Windows, Linux, macOS | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | 通用 PC、老旧硬件 |
+| **OpenGL 3.3** | Windows, Linux, macOS | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | 通用 PC、最低桌面 GL 版本 |
 | **OpenGL ES 3.1** | Android, iOS | ⭐⭐⭐⭐ | ⭐⭐⭐ | 现代移动设备 |
-| **OpenGL ES 3.0** | Android, iOS | ⭐⭐⭐ | ⭐⭐⭐⭐ | 主流移动设备 |
-| **OpenGL ES 2.0** | Android, 树莓派 | ⭐⭐ | ⭐⭐⭐⭐⭐ | 低端设备、嵌入式 |
+| **OpenGL ES 3.0** | Android, iOS, 树莓派 | ⭐⭐⭐ | ⭐⭐⭐⭐ | 主流移动设备、嵌入式 |
 
 ### 计划中后端 (v2.0) 🚧
 

@@ -28,10 +28,8 @@ enum class BackendType {
     OpenGL46,       // OpenGL 4.6
     OpenGL41,       // OpenGL 4.1
     OpenGL33,       // OpenGL 3.3
-    OpenGL20,       // OpenGL 2.0
     OpenGLES31,     // OpenGL ES 3.1
     OpenGLES30,     // OpenGL ES 3.0
-    OpenGLES20,     // OpenGL ES 2.0
     Auto,           // Automatically select best backend
 };
 ```

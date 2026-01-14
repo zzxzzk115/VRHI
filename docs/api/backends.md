@@ -26,9 +26,9 @@ All backends implement the `IBackend` interface.
 
 ### 4. OpenGL 3.3 Backend
 - **Platforms**: Windows, Linux, macOS
-- **Features**: Wide hardware compatibility
+- **Features**: Wide hardware compatibility, minimum desktop GL version
 
-### 5-8. OpenGL ES Backends (3.1, 3.0, 2.0)
+### 5-6. OpenGL ES Backends (3.1, 3.0)
 - **Platforms**: Android, iOS, Raspberry Pi
 - **Features**: Mobile and embedded device support
 

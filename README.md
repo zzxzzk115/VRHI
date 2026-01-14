@@ -9,7 +9,7 @@ A modern Render Hardware Interface (RHI) supporting multiple graphics backends, 
 
 ## ✨ Features
 
-- 🎯 **Multi-Backend Support**: Vulkan, OpenGL 3.3/4.1/4.6, OpenGL ES 2.0/3.0/3.1
+- 🎯 **Multi-Backend Support**: Vulkan, OpenGL 3.3/4.1/4.6, OpenGL ES 3.0/3.1
   - **Planned (v2.0)**: Direct3D 12 (Windows), Metal (macOS/iOS), WebGPU
 - 🤖 **Smart Backend Selection**: Automatically detects hardware features and scores backends to select the optimal one
 - 🔒 **Modern C++23**: Leverages the latest C++ standard features
@@ -215,10 +215,9 @@ target_link_libraries(your_app PRIVATE VRHI::VRHI)
 | **Vulkan** | Windows, Linux, Android | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | High-performance PC, modern mobile devices |
 | **OpenGL 4.6** | Windows, Linux | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | High-end PC |
 | **OpenGL 4.1** | Windows, Linux, macOS | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | Mid to high-end PC, **macOS** (max version) |
-| **OpenGL 3.3** | Windows, Linux, macOS | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | General PC, older hardware |
+| **OpenGL 3.3** | Windows, Linux, macOS | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | General PC, minimum desktop GL version |
 | **OpenGL ES 3.1** | Android, iOS | ⭐⭐⭐⭐ | ⭐⭐⭐ | Modern mobile devices |
-| **OpenGL ES 3.0** | Android, iOS | ⭐⭐⭐ | ⭐⭐⭐⭐ | Mainstream mobile devices |
-| **OpenGL ES 2.0** | Android, Raspberry Pi | ⭐⭐ | ⭐⭐⭐⭐⭐ | Low-end devices, embedded |
+| **OpenGL ES 3.0** | Android, iOS, Raspberry Pi | ⭐⭐⭐ | ⭐⭐⭐⭐ | Mainstream mobile, embedded devices |
 
 ### Planned Backends (v2.0) 🚧
 

@@ -41,12 +41,10 @@ enum class BackendType {
     OpenGL46,
     OpenGL41,
     OpenGL33,
-    OpenGL20,
     
     // OpenGL ES Mobile
     OpenGLES31,
     OpenGLES30,
-    OpenGLES20,
     
     // Future/Experimental
     WebGPU,        // Planned: Web and cross-platform backend
