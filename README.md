@@ -10,11 +10,13 @@ A modern Render Hardware Interface (RHI) supporting multiple graphics backends, 
 ## ✨ Features
 
 - 🎯 **Multi-Backend Support**: Vulkan, OpenGL 3.3/4.1/4.6, OpenGL ES 2.0/3.0/3.1
+  - **Planned (v2.0)**: Direct3D 12 (Windows), Metal (macOS/iOS), WebGPU
 - 🤖 **Smart Backend Selection**: Automatically detects hardware features and scores backends to select the optimal one
 - 🔒 **Modern C++23**: Leverages the latest C++ standard features
 - 🛡️ **RAII Resource Management**: Automated resource lifecycle management to prevent leaks
 - 🌐 **Cross-Platform**: Windows, Linux, macOS, Android, iOS, Raspberry Pi
 - ⚡ **High Performance**: Zero-overhead abstraction, from high-end PCs to low-end mobile devices
+- 🎨 **Backend Extensibility**: Abstract design allows easy extension to new graphics APIs (D3D12, Metal, etc.)
 - 📦 **Header-Only**: Header-only library for easy integration
 
 ## 🚀 Quick Start
@@ -82,10 +84,12 @@ Complete documentation can be found in the [docs/](docs/) directory:
 
 VRHI's innovation lies in its initialization process:
 
-1. **Detect all available backends** (Vulkan, OpenGL, OpenGL ES)
+1. **Detect all available backends** (Vulkan, OpenGL, OpenGL ES, D3D12*, Metal*)
 2. **Query hardware feature support** (compute shaders, ray tracing, etc.)
 3. **Comprehensive scoring** (Feature support 40% + Performance 30% + Stability 20% + Compatibility 10%)
 4. **Automatically select optimal backend** or allow manual specification
+
+*Planned for v2.0
 
 ```cpp
 VRHI::DeviceConfig config;
@@ -95,6 +99,22 @@ config.features.optional = {VRHI::Feature::RayTracing};  // Optional features
 auto device = VRHI::CreateDevice(config).value();
 // Automatically selects backend that supports compute shaders with highest score
 ```
+
+### Backend Abstraction & Extensibility
+
+VRHI is designed from the ground up to support easy extension to new graphics APIs:
+
+- **Unified Interface**: All backends implement the same interface contract
+- **Factory Pattern**: New backends can be registered at compile or runtime
+- **Feature-Based**: Core API only includes cross-platform features
+- **Platform-Aware Scoring**: Native APIs (D3D12 on Windows, Metal on macOS) get priority
+
+Adding a new backend requires only:
+1. Implementing the `IBackend` and `IDevice` interfaces
+2. Registering the backend with the factory
+3. Mapping VRHI concepts to native API constructs
+
+See [Architecture Design](docs/design/architecture.md) for details on the abstraction layer.
 
 ### RAII Resource Management
 
@@ -145,15 +165,32 @@ target_link_libraries(your_app PRIVATE VRHI::VRHI)
 
 ## 🎨 Supported Backends
 
+### Current Backends
+
 | Backend | Platform | Performance | Compatibility | Use Case |
 |---------|----------|-------------|---------------|----------|
 | **Vulkan** | Windows, Linux, Android | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | High-performance PC, modern mobile devices |
 | **OpenGL 4.6** | Windows, Linux | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | High-end PC |
-| **OpenGL 4.1** | Windows, Linux, macOS | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | Mid to high-end PC, macOS |
+| **OpenGL 4.1** | Windows, Linux, macOS | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | Mid to high-end PC, **macOS** (max version) |
 | **OpenGL 3.3** | Windows, Linux, macOS | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | General PC, older hardware |
 | **OpenGL ES 3.1** | Android, iOS | ⭐⭐⭐⭐ | ⭐⭐⭐ | Modern mobile devices |
 | **OpenGL ES 3.0** | Android, iOS | ⭐⭐⭐ | ⭐⭐⭐⭐ | Mainstream mobile devices |
 | **OpenGL ES 2.0** | Android, Raspberry Pi | ⭐⭐ | ⭐⭐⭐⭐⭐ | Low-end devices, embedded |
+
+### Planned Backends (v2.0) 🚧
+
+| Backend | Platform | Performance | Compatibility | Use Case |
+|---------|----------|-------------|---------------|----------|
+| **Direct3D 12** | Windows 10/11 | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | Windows high-performance, native API |
+| **Metal** | macOS, iOS | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | Apple platforms, native API |
+| **WebGPU** | Web browsers | ⭐⭐⭐ | ⭐⭐⭐ | Cross-platform web applications |
+
+**Platform Priorities**:
+- **Windows**: D3D12 (planned) > Vulkan > OpenGL 4.6
+- **macOS**: Metal (planned) > OpenGL 4.1
+- **iOS**: Metal (planned) > OpenGL ES 3.0
+- **Linux**: Vulkan > OpenGL 4.6
+- **Android**: Vulkan > OpenGL ES 3.1
 
 ## 🤝 Contributing
 

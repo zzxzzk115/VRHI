@@ -67,24 +67,42 @@ enum class Feature {
 **权重**: 30%
 
 **考虑因素**:
-- **API 开销**: Vulkan < OpenGL 4.x < OpenGL 3.x < OpenGL 2.x
+- **API 开销**: Vulkan ≈ D3D12 ≈ Metal < OpenGL 4.x < OpenGL 3.x < OpenGL 2.x
 - **驱动质量**: 根据平台和供应商的已知表现
 - **硬件能力**: GPU 计算能力、内存带宽等
 
 **性能排序** (从高到低):
-1. Vulkan (最低开销，最高性能)
-2. OpenGL 4.6 (现代 OpenGL，DSA 支持)
-3. OpenGL 4.1 (完整现代特性，macOS 最大支持)
-4. OpenGL ES 3.1 (移动端高性能)
-5. OpenGL 3.3 (传统桌面 GL)
-6. OpenGL ES 3.0 (主流移动端)
-7. OpenGL ES 2.0 (基础移动端)
-8. OpenGL 2.0 (兼容模式)
+
+**现代低开销 API** (相似性能，平台原生优势):
+1. Vulkan (跨平台，最低开销，最高性能)
+2. Direct3D 12 (Windows 原生，驱动优化最好) 🚧 计划
+3. Metal (Apple 平台原生，统一内存优势) 🚧 计划
+
+**传统 API**:
+4. OpenGL 4.6 (现代 OpenGL，DSA 支持)
+5. OpenGL 4.1 (完整现代特性，macOS 最大支持)
+6. OpenGL ES 3.1 (移动端高性能)
+7. OpenGL 3.3 (传统桌面 GL)
+8. OpenGL ES 3.0 (主流移动端)
+9. OpenGL ES 2.0 (基础移动端)
+10. OpenGL 2.0 (兼容模式)
+
+**平台优先级**:
+- **Windows**: D3D12 (计划) > Vulkan > OpenGL 4.6
+- **macOS**: Metal (计划) > OpenGL 4.1
+- **iOS**: Metal (计划) > OpenGL ES 3.0
+- **Linux**: Vulkan > OpenGL 4.6
+- **Android**: Vulkan > OpenGL ES 3.1
 
 **性能分数公式**:
 ```
-性能分 = 基础性能分 + 硬件加成分 - 已知问题惩罚分
+性能分 = 基础性能分 + 平台原生加成 + 硬件加成分 - 已知问题惩罚分
 ```
+
+其中，平台原生加成：
+- 后端为平台原生 API（如 Windows 上的 D3D12，macOS 上的 Metal）：+10 分
+- 后端广泛支持但非原生（如 Vulkan）：+5 分
+- 后端为兼容层（如 macOS 上的 OpenGL）：0 分
 
 ### 3. 稳定性分数 (Stability Score)
 

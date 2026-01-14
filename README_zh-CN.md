@@ -8,11 +8,13 @@
 ## ✨ 特性
 
 - 🎯 **多后端支持**: Vulkan、OpenGL 3.3/4.1/4.6、OpenGL ES 2.0/3.0/3.1
+  - **计划中 (v2.0)**: Direct3D 12 (Windows)、Metal (macOS/iOS)、WebGPU
 - 🤖 **智能后端选择**: 自动检测硬件特性并评分，选择最优后端
 - 🔒 **现代 C++23**: 充分利用最新 C++ 标准特性
 - 🛡️ **RAII 资源管理**: 自动化资源生命周期，避免泄漏
 - 🌐 **跨平台**: Windows、Linux、macOS、Android、iOS、树莓派
 - ⚡ **高性能**: 零开销抽象，从高端 PC 到低端移动设备
+- 🎨 **后端可扩展性**: 抽象设计允许轻松扩展到新的图形 API (D3D12、Metal 等)
 - 📦 **Header-Only**: 仅头文件库，易于集成
 
 ## 🚀 快速开始
@@ -78,10 +80,12 @@ auto device = VRHI::CreateDevice(config).value();
 
 VRHI 的创新之处在于初始化时会：
 
-1. **检测所有可用后端** (Vulkan, OpenGL, OpenGL ES)
+1. **检测所有可用后端** (Vulkan, OpenGL, OpenGL ES, D3D12*, Metal*)
 2. **查询硬件特性支持** (计算着色器、光线追踪等)
 3. **综合评分** (特性支持度 40% + 性能 30% + 稳定性 20% + 兼容性 10%)
 4. **自动选择最优后端** 或由用户手动指定
+
+*计划在 v2.0 实现
 
 ```cpp
 VRHI::DeviceConfig config;
@@ -91,6 +95,22 @@ config.features.optional = {VRHI::Feature::RayTracing};  // 可选特性
 auto device = VRHI::CreateDevice(config).value();
 // 自动选择支持计算着色器且评分最高的后端
 ```
+
+### 后端抽象与可扩展性
+
+VRHI 从设计之初就考虑到轻松扩展到新的图形 API：
+
+- **统一接口**: 所有后端实现相同的接口契约
+- **工厂模式**: 新后端可在编译期或运行时注册
+- **基于特性**: 核心 API 仅包含跨平台特性
+- **平台感知评分**: 原生 API（Windows 上的 D3D12、macOS 上的 Metal）获得优先级
+
+添加新后端只需要：
+1. 实现 `IBackend` 和 `IDevice` 接口
+2. 向工厂注册后端
+3. 将 VRHI 概念映射到原生 API 构造
+
+详见 [架构设计](docs/zh-CN/design/architecture.md) 了解抽象层细节。
 
 ### RAII 资源管理
 
@@ -141,15 +161,32 @@ target_link_libraries(your_app PRIVATE VRHI::VRHI)
 
 ## 🎨 支持的后端
 
+### 当前后端
+
 | 后端 | 平台 | 性能 | 兼容性 | 用途 |
 |------|------|------|--------|------|
 | **Vulkan** | Windows, Linux, Android | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | 高性能 PC、现代移动设备 |
 | **OpenGL 4.6** | Windows, Linux | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | 高端 PC |
-| **OpenGL 4.1** | Windows, Linux, macOS | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | 中高端 PC、macOS |
+| **OpenGL 4.1** | Windows, Linux, macOS | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | 中高端 PC、**macOS**（最高版本） |
 | **OpenGL 3.3** | Windows, Linux, macOS | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | 通用 PC、老旧硬件 |
 | **OpenGL ES 3.1** | Android, iOS | ⭐⭐⭐⭐ | ⭐⭐⭐ | 现代移动设备 |
 | **OpenGL ES 3.0** | Android, iOS | ⭐⭐⭐ | ⭐⭐⭐⭐ | 主流移动设备 |
 | **OpenGL ES 2.0** | Android, 树莓派 | ⭐⭐ | ⭐⭐⭐⭐⭐ | 低端设备、嵌入式 |
+
+### 计划中后端 (v2.0) 🚧
+
+| 后端 | 平台 | 性能 | 兼容性 | 用途 |
+|------|------|------|--------|------|
+| **Direct3D 12** | Windows 10/11 | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | Windows 高性能、原生 API |
+| **Metal** | macOS, iOS | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | Apple 平台、原生 API |
+| **WebGPU** | Web 浏览器 | ⭐⭐⭐ | ⭐⭐⭐ | 跨平台 Web 应用 |
+
+**平台优先级**:
+- **Windows**: D3D12 (计划) > Vulkan > OpenGL 4.6
+- **macOS**: Metal (计划) > OpenGL 4.1
+- **iOS**: Metal (计划) > OpenGL ES 3.0
+- **Linux**: Vulkan > OpenGL 4.6
+- **Android**: Vulkan > OpenGL ES 3.1
 
 ## 🤝 贡献
 

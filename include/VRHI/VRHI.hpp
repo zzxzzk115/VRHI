@@ -32,15 +32,26 @@ class SwapChain;
 // ============================================================================
 
 enum class BackendType {
+    // Modern APIs
     Vulkan,
+    Direct3D12,    // Planned: Windows high-performance backend
+    Metal,         // Planned: macOS/iOS high-performance backend
+    
+    // OpenGL Desktop
     OpenGL46,
     OpenGL41,
     OpenGL33,
     OpenGL20,
+    
+    // OpenGL ES Mobile
     OpenGLES31,
     OpenGLES30,
     OpenGLES20,
-    Auto,  // Automatically select the best backend
+    
+    // Future/Experimental
+    WebGPU,        // Planned: Web and cross-platform backend
+    
+    Auto,          // Automatically select the best backend
 };
 
 enum class Feature {
