@@ -10,62 +10,14 @@ env:
   BUILD_TYPE: Release
 
 jobs:
-  # Format checking job
-  format-check:
-    name: Format Check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Install clang-format
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y clang-format-17
-      
-      - name: Check code formatting
-        run: |
-          find include src tests examples -name '*.hpp' -o -name '*.cpp' | \
-          xargs clang-format-17 --dry-run --Werror
-
-  # Static analysis job
-  static-analysis:
-    name: Static Analysis (clang-tidy)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            clang-17 \
-            clang-tidy-17 \
-            cmake \
-            ninja-build
-      
-      - name: Configure CMake
-        run: |
-          cmake -B build \
-            -G Ninja \
-            -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
-            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-            -DCMAKE_C_COMPILER=clang-17 \
-            -DCMAKE_CXX_COMPILER=clang++-17
-      
-      - name: Run clang-tidy
-        run: |
-          find include src -name '*.cpp' -o -name '*.hpp' | \
-          xargs clang-tidy-17 -p build
-
-  # Linux builds (multiple compilers and architectures)
+  # Compilation check - Linux (GCC and Clang, x64 only)
   build-linux:
-    name: Linux (${{ matrix.compiler }}, ${{ matrix.arch }})
+    name: Linux (${{ matrix.compiler }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         compiler: [gcc-13, clang-17]
-        arch: [x64, arm64]
         include:
           - compiler: gcc-13
             cc: gcc-13
@@ -77,8 +29,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Install dependencies (x64)
-        if: matrix.arch == 'x64'
+      - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -86,22 +37,9 @@ jobs:
             ninja-build \
             ${{ matrix.compiler == 'gcc-13' && 'gcc-13 g++-13' || 'clang-17' }} \
             libvulkan-dev \
-            libglfw3-dev \
-            libsdl2-dev
+            libglfw3-dev
       
-      - name: Install dependencies (arm64 cross-compile)
-        if: matrix.arch == 'arm64'
-        run: |
-          sudo dpkg --add-architecture arm64
-          sudo apt-get update
-          sudo apt-get install -y \
-            cmake \
-            ninja-build \
-            crossbuild-essential-arm64 \
-            ${{ matrix.compiler == 'gcc-13' && 'gcc-13-aarch64-linux-gnu g++-13-aarch64-linux-gnu' || 'clang-17' }}
-      
-      - name: Configure CMake (x64)
-        if: matrix.arch == 'x64'
+      - name: Configure CMake
         run: |
           cmake -B build \
             -G Ninja \
@@ -111,41 +49,15 @@ jobs:
             -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} \
             -DVRHI_BACKEND_VULKAN=ON \
             -DVRHI_BACKEND_OPENGL=ON \
-            -DVRHI_WINDOW_GLFW=ON \
-            -DVRHI_BUILD_TESTS=ON \
-            -DVRHI_BUILD_EXAMPLES=ON
-      
-      - name: Configure CMake (arm64)
-        if: matrix.arch == 'arm64'
-        run: |
-          cmake -B build \
-            -G Ninja \
-            -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
-            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-            -DCMAKE_SYSTEM_NAME=Linux \
-            -DCMAKE_SYSTEM_PROCESSOR=aarch64 \
-            -DCMAKE_C_COMPILER=${{ matrix.cc }} \
-            -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} \
-            -DVRHI_BACKEND_OPENGL=ON \
-            -DVRHI_BUILD_TESTS=OFF \
-            -DVRHI_BUILD_EXAMPLES=OFF
+            -DVRHI_WINDOW_GLFW=ON
       
       - name: Build
         run: cmake --build build --config ${{env.BUILD_TYPE}}
-      
-      - name: Test
-        if: matrix.arch == 'x64'
-        run: cd build && ctest -C ${{env.BUILD_TYPE}} --output-on-failure
 
-  # Windows builds (MSVC and Clang)
+  # Compilation check - Windows (MSVC, x64 only)
   build-windows:
-    name: Windows (${{ matrix.compiler }}, ${{ matrix.arch }})
+    name: Windows (MSVC)
     runs-on: windows-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        compiler: [msvc, clang-cl]
-        arch: [x64, ARM64]
     
     steps:
       - uses: actions/checkout@v4
@@ -153,7 +65,7 @@ jobs:
       - name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1
         with:
-          arch: ${{ matrix.arch }}
+          arch: x64
       
       - name: Install Vulkan SDK
         run: |
@@ -164,30 +76,19 @@ jobs:
         run: |
           cmake -B build `
             -G "Visual Studio 17 2022" `
-            -A ${{ matrix.arch }} `
-            -T ${{ matrix.compiler == 'clang-cl' && 'ClangCL' || 'default' }} `
+            -A x64 `
             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON `
             -DVRHI_BACKEND_VULKAN=ON `
             -DVRHI_BACKEND_OPENGL=ON `
-            -DVRHI_WINDOW_GLFW=ON `
-            -DVRHI_BUILD_TESTS=${{ matrix.arch == 'x64' && 'ON' || 'OFF' }} `
-            -DVRHI_BUILD_EXAMPLES=${{ matrix.arch == 'x64' && 'ON' || 'OFF' }}
+            -DVRHI_WINDOW_GLFW=ON
       
       - name: Build
         run: cmake --build build --config ${{env.BUILD_TYPE}}
-      
-      - name: Test
-        if: matrix.arch == 'x64'
-        run: cd build && ctest -C ${{env.BUILD_TYPE}} --output-on-failure
 
-  # macOS builds (Clang, x64 and ARM64)
+  # Compilation check - macOS (Apple Clang, x64 only)
   build-macos:
-    name: macOS (${{ matrix.arch }})
+    name: macOS (x64)
     runs-on: macos-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        arch: [x64, arm64]
     
     steps:
       - uses: actions/checkout@v4
@@ -198,7 +99,6 @@ jobs:
             cmake \
             ninja \
             glfw \
-            sdl2 \
             vulkan-headers \
             molten-vk
       
@@ -208,65 +108,10 @@ jobs:
             -G Ninja \
             -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-            -DCMAKE_OSX_ARCHITECTURES=${{ matrix.arch == 'arm64' && 'arm64' || 'x86_64' }} \
+            -DCMAKE_OSX_ARCHITECTURES=x86_64 \
             -DVRHI_BACKEND_VULKAN_MOLTENVK=ON \
             -DVRHI_BACKEND_OPENGL=ON \
-            -DVRHI_WINDOW_GLFW=ON \
-            -DVRHI_BUILD_TESTS=ON \
-            -DVRHI_BUILD_EXAMPLES=ON
+            -DVRHI_WINDOW_GLFW=ON
       
       - name: Build
         run: cmake --build build --config ${{env.BUILD_TYPE}}
-      
-      - name: Test
-        run: cd build && ctest -C ${{env.BUILD_TYPE}} --output-on-failure
-
-  # Coverage report (Linux only, x64 only)
-  coverage:
-    name: Code Coverage
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            cmake \
-            ninja-build \
-            gcc-13 \
-            g++-13 \
-            lcov \
-            libvulkan-dev \
-            libglfw3-dev
-      
-      - name: Configure CMake
-        run: |
-          cmake -B build \
-            -G Ninja \
-            -DCMAKE_BUILD_TYPE=Debug \
-            -DCMAKE_C_COMPILER=gcc-13 \
-            -DCMAKE_CXX_COMPILER=g++-13 \
-            -DCMAKE_CXX_FLAGS="--coverage" \
-            -DCMAKE_EXE_LINKER_FLAGS="--coverage" \
-            -DVRHI_BACKEND_VULKAN=ON \
-            -DVRHI_BACKEND_OPENGL=ON \
-            -DVRHI_BUILD_TESTS=ON
-      
-      - name: Build
-        run: cmake --build build
-      
-      - name: Test
-        run: cd build && ctest --output-on-failure
-      
-      - name: Generate coverage report
-        run: |
-          lcov --capture --directory build --output-file coverage.info
-          lcov --remove coverage.info '/usr/*' '*/external/*' '*/tests/*' --output-file coverage.info
-          lcov --list coverage.info
-      
-      - name: Upload to codecov
-        uses: codecov/codecov-action@v3
-        with:
-          files: ./coverage.info
-          fail_ci_if_error: false

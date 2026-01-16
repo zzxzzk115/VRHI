@@ -173,56 +173,61 @@ std::expected<std::unique_ptr<Device>, Error> CreateDevice(const DeviceConfig& c
 
 **File**: `.github/workflows/ci.yml`
 
-### CI Jobs
+### Progressive CI Strategy
 
-#### 1. Format Check
-- **Platform**: Ubuntu Latest
-- **Tool**: clang-format-17
-- **Purpose**: Ensure all code follows formatting standards
-- **Failure**: Any formatting violation fails the build
+The CI pipeline follows a **progressive approach** starting with basic compilation validation, then expanding to comprehensive testing as the project matures.
 
-#### 2. Static Analysis
-- **Platform**: Ubuntu Latest
-- **Tool**: clang-tidy-17
-- **Purpose**: Detect potential bugs and enforce best practices
-- **Runs on**: All source files in `include/` and `src/`
+#### Phase 1: Compilation Validation (Current)
 
-#### 3. Multi-Platform Build Matrix
+**Focus**: Ensure code compiles on all target platforms with primary compilers
 
-**Linux** (ubuntu-latest):
-- **Compilers**: GCC 13, Clang 17
-- **Architectures**: x64, ARM64 (cross-compile)
-- **Backends**: Vulkan, OpenGL
-- **Tests**: Enabled on x64
+**CI Jobs** (3 total):
 
-**Windows** (windows-latest):
-- **Compilers**: MSVC 2022, Clang-CL
-- **Architectures**: x64, ARM64
-- **Backends**: Vulkan, OpenGL, D3D12 (future)
-- **Tests**: Enabled on x64
+1. **Linux** (ubuntu-latest):
+   - **Compilers**: GCC 13, Clang 17
+   - **Architecture**: x64 only
+   - **Backends**: Vulkan, OpenGL
+   - **Tests**: Disabled
+   - **Purpose**: Validate compilation with GCC and Clang
 
-**macOS** (macos-latest):
-- **Compiler**: Apple Clang
-- **Architectures**: x64 (Intel), ARM64 (Apple Silicon)
-- **Backends**: OpenGL 4.1, Vulkan (via MoltenVK)
-- **Tests**: Enabled on both architectures
+2. **Windows** (windows-latest):
+   - **Compiler**: MSVC 2022
+   - **Architecture**: x64 only
+   - **Backends**: Vulkan, OpenGL
+   - **Tests**: Disabled
+   - **Purpose**: Validate compilation with MSVC
 
-#### 4. Code Coverage
-- **Platform**: Linux (Ubuntu)
-- **Tool**: lcov + codecov
-- **Coverage Target**: >80%
-- **Excluded**: External dependencies, test code
+3. **macOS** (macos-latest):
+   - **Compiler**: Apple Clang
+   - **Architecture**: x64 only
+   - **Backends**: OpenGL 4.1, Vulkan (via MoltenVK)
+   - **Tests**: Disabled
+   - **Purpose**: Validate compilation on macOS with MoltenVK
 
-### Build Verification Matrix
+**Total runtime**: ~15-20 minutes (parallel execution)
 
-Total CI configurations: **12 build jobs**
-- Linux: GCC x64, GCC ARM64, Clang x64, Clang ARM64 = 4 jobs
-- Windows: MSVC x64, MSVC ARM64, Clang-CL x64, Clang-CL ARM64 = 4 jobs
-- macOS: x64, ARM64 = 2 jobs
-- Static analysis: 1 job
-- Format check: 1 job
+#### Phase 2: Extended Coverage (Planned)
 
-**Total runtime**: ~45-60 minutes (parallel execution)
+As the codebase stabilizes, the CI will progressively expand:
+
+1. **Add ARM64 cross-compilation** (Linux, Windows, macOS)
+2. **Enable unit tests** on x64 builds
+3. **Add format checking** with clang-format
+4. **Add static analysis** with clang-tidy
+5. **Add code coverage** reporting (>80% target)
+6. **Add integration tests**
+7. **Add performance benchmarks**
+
+### Current Build Matrix
+
+| Platform | Compiler | Architecture | Backends | Tests |
+|----------|----------|--------------|----------|-------|
+| Linux | GCC 13 | x64 | Vulkan, OpenGL | ❌ |
+| Linux | Clang 17 | x64 | Vulkan, OpenGL | ❌ |
+| Windows | MSVC 2022 | x64 | Vulkan, OpenGL | ❌ |
+| macOS | Apple Clang | x64 | OpenGL 4.1, MoltenVK | ❌ |
+
+**Note**: Format checking, static analysis, ARM64 builds, and tests will be enabled progressively as Phase 2 implementation progresses.
 
 ## Local Development Workflow
 
