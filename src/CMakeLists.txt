@@ -8,11 +8,11 @@
 
 # Core source files
 set(VRHI_CORE_SOURCES
-    # Core implementation files will be added here
+    Core/Version.cpp
+    # Additional core implementation files will be added here
     # Core/Device.cpp
     # Core/Error.cpp
     # Core/Features.cpp
-    # Core/Version.cpp
 )
 
 # Backend source files (conditionally added)
