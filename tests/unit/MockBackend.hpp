@@ -44,7 +44,7 @@ public:
     }
     
 private:
-    BufferDesc m_desc;
+    BufferDesc m_desc{};
     std::vector<uint8_t> m_mappedMemory;
 };
 
@@ -67,7 +67,7 @@ public:
     void Read(void*, size_t, uint32_t, uint32_t) override {}
     
 private:
-    TextureDesc m_desc;
+    TextureDesc m_desc{};
 };
 
 class MockSampler : public Sampler {
@@ -75,7 +75,7 @@ public:
     explicit MockSampler(const SamplerDesc& desc) : m_desc(desc) {}
     
 private:
-    SamplerDesc m_desc;
+    SamplerDesc m_desc{};
 };
 
 class MockShader : public Shader {
@@ -89,7 +89,7 @@ public:
     }
     
 private:
-    ShaderDesc m_desc;
+    ShaderDesc m_desc{};
 };
 
 class MockPipeline : public Pipeline {
@@ -99,7 +99,7 @@ public:
     PipelineType GetType() const noexcept override { return m_type; }
     
 private:
-    PipelineType m_type;
+    PipelineType m_type{};
 };
 
 class MockRenderPass : public RenderPass {
@@ -116,7 +116,7 @@ public:
     uint32_t GetLayers() const noexcept override { return m_desc.layers; }
     
 private:
-    FramebufferDesc m_desc;
+    FramebufferDesc m_desc{};
 };
 
 class MockFence : public Fence {
@@ -140,7 +140,7 @@ class MockSwapChain : public SwapChain {
 public:
     explicit MockSwapChain(const SwapChainDesc& desc) : m_desc(desc) {
         // Create mock images
-        TextureDesc texDesc;
+        TextureDesc texDesc{};
         texDesc.type = TextureType::Texture2D;
         texDesc.format = desc.format;
         texDesc.width = desc.width;
@@ -173,7 +173,7 @@ public:
     uint32_t GetCurrentImageIndex() const noexcept override { return m_currentImage; }
     
 private:
-    SwapChainDesc m_desc;
+    SwapChainDesc m_desc{};
     std::vector<std::unique_ptr<MockTexture>> m_images;
     uint32_t m_currentImage = 0;
 };
@@ -265,7 +265,7 @@ public:
         
         // Create swap chain if window handle provided
         if (config.windowHandle) {
-            SwapChainDesc swapDesc;
+            SwapChainDesc swapDesc{};
             swapDesc.windowHandle = config.windowHandle;
             swapDesc.width = config.width;
             swapDesc.height = config.height;
@@ -280,7 +280,7 @@ public:
     }
     
     BackendInfo GetBackendInfo() const override {
-        BackendInfo info;
+        BackendInfo info{};
         info.type = BackendType::Auto;
         info.name = "Mock Backend";
         info.version = "1.0.0";
@@ -381,7 +381,7 @@ public:
     }
     
 private:
-    DeviceConfig m_config;
+    DeviceConfig m_config{};
     FeatureSet m_features{};
     DeviceProperties m_properties{};
     std::unique_ptr<MockSwapChain> m_swapChain;

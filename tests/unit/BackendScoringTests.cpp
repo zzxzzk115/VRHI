@@ -74,7 +74,7 @@ TEST_F(BackendScoringTest, FeatureSupportChecks) {
 }
 
 TEST_F(BackendScoringTest, FeatureScoreAllRequired) {
-    FeatureRequirements requirements;
+    FeatureRequirements requirements{};
     requirements.required = {Feature::Texture2D, Feature::Compute};
     
     float score = BackendScorer::CalculateFeatureScore(features, requirements);
@@ -83,7 +83,7 @@ TEST_F(BackendScoringTest, FeatureScoreAllRequired) {
 }
 
 TEST_F(BackendScoringTest, FeatureScoreMissingRequired) {
-    FeatureRequirements requirements;
+    FeatureRequirements requirements{};
     requirements.required = {Feature::RayTracing}; // Not supported
     
     float score = BackendScorer::CalculateFeatureScore(features, requirements);
@@ -91,11 +91,11 @@ TEST_F(BackendScoringTest, FeatureScoreMissingRequired) {
 }
 
 TEST_F(BackendScoringTest, FeatureScoreOptionalBonus) {
-    FeatureRequirements requirements1;
+    FeatureRequirements requirements1{};
     requirements1.required = {Feature::Texture2D};
     requirements1.optional = {};
     
-    FeatureRequirements requirements2;
+    FeatureRequirements requirements2{};
     requirements2.required = {Feature::Texture2D};
     requirements2.optional = {Feature::Compute, Feature::Geometry};
     
@@ -241,7 +241,7 @@ TEST_F(BackendScoringTest, NativeBonus) {
 // ============================================================================
 
 TEST_F(BackendScoringTest, OverallScoreCalculation) {
-    FeatureRequirements requirements;
+    FeatureRequirements requirements{};
     requirements.required = {Feature::Texture2D};
     requirements.optional = {Feature::Compute};
     
@@ -253,7 +253,7 @@ TEST_F(BackendScoringTest, OverallScoreCalculation) {
 }
 
 TEST_F(BackendScoringTest, OverallScoreRespectsMissingRequirements) {
-    FeatureRequirements requirements;
+    FeatureRequirements requirements{};
     requirements.required = {Feature::RayTracing}; // Not supported
     
     float score = BackendScorer::CalculateScore(
@@ -263,16 +263,16 @@ TEST_F(BackendScoringTest, OverallScoreRespectsMissingRequirements) {
 }
 
 TEST_F(BackendScoringTest, CustomWeights) {
-    FeatureRequirements requirements;
+    FeatureRequirements requirements{};
     requirements.required = {Feature::Texture2D};
     
     // Default weights
-    ScoringWeights defaultWeights;
+    ScoringWeights defaultWeights{};
     float defaultScore = BackendScorer::CalculateScore(
         BackendType::Vulkan, features, requirements, defaultWeights);
     
     // Custom weights emphasizing performance
-    ScoringWeights perfWeights;
+    ScoringWeights perfWeights{};
     perfWeights.featureWeight = 0.1f;
     perfWeights.performanceWeight = 0.7f;
     perfWeights.stabilityWeight = 0.1f;
@@ -334,7 +334,7 @@ TEST_F(BackendScoringTest, BackendPriorityAndroid) {
 // ============================================================================
 
 TEST_F(BackendScoringTest, VulkanVsOpenGLOnWindows) {
-    FeatureRequirements requirements;
+    FeatureRequirements requirements{};
     requirements.required = {Feature::Texture2D};
     
     float vulkanScore = BackendScorer::CalculateScore(
@@ -360,7 +360,7 @@ TEST_F(BackendScoringTest, VulkanVsOpenGLOnWindows) {
 }
 
 TEST_F(BackendScoringTest, ScoreRankingConsistency) {
-    FeatureRequirements requirements;
+    FeatureRequirements requirements{};
     requirements.required = {Feature::Texture2D};
     
     std::vector<BackendType> backends = {

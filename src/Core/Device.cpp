@@ -72,7 +72,7 @@ CreateDevice(const DeviceConfig& config) {
             // Check required features
             for (const auto& feature : config.features.required) {
                 if (!backend->IsFeatureSupported(feature)) {
-                    Error error;
+                    Error error{};
                     error.code = Error::Code::NoCompatibleBackend;
                     error.message = "Requested backend does not support all required features";
                     LogError(error.message);
@@ -131,7 +131,7 @@ std::vector<BackendInfo> EnumerateBackends() {
         auto& backend = backendResult.value();
         
         // Build backend info
-        BackendInfo info;
+        BackendInfo info{};
         info.type = backend->GetType();
         info.name = std::string(backend->GetName());
         
@@ -141,7 +141,7 @@ std::vector<BackendInfo> EnumerateBackends() {
         info.features = backend->GetSupportedFeatures();
         
         // Calculate score with empty requirements (baseline score)
-        FeatureRequirements emptyReqs;
+        FeatureRequirements emptyReqs{};
         info.score = backend->CalculateScore(emptyReqs);
         
         backends.push_back(std::move(info));

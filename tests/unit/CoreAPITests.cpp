@@ -65,7 +65,7 @@ TEST_F(InitializationTests, AutoInitializeOnCreateDevice) {
         []() { return std::make_unique<Mock::MockBackend>(); });
     
     // CreateDevice should auto-initialize
-    DeviceConfig config;
+    DeviceConfig config{};
     auto result = CreateDevice(config);
     
     // Should be initialized now
@@ -157,7 +157,7 @@ protected:
 };
 
 TEST_F(CreateDeviceTests, CreateDeviceWithDefaultConfig) {
-    DeviceConfig config;
+    DeviceConfig config{};
     auto result = CreateDevice(config);
     
     ASSERT_TRUE(result.has_value());
@@ -166,7 +166,7 @@ TEST_F(CreateDeviceTests, CreateDeviceWithDefaultConfig) {
 }
 
 TEST_F(CreateDeviceTests, CreateDeviceAutoSelectsBackend) {
-    DeviceConfig config;
+    DeviceConfig config{};
     config.preferredBackend = BackendType::Auto;
     
     auto result = CreateDevice(config);
@@ -177,7 +177,7 @@ TEST_F(CreateDeviceTests, CreateDeviceAutoSelectsBackend) {
 }
 
 TEST_F(CreateDeviceTests, CreateDeviceWithSpecificBackend) {
-    DeviceConfig config;
+    DeviceConfig config{};
     config.preferredBackend = BackendType::Auto;
     
     auto result = CreateDevice(config);
@@ -189,7 +189,7 @@ TEST_F(CreateDeviceTests, CreateDeviceWithSpecificBackend) {
 }
 
 TEST_F(CreateDeviceTests, CreateDeviceWithRequiredFeatures) {
-    DeviceConfig config;
+    DeviceConfig config{};
     config.features.required = {Feature::Texture2D};
     
     auto result = CreateDevice(config);
@@ -201,7 +201,7 @@ TEST_F(CreateDeviceTests, CreateDeviceWithRequiredFeatures) {
 }
 
 TEST_F(CreateDeviceTests, CreateDeviceWithOptionalFeatures) {
-    DeviceConfig config;
+    DeviceConfig config{};
     config.features.optional = {Feature::TextureCube};
     
     auto result = CreateDevice(config);
@@ -212,7 +212,7 @@ TEST_F(CreateDeviceTests, CreateDeviceWithOptionalFeatures) {
 }
 
 TEST_F(CreateDeviceTests, CreateDeviceFailsWithUnsupportedRequiredFeature) {
-    DeviceConfig config;
+    DeviceConfig config{};
     config.preferredBackend = BackendType::Auto;
     config.features.required = {Feature::RayTracing}; // Not supported by mock
     
@@ -226,7 +226,7 @@ TEST_F(CreateDeviceTests, CreateDeviceFailsWithUnsupportedRequiredFeature) {
 }
 
 TEST_F(CreateDeviceTests, CreateDeviceWithMixedFeatures) {
-    DeviceConfig config;
+    DeviceConfig config{};
     config.features.required = {Feature::Texture2D};
     config.features.optional = {Feature::TextureCube, Feature::RayTracing};
     
@@ -239,7 +239,7 @@ TEST_F(CreateDeviceTests, CreateDeviceWithMixedFeatures) {
 }
 
 TEST_F(CreateDeviceTests, MultipleDeviceCreation) {
-    DeviceConfig config;
+    DeviceConfig config{};
     
     auto result1 = CreateDevice(config);
     ASSERT_TRUE(result1.has_value());
@@ -277,7 +277,7 @@ TEST_F(CoreAPIIntegrationTests, EnumerateAndCreateDevice) {
     ASSERT_GE(backends.size(), 1);
     
     // Then create device with auto-selection
-    DeviceConfig config;
+    DeviceConfig config{};
     auto result = CreateDevice(config);
     ASSERT_TRUE(result.has_value());
     
@@ -295,7 +295,7 @@ TEST_F(CoreAPIIntegrationTests, FullWorkflow) {
     EXPECT_GE(backends.size(), 1);
     
     // Create device
-    DeviceConfig config;
+    DeviceConfig config{};
     auto result = CreateDevice(config);
     ASSERT_TRUE(result.has_value());
     

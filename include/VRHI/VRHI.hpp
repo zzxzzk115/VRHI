@@ -228,7 +228,7 @@ struct BackendInfo {
     std::string vendorName;
     std::string driverVersion;
     
-    FeatureSet features;
+    FeatureSet features{};
 };
 
 struct DeviceProperties {
@@ -253,7 +253,7 @@ struct DeviceProperties {
 
 struct DeviceConfig {
     BackendType preferredBackend = BackendType::Auto;
-    FeatureRequirements features;
+    FeatureRequirements features{};
     
     bool enableValidation = false;
     bool enableDebugMarkers = false;
