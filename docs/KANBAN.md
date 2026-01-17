@@ -56,11 +56,11 @@ This document tracks all work items for VRHI v1.0 development. Tasks can be assi
 
 | ID | Task | Priority | Effort | Status |
 |----|------|----------|--------|--------|
-| F4.1 | Implement `EnumerateBackends()` signature | P0 | S | Backlog |
-| F4.2 | Implement `CreateDevice()` signature | P0 | S | Backlog |
-| F4.3 | Add backend registry system | P0 | M | Backlog |
-| F4.4 | Implement backend factory pattern | P0 | M | Backlog |
-| F4.5 | Add initialization/shutdown functions | P1 | S | Backlog |
+| F4.1 | Implement `EnumerateBackends()` signature | P0 | S | Done |
+| F4.2 | Implement `CreateDevice()` signature | P0 | S | Done |
+| F4.3 | Add backend registry system | P0 | M | Done |
+| F4.4 | Implement backend factory pattern | P0 | M | Done |
+| F4.5 | Add initialization/shutdown functions | P1 | S | Done |
 
 ---
 
