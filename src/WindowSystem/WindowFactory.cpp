@@ -24,7 +24,7 @@ CreateWindow(const WindowConfig& config, WindowSystemType type) {
         type = WindowSystemType::EGL;
 #else
         return std::unexpected(Error{
-            Error::Code::NotSupported,
+            Error::Code::UnsupportedFeature,
             "No window system backend available"
         });
 #endif
@@ -47,7 +47,7 @@ CreateWindow(const WindowConfig& config, WindowSystemType type) {
         case WindowSystemType::SDL2:
             // TODO: Implement SDL2 window
             return std::unexpected(Error{
-                Error::Code::NotSupported,
+                Error::Code::UnsupportedFeature,
                 "SDL2 window system not yet implemented"
             });
 #endif
@@ -56,7 +56,7 @@ CreateWindow(const WindowConfig& config, WindowSystemType type) {
         case WindowSystemType::SDL3:
             // TODO: Implement SDL3 window
             return std::unexpected(Error{
-                Error::Code::NotSupported,
+                Error::Code::UnsupportedFeature,
                 "SDL3 window system not yet implemented"
             });
 #endif
@@ -65,14 +65,14 @@ CreateWindow(const WindowConfig& config, WindowSystemType type) {
         case WindowSystemType::EGL:
             // TODO: Implement EGL window
             return std::unexpected(Error{
-                Error::Code::NotSupported,
+                Error::Code::UnsupportedFeature,
                 "EGL window system not yet implemented"
             });
 #endif
         
         default:
             return std::unexpected(Error{
-                Error::Code::NotSupported,
+                Error::Code::UnsupportedFeature,
                 "Requested window system not available in this build"
             });
     }

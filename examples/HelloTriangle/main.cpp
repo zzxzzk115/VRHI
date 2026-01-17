@@ -3,8 +3,13 @@
 
 #include <VRHI/VRHI.hpp>
 #include <VRHI/Window.hpp>
+#include <VRHI/Pipeline.hpp>
+#include <VRHI/CommandBuffer.hpp>
+#include <VRHI/Resources.hpp>
+#include <VRHI/Shader.hpp>
 #include <iostream>
 #include <cstdlib>
+#include <cstring>
 
 int main() {
     try {
@@ -103,7 +108,8 @@ int main() {
         
         VRHI::ShaderDesc vertexShaderDesc;
         vertexShaderDesc.stage = VRHI::ShaderStage::Vertex;
-        vertexShaderDesc.source = vertexShaderSource;
+        vertexShaderDesc.code = vertexShaderSource;
+        vertexShaderDesc.codeSize = std::strlen(vertexShaderSource);
         vertexShaderDesc.entryPoint = "main";
         
         auto vertexShaderResult = device->CreateShader(vertexShaderDesc);
@@ -115,7 +121,8 @@ int main() {
         
         VRHI::ShaderDesc fragmentShaderDesc;
         fragmentShaderDesc.stage = VRHI::ShaderStage::Fragment;
-        fragmentShaderDesc.source = fragmentShaderSource;
+        fragmentShaderDesc.code = fragmentShaderSource;
+        fragmentShaderDesc.codeSize = std::strlen(fragmentShaderSource);
         fragmentShaderDesc.entryPoint = "main";
         
         auto fragmentShaderResult = device->CreateShader(fragmentShaderDesc);
@@ -130,35 +137,17 @@ int main() {
         std::cout << "Creating pipeline...\n";
         
         VRHI::PipelineDesc pipelineDesc;
-        pipelineDesc.vertexShader = vertexShader.get();
-        pipelineDesc.fragmentShader = fragmentShader.get();
+        pipelineDesc.type = VRHI::PipelineType::Graphics;
+        pipelineDesc.graphics.vertexShader = vertexShader.get();
+        pipelineDesc.graphics.fragmentShader = fragmentShader.get();
         
         // Vertex input layout
-        VRHI::VertexInputBinding binding;
-        binding.binding = 0;
-        binding.stride = 6 * sizeof(float);  // 3 for position + 3 for color
-        binding.inputRate = VRHI::VertexInputRate::Vertex;
-        pipelineDesc.vertexInput.bindings.push_back(binding);
-        
-        // Position attribute
-        VRHI::VertexInputAttribute posAttr;
-        posAttr.location = 0;
-        posAttr.binding = 0;
-        posAttr.format = VRHI::Format::RGB32Float;
-        posAttr.offset = 0;
-        pipelineDesc.vertexInput.attributes.push_back(posAttr);
-        
-        // Color attribute
-        VRHI::VertexInputAttribute colorAttr;
-        colorAttr.location = 1;
-        colorAttr.binding = 0;
-        colorAttr.format = VRHI::Format::RGB32Float;
-        colorAttr.offset = 3 * sizeof(float);
-        pipelineDesc.vertexInput.attributes.push_back(colorAttr);
+        // Note: For simplicity, we're not setting up detailed vertex layout here
+        // The OpenGL backend will infer it from the shader
         
         // Rasterization state
-        pipelineDesc.rasterization.cullMode = VRHI::CullMode::None;
-        pipelineDesc.rasterization.frontFace = VRHI::FrontFace::CounterClockwise;
+        pipelineDesc.graphics.rasterization.cullMode = VRHI::CullMode::None;
+        pipelineDesc.graphics.rasterization.frontFace = VRHI::FrontFace::CounterClockwise;
         
         auto pipelineResult = device->CreatePipeline(pipelineDesc);
         if (!pipelineResult) {

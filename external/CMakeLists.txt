@@ -59,9 +59,27 @@ if(VRHI_WINDOW_GLFW)
     set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
     set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
     set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-    set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
+    
+    # Platform-specific GLFW options
+    if(UNIX AND NOT APPLE)
+        set(GLFW_BUILD_WAYLAND OFF CACHE BOOL "" FORCE)
+        set(GLFW_BUILD_X11 ON CACHE BOOL "" FORCE)
+    endif()
+    
+    # Enable GLFW install so it can be exported with VRHI
+    set(GLFW_INSTALL ON CACHE BOOL "" FORCE)
     
     add_subdirectory(glfw-3.4)
+    
+    # GLFW has some warnings with strict compiler settings, disable Werror for it
+    if(TARGET glfw)
+        target_compile_options(glfw PRIVATE 
+            -Wno-error=missing-field-initializers
+            -Wno-error=sign-compare
+            -Wno-error=pedantic
+        )
+    endif()
+    
     list(APPEND VRHI_EXTERNAL_TARGETS glfw)
 endif()
 

@@ -243,21 +243,26 @@ add_library(VRHI::VRHI ALIAS VRHI)
 
 include(GNUInstallDirs)
 
-# Install library
-install(TARGETS VRHI
-    EXPORT VRHITargets
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
-
-# Install export targets
-install(EXPORT VRHITargets
-    FILE VRHITargets.cmake
-    NAMESPACE VRHI::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/VRHI
-)
+# Install library (only when not in interface mode)
+if(TARGET VRHI AND NOT CMAKE_SKIP_INSTALL_RULES)
+    # Install library target
+    install(TARGETS VRHI
+        EXPORT VRHITargets
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    )
+    
+    # Install export targets
+    # Note: External dependencies (like GLFW, GLAD) are not exported
+    # They should be found through find_package in the consuming project
+    install(EXPORT VRHITargets
+        FILE VRHITargets.cmake
+        NAMESPACE VRHI::
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/VRHI
+    )
+endif()
 
 # ============================================================================
 # Summary

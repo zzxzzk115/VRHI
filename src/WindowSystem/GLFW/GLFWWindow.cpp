@@ -46,7 +46,7 @@ GLFWWindow::~GLFWWindow() {
 std::expected<void, Error> GLFWWindow::Initialize() {
     if (m_initialized) {
         return std::unexpected(Error{
-            Error::Code::InvalidOperation,
+            Error::Code::ValidationError,
             "Window already initialized"
         });
     }
