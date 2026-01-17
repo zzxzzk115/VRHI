@@ -31,7 +31,7 @@ option(VRHI_ENABLE_METAL "Enable Metal backend (macOS/iOS only)" OFF)
 # Window system options
 option(VRHI_WINDOW_SDL2 "Enable SDL2 window system support" OFF)
 option(VRHI_WINDOW_SDL3 "Enable SDL3 window system support" OFF)
-option(VRHI_WINDOW_GLFW "Enable GLFW window system support" OFF)
+option(VRHI_WINDOW_GLFW "Enable GLFW window system support" ON)
 option(VRHI_WINDOW_EGL "Enable EGL window system support (Linux/Android)" OFF)
 
 # Debug and validation options
