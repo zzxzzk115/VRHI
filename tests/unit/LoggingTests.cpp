@@ -12,7 +12,7 @@
 // Test Fixtures and Helpers
 // ============================================================================
 
-// Approach 1: Custom Logger Class Implementation
+// Custom Logger Class Implementation
 class TestLogger : public VRHI::ILogger {
 public:
     struct LogEntry {
@@ -44,25 +44,6 @@ public:
     }
 };
 
-// Approach 2: Function Pointer Implementation
-namespace {
-    std::vector<std::pair<VRHI::LogLevel, std::string>> g_functionPointerLogs;
-    
-    void TestLogFunction(VRHI::LogLevel level, std::string_view message) {
-        g_functionPointerLogs.push_back({level, std::string(message)});
-    }
-    
-    void TestLogFormattedFunction(VRHI::LogLevel level, const char* format, va_list args) {
-        char buffer[4096];
-        int written = vsnprintf(buffer, sizeof(buffer), format, args);
-        if (written >= 0 && written < static_cast<int>(sizeof(buffer))) {
-            g_functionPointerLogs.push_back({level, std::string(buffer)});
-        } else {
-            g_functionPointerLogs.push_back({level, "[Formatting error or truncated]"});
-        }
-    }
-}
-
 // ============================================================================
 // Log Level Tests
 // ============================================================================
@@ -91,10 +72,10 @@ TEST(LoggingTests, SetAndGetLogLevel) {
 }
 
 // ============================================================================
-// Approach 1: Interface Class Logger Tests
+// ILogger Interface Tests
 // ============================================================================
 
-TEST(LoggingTests, CustomLoggerInterface_BasicLog) {
+TEST(LoggingTests, CustomLogger_BasicLog) {
     TestLogger testLogger;
     VRHI::SetLogger(&testLogger);
     VRHI::SetLogLevel(VRHI::LogLevel::Debug);
@@ -111,7 +92,7 @@ TEST(LoggingTests, CustomLoggerInterface_BasicLog) {
     VRHI::SetLogLevel(VRHI::LogLevel::Info);
 }
 
-TEST(LoggingTests, CustomLoggerInterface_FormattedLog) {
+TEST(LoggingTests, CustomLogger_FormattedLog) {
     TestLogger testLogger;
     VRHI::SetLogger(&testLogger);
     VRHI::SetLogLevel(VRHI::LogLevel::Debug);
@@ -128,7 +109,7 @@ TEST(LoggingTests, CustomLoggerInterface_FormattedLog) {
     VRHI::SetLogLevel(VRHI::LogLevel::Info);
 }
 
-TEST(LoggingTests, CustomLoggerInterface_LogLevelFiltering) {
+TEST(LoggingTests, CustomLogger_LogLevelFiltering) {
     TestLogger testLogger;
     VRHI::SetLogger(&testLogger);
     VRHI::SetLogLevel(VRHI::LogLevel::Warning);
@@ -150,7 +131,7 @@ TEST(LoggingTests, CustomLoggerInterface_LogLevelFiltering) {
     VRHI::SetLogLevel(VRHI::LogLevel::Info);
 }
 
-TEST(LoggingTests, CustomLoggerInterface_MultipleMessages) {
+TEST(LoggingTests, CustomLogger_MultipleMessages) {
     TestLogger testLogger;
     VRHI::SetLogger(&testLogger);
     VRHI::SetLogLevel(VRHI::LogLevel::Debug);
@@ -169,111 +150,18 @@ TEST(LoggingTests, CustomLoggerInterface_MultipleMessages) {
     VRHI::SetLogLevel(VRHI::LogLevel::Info);
 }
 
-// ============================================================================
-// Approach 2: Function Pointer Logger Tests
-// ============================================================================
-
-TEST(LoggingTests, FunctionPointer_BasicLog) {
-    g_functionPointerLogs.clear();
-    VRHI::SetLogFunction(TestLogFunction);
-    VRHI::SetLogLevel(VRHI::LogLevel::Debug);
-    
-    VRHI::Internal::Log(VRHI::LogLevel::Info, "Function pointer test");
-    
-    ASSERT_EQ(g_functionPointerLogs.size(), 1);
-    EXPECT_EQ(g_functionPointerLogs[0].first, VRHI::LogLevel::Info);
-    EXPECT_EQ(g_functionPointerLogs[0].second, "Function pointer test");
-    
-    // Cleanup
-    VRHI::SetLogFunction(nullptr);
-    VRHI::SetLogLevel(VRHI::LogLevel::Info);
-    g_functionPointerLogs.clear();
-}
-
-TEST(LoggingTests, FunctionPointer_FormattedLog) {
-    g_functionPointerLogs.clear();
-    VRHI::SetLogFormattedFunction(TestLogFormattedFunction);
-    VRHI::SetLogLevel(VRHI::LogLevel::Debug);
-    
-    VRHI::Internal::LogFormatted(VRHI::LogLevel::Error, "Error code: %d", 404);
-    
-    ASSERT_EQ(g_functionPointerLogs.size(), 1);
-    EXPECT_EQ(g_functionPointerLogs[0].first, VRHI::LogLevel::Error);
-    EXPECT_EQ(g_functionPointerLogs[0].second, "Error code: 404");
-    
-    // Cleanup
-    VRHI::SetLogFormattedFunction(nullptr);
-    VRHI::SetLogLevel(VRHI::LogLevel::Info);
-    g_functionPointerLogs.clear();
-}
-
-TEST(LoggingTests, FunctionPointer_BothFunctions) {
-    g_functionPointerLogs.clear();
-    VRHI::SetLogFunction(TestLogFunction);
-    VRHI::SetLogFormattedFunction(TestLogFormattedFunction);
-    VRHI::SetLogLevel(VRHI::LogLevel::Debug);
-    
-    VRHI::Internal::Log(VRHI::LogLevel::Info, "Simple message");
-    VRHI::Internal::LogFormatted(VRHI::LogLevel::Warning, "Formatted: %s", "message");
-    
-    ASSERT_EQ(g_functionPointerLogs.size(), 2);
-    EXPECT_EQ(g_functionPointerLogs[0].second, "Simple message");
-    EXPECT_EQ(g_functionPointerLogs[1].second, "Formatted: message");
-    
-    // Cleanup
-    VRHI::SetLogFunction(nullptr);
-    VRHI::SetLogFormattedFunction(nullptr);
-    VRHI::SetLogLevel(VRHI::LogLevel::Info);
-    g_functionPointerLogs.clear();
-}
-
-// ============================================================================
-// Priority Tests (ILogger takes priority over function pointers)
-// ============================================================================
-
-TEST(LoggingTests, LoggerPriority_InterfaceTakesPrecedence) {
-    TestLogger testLogger;
-    g_functionPointerLogs.clear();
-    
-    // Set both interface and function pointers
-    VRHI::SetLogger(&testLogger);
-    VRHI::SetLogFunction(TestLogFunction);
-    VRHI::SetLogLevel(VRHI::LogLevel::Debug);
-    
-    VRHI::Internal::Log(VRHI::LogLevel::Info, "Priority test");
-    
-    // Interface should take priority
-    ASSERT_EQ(testLogger.entries.size(), 1);
-    EXPECT_EQ(testLogger.entries[0].message, "Priority test");
-    
-    // Function pointer should not be called
-    EXPECT_EQ(g_functionPointerLogs.size(), 0);
-    
-    // Cleanup
+TEST(LoggingTests, DefaultLogger_FallbackBehavior) {
+    // Set logger to nullptr to use default logger
     VRHI::SetLogger(nullptr);
-    VRHI::SetLogFunction(nullptr);
-    VRHI::SetLogLevel(VRHI::LogLevel::Info);
-    g_functionPointerLogs.clear();
-}
-
-TEST(LoggingTests, LoggerPriority_FallbackToFunctionPointer) {
-    TestLogger testLogger;
-    g_functionPointerLogs.clear();
-    
-    // Only set function pointer
-    VRHI::SetLogFunction(TestLogFunction);
     VRHI::SetLogLevel(VRHI::LogLevel::Debug);
     
-    VRHI::Internal::Log(VRHI::LogLevel::Info, "Fallback test");
+    // This should not crash and should use the default logger
+    VRHI::Internal::Log(VRHI::LogLevel::Info, "Default logger test");
+    VRHI::Internal::LogFormatted(VRHI::LogLevel::Warning, "Formatted: %d", 123);
     
-    // Function pointer should be called
-    ASSERT_EQ(g_functionPointerLogs.size(), 1);
-    EXPECT_EQ(g_functionPointerLogs[0].second, "Fallback test");
-    
+    // No assertions here, just verify it doesn't crash
     // Cleanup
-    VRHI::SetLogFunction(nullptr);
     VRHI::SetLogLevel(VRHI::LogLevel::Info);
-    g_functionPointerLogs.clear();
 }
 
 // ============================================================================
