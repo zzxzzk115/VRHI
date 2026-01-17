@@ -78,10 +78,32 @@ endif()
 
 # Window system abstraction
 set(VRHI_WINDOW_SOURCES
-    # WindowSystem/WindowAbstraction.cpp
-    # WindowSystem/KeyCodeMapper.cpp
-    # WindowSystem/EventDispatcher.cpp
+    WindowSystem/WindowFactory.cpp
 )
+
+# GLFW window system
+if(VRHI_WINDOW_GLFW)
+    list(APPEND VRHI_WINDOW_SOURCES
+        WindowSystem/GLFW/GLFWWindow.cpp
+    )
+    message(STATUS "GLFW window system enabled")
+endif()
+
+# SDL2 window system (future)
+if(VRHI_WINDOW_SDL2)
+    list(APPEND VRHI_WINDOW_SOURCES
+        # WindowSystem/SDL2/SDL2Window.cpp
+    )
+    message(STATUS "SDL2 window system enabled")
+endif()
+
+# SDL3 window system (future)
+if(VRHI_WINDOW_SDL3)
+    list(APPEND VRHI_WINDOW_SOURCES
+        # WindowSystem/SDL3/SDL3Window.cpp
+    )
+    message(STATUS "SDL3 window system enabled")
+endif()
 
 # Combine all sources
 set(VRHI_ALL_SOURCES
@@ -149,12 +171,34 @@ else()
         target_compile_definitions(VRHI PRIVATE VRHI_ENABLE_VALIDATION=1)
     endif()
     
+    # Window system compile definitions
+    if(VRHI_WINDOW_GLFW)
+        target_compile_definitions(VRHI PRIVATE VRHI_WINDOW_GLFW=1)
+    endif()
+    
+    if(VRHI_WINDOW_SDL2)
+        target_compile_definitions(VRHI PRIVATE VRHI_WINDOW_SDL2=1)
+    endif()
+    
+    if(VRHI_WINDOW_SDL3)
+        target_compile_definitions(VRHI PRIVATE VRHI_WINDOW_SDL3=1)
+    endif()
+    
+    if(VRHI_WINDOW_EGL)
+        target_compile_definitions(VRHI PRIVATE VRHI_WINDOW_EGL=1)
+    endif()
+    
     # Link libraries
     target_link_libraries(VRHI PRIVATE Threads::Threads)
     
     # Backend-specific libraries
     if(VRHI_ENABLE_OPENGL)
         target_link_libraries(VRHI PRIVATE glad::gl33)
+    endif()
+    
+    # Window system libraries
+    if(VRHI_WINDOW_GLFW)
+        target_link_libraries(VRHI PRIVATE glfw)
     endif()
     
     # Platform-specific libraries

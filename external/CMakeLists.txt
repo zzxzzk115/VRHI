@@ -49,12 +49,27 @@ if(VRHI_ENABLE_OPENGL)
     # add_subdirectory(glad_gl46)
 endif()
 
+# ============================================================================
+# GLFW (Window System)
+# ============================================================================
+if(VRHI_WINDOW_GLFW)
+    message(STATUS "  Adding GLFW 3.4")
+    
+    # Configure GLFW options
+    set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+    set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+    set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+    set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
+    
+    add_subdirectory(glfw-3.4)
+    list(APPEND VRHI_EXTERNAL_TARGETS glfw)
+endif()
+
 # Placeholder for future third-party dependencies
 # Examples:
 #   - Vulkan headers (header-only)
 #   - vk-bootstrap (Vulkan initialization helper)
 #   - SDL2/SDL3 (optional window system)
-#   - GLFW (optional window system)
 #   - etc.
 
 # Export list of external targets
