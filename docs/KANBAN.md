@@ -30,14 +30,14 @@ This document tracks all work items for VRHI v1.0 development. Tasks can be assi
 
 | ID | Task | Priority | Effort | Status |
 |----|------|----------|--------|--------|
-| F2.1 | Implement `Error` class with error codes | P0 | S | Backlog |
-| F2.2 | Create `BackendType` enum | P0 | S | Backlog |
-| F2.3 | Create `Feature` enum (all features) | P0 | M | Backlog |
-| F2.4 | Implement `DeviceConfig` struct | P0 | S | Backlog |
-| F2.5 | Implement `FeatureRequirements` struct | P0 | S | Backlog |
-| F2.6 | Create base types (Handle, Version, etc.) | P1 | S | Backlog |
-| F2.7 | Add std::expected type aliases | P1 | S | Backlog |
-| F2.8 | Write unit tests for error handling | P1 | M | Backlog |
+| F2.1 | Implement `Error` class with error codes | P0 | S | Done |
+| F2.2 | Create `BackendType` enum | P0 | S | Done |
+| F2.3 | Create `Feature` enum (all features) | P0 | M | Done |
+| F2.4 | Implement `DeviceConfig` struct | P0 | S | Done |
+| F2.5 | Implement `FeatureRequirements` struct | P0 | S | Done |
+| F2.6 | Create base types (Handle, Version, etc.) | P1 | S | Done |
+| F2.7 | Add std::expected type aliases | P1 | S | Done |
+| F2.8 | Write unit tests for error handling | P1 | M | Done |
 
 ### Device Abstraction (Interfaces)
 
@@ -247,9 +247,9 @@ This document tracks all work items for VRHI v1.0 development. Tasks can be assi
 
 | ID | Task | Priority | Effort | Status |
 |----|------|----------|--------|--------|
-| T1.1 | Set up testing framework (Google Test) | P0 | S | Backlog |
-| T1.2 | Write tests for core types | P0 | M | Backlog |
-| T1.3 | Write tests for error handling | P0 | M | Backlog |
+| T1.1 | Set up testing framework (Google Test) | P0 | S | Done |
+| T1.2 | Write tests for core types | P0 | M | Done |
+| T1.3 | Write tests for error handling | P0 | M | Done |
 | T1.4 | Write tests for backend scoring | P0 | M | Backlog |
 | T1.5 | Write tests for feature detection | P0 | M | Backlog |
 | T1.6 | Write tests for resource management | P0 | L | Backlog |
