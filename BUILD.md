@@ -9,7 +9,7 @@ This document describes how to build VRHI from source.
 VRHI requires a modern C++23-compliant compiler:
 
 - **GCC**: 13.0 or later
-- **Clang**: 16.0 or later  
+- **Clang**: 18.0 or later (required for std::expected support)
 - **MSVC**: 2022 (19.30) or later
 
 ### Build Tools
