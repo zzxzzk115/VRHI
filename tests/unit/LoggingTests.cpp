@@ -27,9 +27,16 @@ public:
     }
     
     void LogFormatted(VRHI::LogLevel level, const char* format, va_list args) override {
-        char buffer[1024];
-        vsnprintf(buffer, sizeof(buffer), format, args);
-        entries.push_back({level, std::string(buffer)});
+        char buffer[4096];
+        int written = vsnprintf(buffer, sizeof(buffer), format, args);
+        // Handle truncation - vsnprintf returns the number of chars that would have been written
+        if (written < 0) {
+            entries.push_back({level, "[Formatting error]"});
+        } else if (written >= static_cast<int>(sizeof(buffer))) {
+            entries.push_back({level, std::string(buffer) + "...[truncated]"});
+        } else {
+            entries.push_back({level, std::string(buffer)});
+        }
     }
     
     void Clear() {
@@ -46,9 +53,13 @@ namespace {
     }
     
     void TestLogFormattedFunction(VRHI::LogLevel level, const char* format, va_list args) {
-        char buffer[1024];
-        vsnprintf(buffer, sizeof(buffer), format, args);
-        g_functionPointerLogs.push_back({level, std::string(buffer)});
+        char buffer[4096];
+        int written = vsnprintf(buffer, sizeof(buffer), format, args);
+        if (written >= 0 && written < static_cast<int>(sizeof(buffer))) {
+            g_functionPointerLogs.push_back({level, std::string(buffer)});
+        } else {
+            g_functionPointerLogs.push_back({level, "[Formatting error or truncated]"});
+        }
     }
 }
 

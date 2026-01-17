@@ -6,7 +6,9 @@
 
 #include <cstdio>
 #include <cstdarg>
-#include <ctime>
+#include <chrono>
+#include <iomanip>
+#include <sstream>
 #include <mutex>
 #include <memory>
 
@@ -21,18 +23,31 @@ namespace {
 class DefaultLogger : public ILogger {
 public:
     void Log(LogLevel level, std::string_view message) override {
-        // Get current time
-        std::time_t now = std::time(nullptr);
-        char timeBuffer[32];
-        std::strftime(timeBuffer, sizeof(timeBuffer), "%Y-%m-%d %H:%M:%S", 
-                      std::localtime(&now));
+        // Get current time using chrono (thread-safe)
+        auto now = std::chrono::system_clock::now();
+        auto time_t_now = std::chrono::system_clock::to_time_t(now);
+        
+        // Format timestamp thread-safely
+        std::ostringstream timeStream;
+        {
+            // Use a local mutex for time formatting to ensure thread safety
+            static std::mutex timeMutex;
+            std::lock_guard<std::mutex> timeLock(timeMutex);
+            std::tm tm_buf;
+#ifdef _WIN32
+            localtime_s(&tm_buf, &time_t_now);
+#else
+            localtime_r(&time_t_now, &tm_buf);
+#endif
+            timeStream << std::put_time(&tm_buf, "%Y-%m-%d %H:%M:%S");
+        }
         
         // Determine output stream (stderr for warnings and errors, stdout for others)
         FILE* stream = (level >= LogLevel::Warning) ? stderr : stdout;
         
         // Print formatted message
         std::fprintf(stream, "[%s] [VRHI] [%s] %.*s\n", 
-                    timeBuffer,
+                    timeStream.str().c_str(),
                     LogLevelToString(level),
                     static_cast<int>(message.size()),
                     message.data());
@@ -41,25 +56,25 @@ public:
     }
     
     void LogFormatted(LogLevel level, const char* format, va_list args) override {
-        // Get current time
-        std::time_t now = std::time(nullptr);
-        char timeBuffer[32];
-        std::strftime(timeBuffer, sizeof(timeBuffer), "%Y-%m-%d %H:%M:%S", 
-                      std::localtime(&now));
+        // Format the message first
+        char buffer[4096];
+        int written = vsnprintf(buffer, sizeof(buffer), format, args);
         
-        // Determine output stream
-        FILE* stream = (level >= LogLevel::Warning) ? stderr : stdout;
+        if (written < 0) {
+            // Formatting error
+            Log(level, "[Formatting error]");
+            return;
+        }
         
-        // Print timestamp and level
-        std::fprintf(stream, "[%s] [VRHI] [%s] ", 
-                    timeBuffer,
-                    LogLevelToString(level));
-        
-        // Print formatted message
-        std::vfprintf(stream, format, args);
-        std::fprintf(stream, "\n");
-        
-        std::fflush(stream);
+        if (written >= static_cast<int>(sizeof(buffer))) {
+            // Message was truncated
+            std::string truncated(buffer);
+            truncated += "...[truncated]";
+            Log(level, truncated);
+        } else {
+            // Normal case
+            Log(level, std::string_view(buffer, written));
+        }
     }
 
 private:
