@@ -183,7 +183,7 @@ option(VRHI_WINDOW_EGL "启用 EGL 支持" OFF)
 
 ### 要求
 
-- **编译器**: GCC 13+, Clang 18+, Apple Clang 15+ (Xcode 15.3+), MSVC 2022+
+- **编译器**: GCC 14+, Clang 19+, Apple Clang 15+ (Xcode 15.3+), MSVC 2022+
 - **C++ 标准**: C++23
 - **CMake**: 3.21+
 - **平台**: Windows, Linux, macOS, Android, iOS, 树莓派
