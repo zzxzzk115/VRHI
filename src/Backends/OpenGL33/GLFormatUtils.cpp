@@ -138,12 +138,12 @@ GLenum GLFormatUtils::GetInternalFormat(TextureFormat format) {
         case TextureFormat::Depth32F: return GL_DEPTH_COMPONENT32F;
         case TextureFormat::Depth32FStencil8: return GL_DEPTH32F_STENCIL8;
         
-        // Compressed formats - using constants that work across GL versions
-        case TextureFormat::BC1_UNorm: return 0x83F1;  // GL_COMPRESSED_RGBA_S3TC_DXT1_EXT
-        case TextureFormat::BC3_UNorm: return 0x83F3;  // GL_COMPRESSED_RGBA_S3TC_DXT5_EXT
-        case TextureFormat::BC7_UNorm: return 0x8E8C;  // GL_COMPRESSED_RGBA_BPTC_UNORM
-        case TextureFormat::ETC2_RGB8: return 0x9274;  // GL_COMPRESSED_RGB8_ETC2
-        case TextureFormat::ASTC_4x4: return 0x93B0;   // GL_COMPRESSED_RGBA_ASTC_4x4_KHR
+        // Compressed formats - now using GLAD-provided constants
+        case TextureFormat::BC1_UNorm: return GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
+        case TextureFormat::BC3_UNorm: return GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+        case TextureFormat::BC7_UNorm: return GL_COMPRESSED_RGBA_BPTC_UNORM_ARB;
+        case TextureFormat::ETC2_RGB8: return GL_COMPRESSED_RGB8_ETC2;
+        case TextureFormat::ASTC_4x4: return GL_COMPRESSED_RGBA_ASTC_4x4_KHR;
         
         default: return GL_RGBA8;
     }

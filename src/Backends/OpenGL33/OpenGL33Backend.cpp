@@ -107,7 +107,8 @@ void OpenGL33Backend::DetectFeatures() {
     
     if (hasAnisotropic) {
         GLfloat maxAnisotropy = 0.0f;
-        glGetFloatv(GLExtConstants::GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAnisotropy);
+        // Use GLAD-provided constant
+        glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAnisotropy);
         m_features.texture.maxAnisotropy = maxAnisotropy;
     } else {
         m_features.texture.maxAnisotropy = 1.0f;
