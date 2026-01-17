@@ -37,20 +37,25 @@ if(VRHI_BUILD_TESTS)
     list(APPEND VRHI_EXTERNAL_TARGETS gtest gtest_main)
 endif()
 
+# ============================================================================
+# GLAD OpenGL Loaders
+# ============================================================================
+if(VRHI_ENABLE_OPENGL)
+    message(STATUS "  Adding GLAD OpenGL 3.3")
+    add_subdirectory(glad_gl33)
+    list(APPEND VRHI_EXTERNAL_TARGETS glad_gl33)
+    
+    # Future: Add other GLAD versions as needed
+    # add_subdirectory(glad_gl46)
+endif()
+
 # Placeholder for future third-party dependencies
 # Examples:
 #   - Vulkan headers (header-only)
-#   - GLAD (OpenGL loader)
 #   - vk-bootstrap (Vulkan initialization helper)
 #   - SDL2/SDL3 (optional window system)
 #   - GLFW (optional window system)
 #   - etc.
-
-# Future dependencies will be added with add_subdirectory() or as interface libraries
-# Example:
-# add_subdirectory(vulkan-headers)
-# add_subdirectory(glad)
-# add_subdirectory(vk-bootstrap)
 
 # Export list of external targets
 set(VRHI_EXTERNAL_TARGETS "${VRHI_EXTERNAL_TARGETS}" CACHE INTERNAL "List of external dependency targets")

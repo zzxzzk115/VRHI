@@ -38,10 +38,18 @@ endif()
 # OpenGL backend
 if(VRHI_ENABLE_OPENGL)
     list(APPEND VRHI_BACKEND_SOURCES
-        # Backends/OpenGL/OpenGLBackend.cpp
-        # Backends/OpenGL/OpenGLDevice.cpp
-        # Backends/OpenGL/OpenGLResources.cpp
-        # Backends/OpenGL/OpenGLCommands.cpp
+        Backends/OpenGL33/OpenGL33Backend.cpp
+        Backends/OpenGL33/OpenGL33Device.cpp
+        Backends/OpenGL33/OpenGL33Buffer.cpp
+        Backends/OpenGL33/OpenGL33Texture.cpp
+        Backends/OpenGL33/OpenGL33Sampler.cpp
+        Backends/OpenGL33/OpenGL33Shader.cpp
+        Backends/OpenGL33/OpenGL33Pipeline.cpp
+        Backends/OpenGL33/OpenGL33RenderPass.cpp
+        Backends/OpenGL33/OpenGL33Framebuffer.cpp
+        Backends/OpenGL33/OpenGL33CommandBuffer.cpp
+        Backends/OpenGL33/OpenGL33Sync.cpp
+        Backends/OpenGL33/GLFormatUtils.cpp
     )
     message(STATUS "OpenGL backend enabled")
 endif()
@@ -143,6 +151,11 @@ else()
     
     # Link libraries
     target_link_libraries(VRHI PRIVATE Threads::Threads)
+    
+    # Backend-specific libraries
+    if(VRHI_ENABLE_OPENGL)
+        target_link_libraries(VRHI PRIVATE glad::gl33)
+    endif()
     
     # Platform-specific libraries
     if(VRHI_PLATFORM_WINDOWS)

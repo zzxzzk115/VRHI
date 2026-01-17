@@ -12,34 +12,124 @@
   "output": "external/googletest-1.17.0/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o"
 },
 {
+  "directory": "/home/runner/work/VRHI/VRHI/_codeql_build_dir/external/glad_gl33",
+  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/cc -DNDEBUG -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/external/glad_gl33/include -O3 -DNDEBUG -std=gnu11 -fPIC -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -Wno-pedantic -Wno-error -o CMakeFiles/glad_gl33.dir/src/glad.c.o -c /home/runner/work/VRHI/VRHI/external/glad_gl33/src/glad.c",
+  "file": "/home/runner/work/VRHI/VRHI/external/glad_gl33/src/glad.c",
+  "output": "external/glad_gl33/CMakeFiles/glad_gl33.dir/src/glad.c.o"
+},
+{
   "directory": "/home/runner/work/VRHI/VRHI/_codeql_build_dir/src",
-  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_BACKEND_OPENGL=1 -DVRHI_BACKEND_VULKAN=1 -DVRHI_ENABLE_VALIDATION=1 -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -I/home/runner/work/VRHI/VRHI/src -O3 -DNDEBUG -std=c++23 -fPIC -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/VRHI.dir/Core/Version.cpp.o -c /home/runner/work/VRHI/VRHI/src/Core/Version.cpp",
+  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_BACKEND_OPENGL=1 -DVRHI_BACKEND_VULKAN=1 -DVRHI_ENABLE_VALIDATION=1 -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -I/home/runner/work/VRHI/VRHI/src -I/home/runner/work/VRHI/VRHI/external/glad_gl33/include -O3 -DNDEBUG -std=c++23 -fPIC -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/VRHI.dir/Core/Version.cpp.o -c /home/runner/work/VRHI/VRHI/src/Core/Version.cpp",
   "file": "/home/runner/work/VRHI/VRHI/src/Core/Version.cpp",
   "output": "src/CMakeFiles/VRHI.dir/Core/Version.cpp.o"
 },
 {
   "directory": "/home/runner/work/VRHI/VRHI/_codeql_build_dir/src",
-  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_BACKEND_OPENGL=1 -DVRHI_BACKEND_VULKAN=1 -DVRHI_ENABLE_VALIDATION=1 -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -I/home/runner/work/VRHI/VRHI/src -O3 -DNDEBUG -std=c++23 -fPIC -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/VRHI.dir/Core/Device.cpp.o -c /home/runner/work/VRHI/VRHI/src/Core/Device.cpp",
+  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_BACKEND_OPENGL=1 -DVRHI_BACKEND_VULKAN=1 -DVRHI_ENABLE_VALIDATION=1 -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -I/home/runner/work/VRHI/VRHI/src -I/home/runner/work/VRHI/VRHI/external/glad_gl33/include -O3 -DNDEBUG -std=c++23 -fPIC -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/VRHI.dir/Core/Device.cpp.o -c /home/runner/work/VRHI/VRHI/src/Core/Device.cpp",
   "file": "/home/runner/work/VRHI/VRHI/src/Core/Device.cpp",
   "output": "src/CMakeFiles/VRHI.dir/Core/Device.cpp.o"
 },
 {
   "directory": "/home/runner/work/VRHI/VRHI/_codeql_build_dir/src",
-  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_BACKEND_OPENGL=1 -DVRHI_BACKEND_VULKAN=1 -DVRHI_ENABLE_VALIDATION=1 -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -I/home/runner/work/VRHI/VRHI/src -O3 -DNDEBUG -std=c++23 -fPIC -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/VRHI.dir/Core/Logging.cpp.o -c /home/runner/work/VRHI/VRHI/src/Core/Logging.cpp",
+  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_BACKEND_OPENGL=1 -DVRHI_BACKEND_VULKAN=1 -DVRHI_ENABLE_VALIDATION=1 -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -I/home/runner/work/VRHI/VRHI/src -I/home/runner/work/VRHI/VRHI/external/glad_gl33/include -O3 -DNDEBUG -std=c++23 -fPIC -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/VRHI.dir/Core/Logging.cpp.o -c /home/runner/work/VRHI/VRHI/src/Core/Logging.cpp",
   "file": "/home/runner/work/VRHI/VRHI/src/Core/Logging.cpp",
   "output": "src/CMakeFiles/VRHI.dir/Core/Logging.cpp.o"
 },
 {
   "directory": "/home/runner/work/VRHI/VRHI/_codeql_build_dir/src",
-  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_BACKEND_OPENGL=1 -DVRHI_BACKEND_VULKAN=1 -DVRHI_ENABLE_VALIDATION=1 -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -I/home/runner/work/VRHI/VRHI/src -O3 -DNDEBUG -std=c++23 -fPIC -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/VRHI.dir/Core/Backend.cpp.o -c /home/runner/work/VRHI/VRHI/src/Core/Backend.cpp",
+  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_BACKEND_OPENGL=1 -DVRHI_BACKEND_VULKAN=1 -DVRHI_ENABLE_VALIDATION=1 -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -I/home/runner/work/VRHI/VRHI/src -I/home/runner/work/VRHI/VRHI/external/glad_gl33/include -O3 -DNDEBUG -std=c++23 -fPIC -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/VRHI.dir/Core/Backend.cpp.o -c /home/runner/work/VRHI/VRHI/src/Core/Backend.cpp",
   "file": "/home/runner/work/VRHI/VRHI/src/Core/Backend.cpp",
   "output": "src/CMakeFiles/VRHI.dir/Core/Backend.cpp.o"
 },
 {
   "directory": "/home/runner/work/VRHI/VRHI/_codeql_build_dir/src",
-  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_BACKEND_OPENGL=1 -DVRHI_BACKEND_VULKAN=1 -DVRHI_ENABLE_VALIDATION=1 -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -I/home/runner/work/VRHI/VRHI/src -O3 -DNDEBUG -std=c++23 -fPIC -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/VRHI.dir/Core/BackendScoring.cpp.o -c /home/runner/work/VRHI/VRHI/src/Core/BackendScoring.cpp",
+  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_BACKEND_OPENGL=1 -DVRHI_BACKEND_VULKAN=1 -DVRHI_ENABLE_VALIDATION=1 -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -I/home/runner/work/VRHI/VRHI/src -I/home/runner/work/VRHI/VRHI/external/glad_gl33/include -O3 -DNDEBUG -std=c++23 -fPIC -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/VRHI.dir/Core/BackendScoring.cpp.o -c /home/runner/work/VRHI/VRHI/src/Core/BackendScoring.cpp",
   "file": "/home/runner/work/VRHI/VRHI/src/Core/BackendScoring.cpp",
   "output": "src/CMakeFiles/VRHI.dir/Core/BackendScoring.cpp.o"
+},
+{
+  "directory": "/home/runner/work/VRHI/VRHI/_codeql_build_dir/src",
+  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_BACKEND_OPENGL=1 -DVRHI_BACKEND_VULKAN=1 -DVRHI_ENABLE_VALIDATION=1 -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -I/home/runner/work/VRHI/VRHI/src -I/home/runner/work/VRHI/VRHI/external/glad_gl33/include -O3 -DNDEBUG -std=c++23 -fPIC -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/VRHI.dir/Core/NullBackend.cpp.o -c /home/runner/work/VRHI/VRHI/src/Core/NullBackend.cpp",
+  "file": "/home/runner/work/VRHI/VRHI/src/Core/NullBackend.cpp",
+  "output": "src/CMakeFiles/VRHI.dir/Core/NullBackend.cpp.o"
+},
+{
+  "directory": "/home/runner/work/VRHI/VRHI/_codeql_build_dir/src",
+  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_BACKEND_OPENGL=1 -DVRHI_BACKEND_VULKAN=1 -DVRHI_ENABLE_VALIDATION=1 -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -I/home/runner/work/VRHI/VRHI/src -I/home/runner/work/VRHI/VRHI/external/glad_gl33/include -O3 -DNDEBUG -std=c++23 -fPIC -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/VRHI.dir/Core/NullDevice.cpp.o -c /home/runner/work/VRHI/VRHI/src/Core/NullDevice.cpp",
+  "file": "/home/runner/work/VRHI/VRHI/src/Core/NullDevice.cpp",
+  "output": "src/CMakeFiles/VRHI.dir/Core/NullDevice.cpp.o"
+},
+{
+  "directory": "/home/runner/work/VRHI/VRHI/_codeql_build_dir/src",
+  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_BACKEND_OPENGL=1 -DVRHI_BACKEND_VULKAN=1 -DVRHI_ENABLE_VALIDATION=1 -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -I/home/runner/work/VRHI/VRHI/src -I/home/runner/work/VRHI/VRHI/external/glad_gl33/include -O3 -DNDEBUG -std=c++23 -fPIC -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/VRHI.dir/Core/MockBackend.cpp.o -c /home/runner/work/VRHI/VRHI/src/Core/MockBackend.cpp",
+  "file": "/home/runner/work/VRHI/VRHI/src/Core/MockBackend.cpp",
+  "output": "src/CMakeFiles/VRHI.dir/Core/MockBackend.cpp.o"
+},
+{
+  "directory": "/home/runner/work/VRHI/VRHI/_codeql_build_dir/src",
+  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_BACKEND_OPENGL=1 -DVRHI_BACKEND_VULKAN=1 -DVRHI_ENABLE_VALIDATION=1 -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -I/home/runner/work/VRHI/VRHI/src -I/home/runner/work/VRHI/VRHI/external/glad_gl33/include -O3 -DNDEBUG -std=c++23 -fPIC -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/VRHI.dir/Backends/OpenGL33/OpenGL33Backend.cpp.o -c /home/runner/work/VRHI/VRHI/src/Backends/OpenGL33/OpenGL33Backend.cpp",
+  "file": "/home/runner/work/VRHI/VRHI/src/Backends/OpenGL33/OpenGL33Backend.cpp",
+  "output": "src/CMakeFiles/VRHI.dir/Backends/OpenGL33/OpenGL33Backend.cpp.o"
+},
+{
+  "directory": "/home/runner/work/VRHI/VRHI/_codeql_build_dir/src",
+  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_BACKEND_OPENGL=1 -DVRHI_BACKEND_VULKAN=1 -DVRHI_ENABLE_VALIDATION=1 -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -I/home/runner/work/VRHI/VRHI/src -I/home/runner/work/VRHI/VRHI/external/glad_gl33/include -O3 -DNDEBUG -std=c++23 -fPIC -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/VRHI.dir/Backends/OpenGL33/OpenGL33Device.cpp.o -c /home/runner/work/VRHI/VRHI/src/Backends/OpenGL33/OpenGL33Device.cpp",
+  "file": "/home/runner/work/VRHI/VRHI/src/Backends/OpenGL33/OpenGL33Device.cpp",
+  "output": "src/CMakeFiles/VRHI.dir/Backends/OpenGL33/OpenGL33Device.cpp.o"
+},
+{
+  "directory": "/home/runner/work/VRHI/VRHI/_codeql_build_dir/src",
+  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_BACKEND_OPENGL=1 -DVRHI_BACKEND_VULKAN=1 -DVRHI_ENABLE_VALIDATION=1 -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -I/home/runner/work/VRHI/VRHI/src -I/home/runner/work/VRHI/VRHI/external/glad_gl33/include -O3 -DNDEBUG -std=c++23 -fPIC -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/VRHI.dir/Backends/OpenGL33/OpenGL33Buffer.cpp.o -c /home/runner/work/VRHI/VRHI/src/Backends/OpenGL33/OpenGL33Buffer.cpp",
+  "file": "/home/runner/work/VRHI/VRHI/src/Backends/OpenGL33/OpenGL33Buffer.cpp",
+  "output": "src/CMakeFiles/VRHI.dir/Backends/OpenGL33/OpenGL33Buffer.cpp.o"
+},
+{
+  "directory": "/home/runner/work/VRHI/VRHI/_codeql_build_dir/src",
+  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_BACKEND_OPENGL=1 -DVRHI_BACKEND_VULKAN=1 -DVRHI_ENABLE_VALIDATION=1 -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -I/home/runner/work/VRHI/VRHI/src -I/home/runner/work/VRHI/VRHI/external/glad_gl33/include -O3 -DNDEBUG -std=c++23 -fPIC -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/VRHI.dir/Backends/OpenGL33/OpenGL33Texture.cpp.o -c /home/runner/work/VRHI/VRHI/src/Backends/OpenGL33/OpenGL33Texture.cpp",
+  "file": "/home/runner/work/VRHI/VRHI/src/Backends/OpenGL33/OpenGL33Texture.cpp",
+  "output": "src/CMakeFiles/VRHI.dir/Backends/OpenGL33/OpenGL33Texture.cpp.o"
+},
+{
+  "directory": "/home/runner/work/VRHI/VRHI/_codeql_build_dir/src",
+  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_BACKEND_OPENGL=1 -DVRHI_BACKEND_VULKAN=1 -DVRHI_ENABLE_VALIDATION=1 -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -I/home/runner/work/VRHI/VRHI/src -I/home/runner/work/VRHI/VRHI/external/glad_gl33/include -O3 -DNDEBUG -std=c++23 -fPIC -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/VRHI.dir/Backends/OpenGL33/OpenGL33Sampler.cpp.o -c /home/runner/work/VRHI/VRHI/src/Backends/OpenGL33/OpenGL33Sampler.cpp",
+  "file": "/home/runner/work/VRHI/VRHI/src/Backends/OpenGL33/OpenGL33Sampler.cpp",
+  "output": "src/CMakeFiles/VRHI.dir/Backends/OpenGL33/OpenGL33Sampler.cpp.o"
+},
+{
+  "directory": "/home/runner/work/VRHI/VRHI/_codeql_build_dir/src",
+  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_BACKEND_OPENGL=1 -DVRHI_BACKEND_VULKAN=1 -DVRHI_ENABLE_VALIDATION=1 -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -I/home/runner/work/VRHI/VRHI/src -I/home/runner/work/VRHI/VRHI/external/glad_gl33/include -O3 -DNDEBUG -std=c++23 -fPIC -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/VRHI.dir/Backends/OpenGL33/OpenGL33Shader.cpp.o -c /home/runner/work/VRHI/VRHI/src/Backends/OpenGL33/OpenGL33Shader.cpp",
+  "file": "/home/runner/work/VRHI/VRHI/src/Backends/OpenGL33/OpenGL33Shader.cpp",
+  "output": "src/CMakeFiles/VRHI.dir/Backends/OpenGL33/OpenGL33Shader.cpp.o"
+},
+{
+  "directory": "/home/runner/work/VRHI/VRHI/_codeql_build_dir/src",
+  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_BACKEND_OPENGL=1 -DVRHI_BACKEND_VULKAN=1 -DVRHI_ENABLE_VALIDATION=1 -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -I/home/runner/work/VRHI/VRHI/src -I/home/runner/work/VRHI/VRHI/external/glad_gl33/include -O3 -DNDEBUG -std=c++23 -fPIC -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/VRHI.dir/Backends/OpenGL33/OpenGL33Pipeline.cpp.o -c /home/runner/work/VRHI/VRHI/src/Backends/OpenGL33/OpenGL33Pipeline.cpp",
+  "file": "/home/runner/work/VRHI/VRHI/src/Backends/OpenGL33/OpenGL33Pipeline.cpp",
+  "output": "src/CMakeFiles/VRHI.dir/Backends/OpenGL33/OpenGL33Pipeline.cpp.o"
+},
+{
+  "directory": "/home/runner/work/VRHI/VRHI/_codeql_build_dir/src",
+  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_BACKEND_OPENGL=1 -DVRHI_BACKEND_VULKAN=1 -DVRHI_ENABLE_VALIDATION=1 -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -I/home/runner/work/VRHI/VRHI/src -I/home/runner/work/VRHI/VRHI/external/glad_gl33/include -O3 -DNDEBUG -std=c++23 -fPIC -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/VRHI.dir/Backends/OpenGL33/OpenGL33RenderPass.cpp.o -c /home/runner/work/VRHI/VRHI/src/Backends/OpenGL33/OpenGL33RenderPass.cpp",
+  "file": "/home/runner/work/VRHI/VRHI/src/Backends/OpenGL33/OpenGL33RenderPass.cpp",
+  "output": "src/CMakeFiles/VRHI.dir/Backends/OpenGL33/OpenGL33RenderPass.cpp.o"
+},
+{
+  "directory": "/home/runner/work/VRHI/VRHI/_codeql_build_dir/src",
+  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_BACKEND_OPENGL=1 -DVRHI_BACKEND_VULKAN=1 -DVRHI_ENABLE_VALIDATION=1 -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -I/home/runner/work/VRHI/VRHI/src -I/home/runner/work/VRHI/VRHI/external/glad_gl33/include -O3 -DNDEBUG -std=c++23 -fPIC -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/VRHI.dir/Backends/OpenGL33/OpenGL33Framebuffer.cpp.o -c /home/runner/work/VRHI/VRHI/src/Backends/OpenGL33/OpenGL33Framebuffer.cpp",
+  "file": "/home/runner/work/VRHI/VRHI/src/Backends/OpenGL33/OpenGL33Framebuffer.cpp",
+  "output": "src/CMakeFiles/VRHI.dir/Backends/OpenGL33/OpenGL33Framebuffer.cpp.o"
+},
+{
+  "directory": "/home/runner/work/VRHI/VRHI/_codeql_build_dir/src",
+  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_BACKEND_OPENGL=1 -DVRHI_BACKEND_VULKAN=1 -DVRHI_ENABLE_VALIDATION=1 -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -I/home/runner/work/VRHI/VRHI/src -I/home/runner/work/VRHI/VRHI/external/glad_gl33/include -O3 -DNDEBUG -std=c++23 -fPIC -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/VRHI.dir/Backends/OpenGL33/OpenGL33CommandBuffer.cpp.o -c /home/runner/work/VRHI/VRHI/src/Backends/OpenGL33/OpenGL33CommandBuffer.cpp",
+  "file": "/home/runner/work/VRHI/VRHI/src/Backends/OpenGL33/OpenGL33CommandBuffer.cpp",
+  "output": "src/CMakeFiles/VRHI.dir/Backends/OpenGL33/OpenGL33CommandBuffer.cpp.o"
+},
+{
+  "directory": "/home/runner/work/VRHI/VRHI/_codeql_build_dir/src",
+  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_BACKEND_OPENGL=1 -DVRHI_BACKEND_VULKAN=1 -DVRHI_ENABLE_VALIDATION=1 -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -I/home/runner/work/VRHI/VRHI/src -I/home/runner/work/VRHI/VRHI/external/glad_gl33/include -O3 -DNDEBUG -std=c++23 -fPIC -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/VRHI.dir/Backends/OpenGL33/OpenGL33Sync.cpp.o -c /home/runner/work/VRHI/VRHI/src/Backends/OpenGL33/OpenGL33Sync.cpp",
+  "file": "/home/runner/work/VRHI/VRHI/src/Backends/OpenGL33/OpenGL33Sync.cpp",
+  "output": "src/CMakeFiles/VRHI.dir/Backends/OpenGL33/OpenGL33Sync.cpp.o"
 },
 {
   "directory": "/home/runner/work/VRHI/VRHI/_codeql_build_dir/tests",
@@ -70,5 +160,11 @@
   "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -isystem /home/runner/work/VRHI/VRHI/external/googletest-1.17.0/googletest/include -isystem /home/runner/work/VRHI/VRHI/external/googletest-1.17.0/googletest -O3 -DNDEBUG -std=c++23 -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/BackendScoringTests.dir/unit/BackendScoringTests.cpp.o -c /home/runner/work/VRHI/VRHI/tests/unit/BackendScoringTests.cpp",
   "file": "/home/runner/work/VRHI/VRHI/tests/unit/BackendScoringTests.cpp",
   "output": "tests/CMakeFiles/BackendScoringTests.dir/unit/BackendScoringTests.cpp.o"
+},
+{
+  "directory": "/home/runner/work/VRHI/VRHI/_codeql_build_dir/tests",
+  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -isystem /home/runner/work/VRHI/VRHI/external/googletest-1.17.0/googletest/include -isystem /home/runner/work/VRHI/VRHI/external/googletest-1.17.0/googletest -O3 -DNDEBUG -std=c++23 -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/FeatureDetectionTests.dir/unit/FeatureDetectionTests.cpp.o -c /home/runner/work/VRHI/VRHI/tests/unit/FeatureDetectionTests.cpp",
+  "file": "/home/runner/work/VRHI/VRHI/tests/unit/FeatureDetectionTests.cpp",
+  "output": "tests/CMakeFiles/FeatureDetectionTests.dir/unit/FeatureDetectionTests.cpp.o"
 }
 ]
