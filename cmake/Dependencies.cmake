@@ -87,14 +87,9 @@ endif()
 
 # GLFW
 if(VRHI_WINDOW_GLFW)
-    find_package(glfw3 QUIET)
-    if(glfw3_FOUND)
-        message(STATUS "GLFW found")
-        set(VRHI_HAS_GLFW ON)
-    else()
-        message(STATUS "GLFW not found - will be added as external dependency later")
-        set(VRHI_HAS_GLFW OFF)
-    endif()
+    # Always use bundled GLFW from external/ to avoid conflicts
+    message(STATUS "GLFW not found - will be added as external dependency later")
+    set(VRHI_HAS_GLFW OFF)
 endif()
 
 # EGL (Linux/Android)
