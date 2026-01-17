@@ -43,14 +43,14 @@ This document tracks all work items for VRHI v1.0 development. Tasks can be assi
 
 | ID | Task | Priority | Effort | Status |
 |----|------|----------|--------|--------|
-| F3.1 | Define `IBackend` interface | P0 | M | Backlog |
-| F3.2 | Define `IDevice` interface | P0 | M | Backlog |
-| F3.3 | Define `ICommandBuffer` interface | P0 | M | Backlog |
-| F3.4 | Define `IBuffer` interface | P1 | S | Backlog |
-| F3.5 | Define `ITexture` interface | P1 | S | Backlog |
-| F3.6 | Define `IPipeline` interface | P1 | M | Backlog |
-| F3.7 | Define `IShader` interface | P1 | S | Backlog |
-| F3.8 | Create mock backend for testing | P1 | M | Backlog |
+| F3.1 | Define `IBackend` interface | P0 | M | Done |
+| F3.2 | Define `IDevice` interface | P0 | M | Done |
+| F3.3 | Define `ICommandBuffer` interface | P0 | M | Done |
+| F3.4 | Define `IBuffer` interface | P1 | S | Done |
+| F3.5 | Define `ITexture` interface | P1 | S | Done |
+| F3.6 | Define `IPipeline` interface | P1 | M | Done |
+| F3.7 | Define `IShader` interface | P1 | S | Done |
+| F3.8 | Create mock backend for testing | P1 | M | Done |
 
 ### Core API Functions
 
