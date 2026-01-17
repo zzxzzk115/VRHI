@@ -4,6 +4,7 @@
 #pragma once
 
 #include <VRHI/VRHIAll.hpp>
+#include <VRHI/BackendScoring.hpp>
 #include <map>
 #include <cstring>
 
@@ -431,24 +432,8 @@ public:
     }
     
     float CalculateScore(const FeatureRequirements& requirements) const override {
-        // Check required features
-        for (const auto& feature : requirements.required) {
-            if (!IsFeatureSupported(feature)) {
-                return -1.0f; // Cannot satisfy requirements
-            }
-        }
-        
-        // Base score for mock backend
-        float score = 50.0f;
-        
-        // Add bonus for optional features
-        for (const auto& feature : requirements.optional) {
-            if (IsFeatureSupported(feature)) {
-                score += 5.0f;
-            }
-        }
-        
-        return score;
+        auto features = GetSupportedFeatures();
+        return BackendScorer::CalculateScore(GetType(), features, requirements);
     }
     
     std::expected<std::unique_ptr<Device>, Error>
