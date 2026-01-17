@@ -4,6 +4,7 @@
 #pragma once
 
 #include <VRHI/CommandBuffer.hpp>
+#include <glad/glad.h>
 
 namespace VRHI {
 
@@ -78,6 +79,7 @@ public:
     
 private:
     CommandBufferState m_state = CommandBufferState::Initial;
+    GLenum m_indexType = GL_UNSIGNED_INT;  // Track bound index buffer type
 };
 
 } // namespace VRHI

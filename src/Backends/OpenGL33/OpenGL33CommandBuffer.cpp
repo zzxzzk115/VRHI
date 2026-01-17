@@ -41,7 +41,9 @@ void OpenGL33CommandBuffer::BindVertexBuffers(uint32_t firstBinding, std::span<B
 }
 
 void OpenGL33CommandBuffer::BindIndexBuffer(Buffer* buffer, uint64_t offset, bool use16BitIndices) {
-    // Bind index buffer
+    // Store the index type for later use in DrawIndexed
+    m_indexType = use16BitIndices ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
+    // Bind index buffer would be implemented here
 }
 
 void OpenGL33CommandBuffer::SetViewport(const Viewport& viewport) {
@@ -111,12 +113,14 @@ void OpenGL33CommandBuffer::DrawIndexed(const DrawIndexedParams& params) {
 }
 
 void OpenGL33CommandBuffer::DrawIndexed(uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance) {
-    const void* indices = reinterpret_cast<const void*>(static_cast<uintptr_t>(firstIndex * sizeof(uint32_t)));
+    // Calculate index offset based on the actual index type size
+    size_t indexSize = (m_indexType == GL_UNSIGNED_SHORT) ? sizeof(uint16_t) : sizeof(uint32_t);
+    const void* indices = reinterpret_cast<const void*>(static_cast<uintptr_t>(firstIndex * indexSize));
     
     if (instanceCount > 1) {
-        glDrawElementsInstanced(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, indices, instanceCount);
+        glDrawElementsInstanced(GL_TRIANGLES, indexCount, m_indexType, indices, instanceCount);
     } else {
-        glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, indices);
+        glDrawElements(GL_TRIANGLES, indexCount, m_indexType, indices);
     }
 }
 

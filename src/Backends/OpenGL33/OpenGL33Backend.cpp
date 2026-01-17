@@ -3,6 +3,7 @@
 
 #include "OpenGL33Backend.hpp"
 #include "OpenGL33Device.hpp"
+#include "GLExtensions.hpp"
 #include <VRHI/BackendScoring.hpp>
 #include <VRHI/Logging.hpp>
 #include <glad/glad.h>
@@ -92,13 +93,13 @@ void OpenGL33Backend::DetectFeatures() {
     
     // Check for anisotropic filtering extension
     // Note: GLAD may not define extension macros for all extensions
-    // We can check for the extension manually if needed
+    // We check manually by querying the extension string list
     GLint numExtensions = 0;
     glGetIntegerv(GL_NUM_EXTENSIONS, &numExtensions);
     bool hasAnisotropic = false;
     for (GLint i = 0; i < numExtensions; ++i) {
         const char* ext = reinterpret_cast<const char*>(glGetStringi(GL_EXTENSIONS, i));
-        if (std::strcmp(ext, "GL_EXT_texture_filter_anisotropic") == 0) {
+        if (std::strcmp(ext, GLCommonExtensions::EXT_texture_filter_anisotropic) == 0) {
             hasAnisotropic = true;
             break;
         }
@@ -106,7 +107,7 @@ void OpenGL33Backend::DetectFeatures() {
     
     if (hasAnisotropic) {
         GLfloat maxAnisotropy = 0.0f;
-        glGetFloatv(0x84FF, &maxAnisotropy);  // GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT value
+        glGetFloatv(GLExtConstants::GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAnisotropy);
         m_features.texture.maxAnisotropy = maxAnisotropy;
     } else {
         m_features.texture.maxAnisotropy = 1.0f;

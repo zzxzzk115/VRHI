@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 #include "OpenGL33Sampler.hpp"
+#include "GLExtensions.hpp"
 #include <VRHI/Logging.hpp>
 
 namespace VRHI {
@@ -94,8 +95,7 @@ OpenGL33Sampler::Create(const SamplerDesc& desc) {
     glSamplerParameterf(sampler, GL_TEXTURE_MAX_LOD, desc.maxLod);
     
     if (desc.anisotropyEnable) {
-        // GL_TEXTURE_MAX_ANISOTROPY_EXT = 0x84FE
-        glSamplerParameterf(sampler, 0x84FE, desc.maxAnisotropy);
+        glSamplerParameterf(sampler, GLExtConstants::GL_TEXTURE_MAX_ANISOTROPY_EXT, desc.maxAnisotropy);
     }
     
     if (desc.compareEnable) {

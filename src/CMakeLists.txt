@@ -49,6 +49,7 @@ if(VRHI_ENABLE_OPENGL)
         Backends/OpenGL33/OpenGL33Framebuffer.cpp
         Backends/OpenGL33/OpenGL33CommandBuffer.cpp
         Backends/OpenGL33/OpenGL33Sync.cpp
+        Backends/OpenGL33/GLFormatUtils.cpp
     )
     message(STATUS "OpenGL backend enabled")
 endif()

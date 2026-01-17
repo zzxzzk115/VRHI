@@ -71,7 +71,9 @@ private:
     DeviceProperties m_properties;
     
     // OpenGL context handle (platform-specific, will be void* for now)
-    void* m_context = nullptr;
+    // Reserved for future window system integration (Phase 7-8)
+    // Currently, we assume the context is created externally
+    [[maybe_unused]] void* m_context = nullptr;
     
     bool m_initialized = false;
 };
