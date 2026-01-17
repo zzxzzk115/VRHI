@@ -5,13 +5,6 @@
 
 namespace VRHI {
 
-// Global log level
-static LogLevel g_logLevel = LogLevel::Info;
-
-void SetLogLevel(LogLevel level) noexcept {
-    g_logLevel = level;
-}
-
 std::expected<std::unique_ptr<Device>, Error> 
 CreateDevice(const DeviceConfig& config) {
     // Placeholder implementation
