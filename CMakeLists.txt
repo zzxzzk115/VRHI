@@ -19,7 +19,7 @@ project(VRHI
 
 # Build options
 option(VRHI_BUILD_EXAMPLES "Build example applications" ON)
-option(VRHI_BUILD_TESTS "Build unit tests" OFF)
+option(VRHI_BUILD_TESTS "Build unit tests" ON)
 option(VRHI_BUILD_SHARED_LIBS "Build shared library instead of static" OFF)
 
 # Backend options
