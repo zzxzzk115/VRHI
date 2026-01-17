@@ -9,8 +9,8 @@
 # Core source files
 set(VRHI_CORE_SOURCES
     Core/Version.cpp
+    Core/Device.cpp
     # Additional core implementation files will be added here
-    # Core/Device.cpp
     # Core/Error.cpp
     # Core/Features.cpp
 )

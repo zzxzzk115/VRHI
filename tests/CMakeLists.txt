@@ -4,11 +4,35 @@
 
 message(STATUS "Configuring tests...")
 
-# Test framework will be added here
-# Example: GoogleTest, Catch2, or custom test framework
+# ============================================================================
+# Unit Tests
+# ============================================================================
 
-# add_subdirectory(unit)
-# add_subdirectory(integration)
+# Core type tests
+add_executable(CoreTypesTests
+    unit/CoreTypesTests.cpp
+)
 
-message(STATUS "Tests will be added during development")
-message(STATUS "  Use -DVRHI_BUILD_TESTS=ON to enable tests")
+target_link_libraries(CoreTypesTests
+    PRIVATE
+        VRHI::VRHI
+        gtest
+        gtest_main
+)
+
+# Set C++ standard for tests
+set_target_properties(CoreTypesTests PROPERTIES
+    CXX_STANDARD 23
+    CXX_STANDARD_REQUIRED ON
+    CXX_EXTENSIONS OFF
+)
+
+# Register tests with CTest
+add_test(NAME CoreTypesTests COMMAND CoreTypesTests)
+
+# ============================================================================
+# Test Summary
+# ============================================================================
+
+message(STATUS "Tests configured:")
+message(STATUS "  CoreTypesTests: Unit tests for core types and error handling")
