@@ -187,11 +187,17 @@ TEST_F(BackendScoringTest, CompatibilityPlatformSpecific) {
     float macGL41 = BackendScorer::CalculateCompatibilityScore(
         BackendType::OpenGL41, Platform::macOS);
     
-    // OpenGL 4.6 should not be available on macOS
+    // OpenGL 4.6 should not be available on macOS (score should be 0)
     float macGL46 = BackendScorer::CalculateCompatibilityScore(
         BackendType::OpenGL46, Platform::macOS);
     
+    // OpenGL 3.3 should have decent compatibility on macOS
+    float macGL33 = BackendScorer::CalculateCompatibilityScore(
+        BackendType::OpenGL33, Platform::macOS);
+    
     EXPECT_GT(macGL41, macGL46);
+    EXPECT_GT(macGL33, macGL46);
+    EXPECT_EQ(macGL46, 0.0f); // GL4.6 not supported on macOS
 }
 
 // ============================================================================
@@ -338,10 +344,19 @@ TEST_F(BackendScoringTest, VulkanVsOpenGLOnWindows) {
     float gl33Score = BackendScorer::CalculateScore(
         BackendType::OpenGL33, features, requirements);
     
-    // Vulkan should score higher than OpenGL on Windows
-    // (unless D3D12 which would be native)
-    EXPECT_GT(vulkanScore, gl46Score);
-    EXPECT_GT(gl46Score, gl33Score);
+    // Vulkan should generally score higher than OpenGL
+    EXPECT_GT(vulkanScore, gl33Score);
+    
+    // Platform-specific expectations
+    Platform platform = GetCurrentPlatform();
+    if (platform == Platform::macOS) {
+        // On macOS, GL4.6 is not supported, so GL3.3 should score higher
+        EXPECT_GT(gl33Score, gl46Score);
+    } else {
+        // On other platforms (Windows, Linux), GL4.6 should score higher than GL3.3
+        EXPECT_GT(gl46Score, gl33Score);
+        EXPECT_GT(vulkanScore, gl46Score);
+    }
 }
 
 TEST_F(BackendScoringTest, ScoreRankingConsistency) {

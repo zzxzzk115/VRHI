@@ -281,6 +281,7 @@ float BackendScorer::CalculateCompatibilityScore(
             else if (backendType == BackendType::OpenGL41) score = 90.0f; // Max GL version on macOS
             else if (backendType == BackendType::OpenGL33) score = 85.0f;
             else if (backendType == BackendType::Vulkan) score = 60.0f; // Via MoltenVK
+            else if (backendType == BackendType::OpenGL46) score = 0.0f; // Not supported on macOS
             break;
             
         case Platform::iOS:
