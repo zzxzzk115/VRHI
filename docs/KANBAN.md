@@ -70,14 +70,14 @@ This document tracks all work items for VRHI v1.0 development. Tasks can be assi
 
 | ID | Task | Priority | Effort | Status |
 |----|------|----------|--------|--------|
-| B1.1 | Implement backend scoring algorithm | P0 | M | Backlog |
-| B1.2 | Add platform-native API bonus logic | P0 | S | Backlog |
-| B1.3 | Implement feature support scoring (40%) | P0 | M | Backlog |
-| B1.4 | Implement performance scoring (30%) | P1 | M | Backlog |
-| B1.5 | Implement stability scoring (20%) | P1 | S | Backlog |
-| B1.6 | Implement compatibility scoring (10%) | P1 | S | Backlog |
-| B1.7 | Add backend priority lists per platform | P1 | S | Backlog |
-| B1.8 | Write unit tests for scoring system | P1 | M | Backlog |
+| B1.1 | Implement backend scoring algorithm | P0 | M | Done |
+| B1.2 | Add platform-native API bonus logic | P0 | S | Done |
+| B1.3 | Implement feature support scoring (40%) | P0 | M | Done |
+| B1.4 | Implement performance scoring (30%) | P1 | M | Done |
+| B1.5 | Implement stability scoring (20%) | P1 | S | Done |
+| B1.6 | Implement compatibility scoring (10%) | P1 | S | Done |
+| B1.7 | Add backend priority lists per platform | P1 | S | Done |
+| B1.8 | Write unit tests for scoring system | P1 | M | Done |
 
 ### Feature Detection
 
