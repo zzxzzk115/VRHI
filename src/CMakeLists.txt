@@ -13,6 +13,9 @@ set(VRHI_CORE_SOURCES
     Core/Logging.cpp
     Core/Backend.cpp
     Core/BackendScoring.cpp
+    Core/NullBackend.cpp
+    Core/NullDevice.cpp
+    Core/MockBackend.cpp
     # Additional core implementation files will be added here
     # Core/Error.cpp
     # Core/Features.cpp

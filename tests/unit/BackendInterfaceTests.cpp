@@ -259,3 +259,4 @@ TEST_F(CommandBufferInterfaceTest, SetDynamicState) {
     
     cmd->End();
 }
+
