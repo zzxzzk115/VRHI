@@ -98,15 +98,15 @@ struct ClearDepthStencilValue {
 // ============================================================================
 
 /// Command buffer for recording and submitting rendering commands
-class ICommandBuffer {
+class CommandBuffer {
 public:
-    virtual ~ICommandBuffer() = default;
+    virtual ~CommandBuffer() = default;
     
     // CommandBuffer cannot be copied, only moved
-    ICommandBuffer(const ICommandBuffer&) = delete;
-    ICommandBuffer& operator=(const ICommandBuffer&) = delete;
-    ICommandBuffer(ICommandBuffer&&) noexcept = default;
-    ICommandBuffer& operator=(ICommandBuffer&&) noexcept = default;
+    CommandBuffer(const CommandBuffer&) = delete;
+    CommandBuffer& operator=(const CommandBuffer&) = delete;
+    CommandBuffer(CommandBuffer&&) noexcept = default;
+    CommandBuffer& operator=(CommandBuffer&&) noexcept = default;
     
     // ========================================================================
     // Command Buffer Lifecycle
@@ -292,10 +292,7 @@ public:
     virtual void InsertDebugMarker(const char* name, const float color[4] = nullptr) = 0;
     
 protected:
-    ICommandBuffer() = default;
+    CommandBuffer() = default;
 };
-
-// Convenience alias for the public API
-using CommandBuffer = ICommandBuffer;
 
 } // namespace VRHI

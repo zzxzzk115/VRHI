@@ -82,15 +82,15 @@ struct ShaderDesc {
 // ============================================================================
 
 /// Shader module interface
-class IShader {
+class Shader {
 public:
-    virtual ~IShader() = default;
+    virtual ~Shader() = default;
     
     // Shader cannot be copied, only moved
-    IShader(const IShader&) = delete;
-    IShader& operator=(const IShader&) = delete;
-    IShader(IShader&&) noexcept = default;
-    IShader& operator=(IShader&&) noexcept = default;
+    Shader(const Shader&) = delete;
+    Shader& operator=(const Shader&) = delete;
+    Shader(Shader&&) noexcept = default;
+    Shader& operator=(Shader&&) noexcept = default;
     
     // ========================================================================
     // Shader Information
@@ -114,10 +114,10 @@ public:
     virtual void* GetNativeHandle() const noexcept { return nullptr; }
     
 protected:
-    IShader() = default;
+    Shader() = default;
 };
 
 // Convenience alias for the public API
-using Shader = IShader;
+
 
 } // namespace VRHI

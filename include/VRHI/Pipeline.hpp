@@ -299,15 +299,15 @@ struct PipelineDesc {
 // ============================================================================
 
 /// Graphics or compute pipeline interface
-class IPipeline {
+class Pipeline {
 public:
-    virtual ~IPipeline() = default;
+    virtual ~Pipeline() = default;
     
     // Pipeline cannot be copied, only moved
-    IPipeline(const IPipeline&) = delete;
-    IPipeline& operator=(const IPipeline&) = delete;
-    IPipeline(IPipeline&&) noexcept = default;
-    IPipeline& operator=(IPipeline&&) noexcept = default;
+    Pipeline(const Pipeline&) = delete;
+    Pipeline& operator=(const Pipeline&) = delete;
+    Pipeline(Pipeline&&) noexcept = default;
+    Pipeline& operator=(Pipeline&&) noexcept = default;
     
     // ========================================================================
     // Pipeline Information
@@ -325,10 +325,10 @@ public:
     virtual void* GetNativeHandle() const noexcept { return nullptr; }
     
 protected:
-    IPipeline() = default;
+    Pipeline() = default;
 };
 
 // Convenience alias for the public API
-using Pipeline = IPipeline;
+
 
 } // namespace VRHI

@@ -16,15 +16,15 @@ class Texture;
 // ============================================================================
 
 /// Fence for CPU-GPU synchronization
-class IFence {
+class Fence {
 public:
-    virtual ~IFence() = default;
+    virtual ~Fence() = default;
     
     // Fence cannot be copied, only moved
-    IFence(const IFence&) = delete;
-    IFence& operator=(const IFence&) = delete;
-    IFence(IFence&&) noexcept = default;
-    IFence& operator=(IFence&&) noexcept = default;
+    Fence(const Fence&) = delete;
+    Fence& operator=(const Fence&) = delete;
+    Fence(Fence&&) noexcept = default;
+    Fence& operator=(Fence&&) noexcept = default;
     
     // ========================================================================
     // Synchronization
@@ -50,7 +50,7 @@ public:
     virtual void* GetNativeHandle() const noexcept { return nullptr; }
     
 protected:
-    IFence() = default;
+    Fence() = default;
 };
 
 // ============================================================================
@@ -58,15 +58,15 @@ protected:
 // ============================================================================
 
 /// Semaphore for GPU-GPU synchronization
-class ISemaphore {
+class Semaphore {
 public:
-    virtual ~ISemaphore() = default;
+    virtual ~Semaphore() = default;
     
     // Semaphore cannot be copied, only moved
-    ISemaphore(const ISemaphore&) = delete;
-    ISemaphore& operator=(const ISemaphore&) = delete;
-    ISemaphore(ISemaphore&&) noexcept = default;
-    ISemaphore& operator=(ISemaphore&&) noexcept = default;
+    Semaphore(const Semaphore&) = delete;
+    Semaphore& operator=(const Semaphore&) = delete;
+    Semaphore(Semaphore&&) noexcept = default;
+    Semaphore& operator=(Semaphore&&) noexcept = default;
     
     // ========================================================================
     // Native Handle Access (Optional)
@@ -77,7 +77,7 @@ public:
     virtual void* GetNativeHandle() const noexcept { return nullptr; }
     
 protected:
-    ISemaphore() = default;
+    Semaphore() = default;
 };
 
 // ============================================================================
@@ -100,15 +100,15 @@ struct SwapChainDesc {
 // ============================================================================
 
 /// Swap chain for presenting images to the screen
-class ISwapChain {
+class SwapChain {
 public:
-    virtual ~ISwapChain() = default;
+    virtual ~SwapChain() = default;
     
     // SwapChain cannot be copied, only moved
-    ISwapChain(const ISwapChain&) = delete;
-    ISwapChain& operator=(const ISwapChain&) = delete;
-    ISwapChain(ISwapChain&&) noexcept = default;
-    ISwapChain& operator=(ISwapChain&&) noexcept = default;
+    SwapChain(const SwapChain&) = delete;
+    SwapChain& operator=(const SwapChain&) = delete;
+    SwapChain(SwapChain&&) noexcept = default;
+    SwapChain& operator=(SwapChain&&) noexcept = default;
     
     // ========================================================================
     // Swap Chain Operations
@@ -120,12 +120,12 @@ public:
     /// @param fence Optional fence to signal when image is ready
     /// @return Image index on success, error on failure
     virtual uint32_t AcquireNextImage(uint64_t timeout = UINT64_MAX,
-                                     ISemaphore* semaphore = nullptr,
-                                     IFence* fence = nullptr) = 0;
+                                     Semaphore* semaphore = nullptr,
+                                     Fence* fence = nullptr) = 0;
     
     /// Present current image to screen
     /// @param waitSemaphores Optional semaphores to wait on before presenting
-    virtual void Present(ISemaphore* const* waitSemaphores = nullptr,
+    virtual void Present(Semaphore* const* waitSemaphores = nullptr,
                         uint32_t waitSemaphoreCount = 0) = 0;
     
     /// Resize swap chain
@@ -166,12 +166,12 @@ public:
     virtual void* GetNativeHandle() const noexcept { return nullptr; }
     
 protected:
-    ISwapChain() = default;
+    SwapChain() = default;
 };
 
 // Convenience aliases for the public API
-using Fence = IFence;
-using Semaphore = ISemaphore;
-using SwapChain = ISwapChain;
+
+
+
 
 } // namespace VRHI

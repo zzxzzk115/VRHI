@@ -90,15 +90,15 @@ struct RenderPassDesc {
 // ============================================================================
 
 /// Render pass interface
-class IRenderPass {
+class RenderPass {
 public:
-    virtual ~IRenderPass() = default;
+    virtual ~RenderPass() = default;
     
     // RenderPass cannot be copied, only moved
-    IRenderPass(const IRenderPass&) = delete;
-    IRenderPass& operator=(const IRenderPass&) = delete;
-    IRenderPass(IRenderPass&&) noexcept = default;
-    IRenderPass& operator=(IRenderPass&&) noexcept = default;
+    RenderPass(const RenderPass&) = delete;
+    RenderPass& operator=(const RenderPass&) = delete;
+    RenderPass(RenderPass&&) noexcept = default;
+    RenderPass& operator=(RenderPass&&) noexcept = default;
     
     // ========================================================================
     // Native Handle Access (Optional)
@@ -109,7 +109,7 @@ public:
     virtual void* GetNativeHandle() const noexcept { return nullptr; }
     
 protected:
-    IRenderPass() = default;
+    RenderPass() = default;
 };
 
 // ============================================================================
@@ -117,7 +117,7 @@ protected:
 // ============================================================================
 
 struct FramebufferDesc {
-    IRenderPass* renderPass = nullptr;
+    RenderPass* renderPass = nullptr;
     std::span<Texture* const> attachments;
     uint32_t width = 0;
     uint32_t height = 0;
@@ -131,15 +131,15 @@ struct FramebufferDesc {
 // ============================================================================
 
 /// Framebuffer interface
-class IFramebuffer {
+class Framebuffer {
 public:
-    virtual ~IFramebuffer() = default;
+    virtual ~Framebuffer() = default;
     
     // Framebuffer cannot be copied, only moved
-    IFramebuffer(const IFramebuffer&) = delete;
-    IFramebuffer& operator=(const IFramebuffer&) = delete;
-    IFramebuffer(IFramebuffer&&) noexcept = default;
-    IFramebuffer& operator=(IFramebuffer&&) noexcept = default;
+    Framebuffer(const Framebuffer&) = delete;
+    Framebuffer& operator=(const Framebuffer&) = delete;
+    Framebuffer(Framebuffer&&) noexcept = default;
+    Framebuffer& operator=(Framebuffer&&) noexcept = default;
     
     // ========================================================================
     // Framebuffer Information
@@ -163,11 +163,11 @@ public:
     virtual void* GetNativeHandle() const noexcept { return nullptr; }
     
 protected:
-    IFramebuffer() = default;
+    Framebuffer() = default;
 };
 
 // Convenience aliases for the public API
-using RenderPass = IRenderPass;
-using Framebuffer = IFramebuffer;
+
+
 
 } // namespace VRHI

@@ -50,6 +50,26 @@ set_target_properties(LoggingTests PROPERTIES
 
 add_test(NAME LoggingTests COMMAND LoggingTests)
 
+# Backend interface tests
+add_executable(BackendInterfaceTests
+    unit/BackendInterfaceTests.cpp
+)
+
+target_link_libraries(BackendInterfaceTests
+    PRIVATE
+        VRHI::VRHI
+        gtest
+        gtest_main
+)
+
+set_target_properties(BackendInterfaceTests PROPERTIES
+    CXX_STANDARD 23
+    CXX_STANDARD_REQUIRED ON
+    CXX_EXTENSIONS OFF
+)
+
+add_test(NAME BackendInterfaceTests COMMAND BackendInterfaceTests)
+
 # ============================================================================
 # Test Summary
 # ============================================================================
@@ -57,3 +77,4 @@ add_test(NAME LoggingTests COMMAND LoggingTests)
 message(STATUS "Tests configured:")
 message(STATUS "  CoreTypesTests: Unit tests for core types and error handling")
 message(STATUS "  LoggingTests: Unit tests for logging system")
+message(STATUS "  BackendInterfaceTests: Unit tests for backend and device interfaces")

@@ -2,7 +2,9 @@
 // SPDX-License-Identifier: MIT
 
 #include "MockBackend.hpp"
+#include <VRHI/VRHIAll.hpp>
 #include <gtest/gtest.h>
+#include <cstring>
 
 using namespace VRHI;
 

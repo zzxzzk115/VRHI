@@ -3,13 +3,11 @@
 
 #pragma once
 
+#include "VRHI.hpp"
 #include <cstdarg>
 #include <string_view>
 
 namespace VRHI {
-
-// Forward declare LogLevel from main header
-enum class LogLevel;
 
 // ============================================================================
 // Logging Interface
@@ -75,6 +73,30 @@ void LogFormatted(LogLevel level, const char* format, ...)
 ;
 
 } // namespace Internal
+
+// ============================================================================
+// Convenience Logging Functions
+// ============================================================================
+
+/// Log a debug message
+inline void LogDebug(std::string_view message) {
+    Internal::Log(LogLevel::Debug, message);
+}
+
+/// Log an info message
+inline void LogInfo(std::string_view message) {
+    Internal::Log(LogLevel::Info, message);
+}
+
+/// Log a warning message
+inline void LogWarning(std::string_view message) {
+    Internal::Log(LogLevel::Warning, message);
+}
+
+/// Log an error message
+inline void LogError(std::string_view message) {
+    Internal::Log(LogLevel::Error, message);
+}
 
 } // namespace VRHI
 

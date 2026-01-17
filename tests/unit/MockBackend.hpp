@@ -5,6 +5,7 @@
 
 #include <VRHI/VRHIAll.hpp>
 #include <map>
+#include <cstring>
 
 namespace VRHI {
 namespace Mock {
@@ -40,7 +41,7 @@ public:
     
 private:
     BufferDesc m_desc;
-    std::vector<uint8_t> m_mappedMemory{1024 * 1024}; // 1MB default
+    std::vector<uint8_t> m_mappedMemory = std::vector<uint8_t>(1024 * 1024); // 1MB default
 };
 
 class MockTexture : public Texture {
@@ -147,12 +148,12 @@ public:
         }
     }
     
-    uint32_t AcquireNextImage(uint64_t, ISemaphore*, IFence*) override {
+    uint32_t AcquireNextImage(uint64_t, Semaphore*, Fence*) override {
         m_currentImage = (m_currentImage + 1) % m_images.size();
         return m_currentImage;
     }
     
-    void Present(ISemaphore* const*, uint32_t) override {}
+    void Present(Semaphore* const*, uint32_t) override {}
     void Resize(uint32_t width, uint32_t height) override {
         m_desc.width = width;
         m_desc.height = height;
