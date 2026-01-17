@@ -5,6 +5,11 @@
 #include <VRHI/Logging.hpp>
 #include <algorithm>
 
+// Platform-specific includes
+#if defined(__APPLE__)
+    #include <TargetConditionals.h>
+#endif
+
 namespace VRHI {
 
 // ============================================================================
@@ -15,7 +20,6 @@ Platform GetCurrentPlatform() noexcept {
 #if defined(_WIN32) || defined(_WIN64)
     return Platform::Windows;
 #elif defined(__APPLE__)
-    #include <TargetConditionals.h>
     #if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
         return Platform::iOS;
     #else

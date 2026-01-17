@@ -1,7 +1,6 @@
 // Copyright (c) 2024 Lazy_V
 // SPDX-License-Identifier: MIT
 
-#include <VRHI/VRHIAll.hpp>
 #include <VRHI/BackendScoring.hpp>
 #include <gtest/gtest.h>
 
