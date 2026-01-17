@@ -4,18 +4,15 @@
 #pragma once
 
 #include <VRHI/Backend.hpp>
-#include <VRHI/BackendScoring.hpp>
 
 namespace VRHI {
 
-/// Mock backend for testing
-class MockBackend : public IBackend {
+/// Null backend - placeholder implementation that does nothing
+/// Used as a default/stub backend before real backend implementations are ready
+class NullBackend : public IBackend {
 public:
-    MockBackend();
-    ~MockBackend() override = default;
-    
-    // Set custom features for testing
-    void SetFeatures(const FeatureSet& features) { m_features = features; }
+    NullBackend() = default;
+    ~NullBackend() override = default;
     
     // IBackend implementation
     BackendType GetType() const noexcept override;
@@ -29,9 +26,6 @@ public:
     
     std::expected<std::unique_ptr<Device>, Error>
     CreateDevice(const DeviceConfig& config) override;
-    
-private:
-    FeatureSet m_features;
 };
 
 } // namespace VRHI

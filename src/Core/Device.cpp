@@ -4,7 +4,6 @@
 #include <VRHI/VRHI.hpp>
 #include <VRHI/Backend.hpp>
 #include <VRHI/Logging.hpp>
-#include "DeviceImpl.hpp"
 #include <algorithm>
 
 namespace VRHI {
@@ -91,18 +90,15 @@ CreateDevice(const DeviceConfig& config) {
     auto& backend = backendResult.value();
     LogInfo(std::string("Selected backend: ") + std::string(backend->GetName()));
     
-    // Create device implementation wrapping the backend
-    try {
-        auto device = std::make_unique<DeviceImpl>(std::move(backend), config);
-        LogInfo("Device created successfully");
-        return device;
-    } catch (const std::exception& e) {
-        Error error{};
-        error.code = Error::Code::InitializationFailed;
-        error.message = std::string("Failed to create device: ") + e.what();
-        LogError(error.message);
-        return std::unexpected(error);
+    // Create device from backend
+    auto deviceResult = backend->CreateDevice(config);
+    if (!deviceResult.has_value()) {
+        LogError("Failed to create device: " + deviceResult.error().message);
+        return std::unexpected(deviceResult.error());
     }
+    
+    LogInfo("Device created successfully");
+    return deviceResult;
 }
 
 // ============================================================================

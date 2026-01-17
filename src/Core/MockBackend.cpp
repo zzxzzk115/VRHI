@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 #include "MockBackend.hpp"
-#include "DeviceImpl.hpp"
+#include "NullDevice.hpp"
 #include <VRHI/BackendScoring.hpp>
 
 namespace VRHI {
@@ -62,6 +62,13 @@ float MockBackend::CalculateScore(const FeatureRequirements& requirements) const
         m_features,
         requirements
     );
+}
+
+std::expected<std::unique_ptr<Device>, Error>
+MockBackend::CreateDevice(const DeviceConfig& config) {
+    // Return a null device as a stub implementation
+    // Real implementation will come with actual backend integration
+    return std::make_unique<NullDevice>();
 }
 
 } // namespace VRHI
