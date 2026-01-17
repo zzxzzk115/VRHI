@@ -187,7 +187,7 @@ See [Build System Design](docs/design/build_system.md) for complete documentatio
 
 ### Requirements
 
-- **Compiler**: GCC 13+, Clang 16+, MSVC 2022+
+- **Compiler**: GCC 14+, Clang 19+, Apple Clang 15+ (Xcode 15.3+), MSVC 2022+
 - **C++ Standard**: C++23
 - **CMake**: 3.21+
 - **Platform**: Windows, Linux, macOS, Android, iOS, Raspberry Pi

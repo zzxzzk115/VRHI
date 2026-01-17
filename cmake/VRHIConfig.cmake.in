@@ -1,0 +1,17 @@
+# ============================================================================
+# VRHI CMake Configuration Template
+# Used to generate VRHIConfig.cmake for find_package() support
+# ============================================================================
+
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+# Find required dependencies
+find_dependency(Threads REQUIRED)
+
+# Include the targets file
+include("${CMAKE_CURRENT_LIST_DIR}/VRHITargets.cmake")
+
+# Provide compatibility with older CMake versions
+check_required_components(VRHI)

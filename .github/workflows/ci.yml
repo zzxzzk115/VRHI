@@ -17,14 +17,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        compiler: [gcc-13, clang-17]
+        compiler: [gcc-14, clang-19]
         include:
-          - compiler: gcc-13
-            cc: gcc-13
-            cxx: g++-13
-          - compiler: clang-17
-            cc: clang-17
-            cxx: clang++-17
+          - compiler: gcc-14
+            cc: gcc-14
+            cxx: g++-14
+          - compiler: clang-19
+            cc: clang-19
+            cxx: clang++-19
     
     steps:
       - uses: actions/checkout@v4
@@ -35,7 +35,7 @@ jobs:
           sudo apt-get install -y \
             cmake \
             ninja-build \
-            ${{ matrix.compiler == 'gcc-13' && 'gcc-13 g++-13' || 'clang-17' }} \
+            ${{ matrix.compiler == 'gcc-14' && 'gcc-14 g++-14' || 'clang-19' }} \
             libvulkan-dev \
             libglfw3-dev
       
@@ -68,9 +68,11 @@ jobs:
           arch: x64
       
       - name: Install Vulkan SDK
-        run: |
-          Invoke-WebRequest -Uri "https://sdk.lunarg.com/sdk/download/latest/windows/vulkan-sdk.exe" -OutFile vulkan-sdk.exe
-          Start-Process -FilePath vulkan-sdk.exe -ArgumentList '/S' -Wait
+        uses: humbletim/setup-vulkan-sdk@v1.2.1
+        with:
+          vulkan-query-version: 1.4.304.1
+          vulkan-components: Vulkan-Headers, Vulkan-Loader
+          vulkan-use-cache: true
       
       - name: Configure CMake
         run: |
@@ -85,9 +87,9 @@ jobs:
       - name: Build
         run: cmake --build build --config ${{env.BUILD_TYPE}}
 
-  # Compilation check - macOS (Apple Clang, x64 only)
+  # Compilation check - macOS (Apple Clang, arm64)
   build-macos:
-    name: macOS (x64)
+    name: macOS (arm64)
     runs-on: macos-latest
     
     steps:
@@ -108,7 +110,7 @@ jobs:
             -G Ninja \
             -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-            -DCMAKE_OSX_ARCHITECTURES=x86_64 \
+            -DCMAKE_OSX_ARCHITECTURES=arm64 \
             -DVRHI_BACKEND_VULKAN_MOLTENVK=ON \
             -DVRHI_BACKEND_OPENGL=ON \
             -DVRHI_WINDOW_GLFW=ON

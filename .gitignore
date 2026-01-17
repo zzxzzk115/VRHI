@@ -1,0 +1,329 @@
+# ============================================================================
+# Build Artifacts
+# ============================================================================
+build/
+Build/
+BUILD/
+out/
+bin/
+lib/
+dist/
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+cmake-build-*/
+*.cmake
+!CMakeLists.txt
+!cmake/*.cmake
+
+# Make
+Makefile
+*.make
+
+# Ninja
+.ninja_deps
+.ninja_log
+build.ninja
+rules.ninja
+
+# ============================================================================
+# IDE and Editor Configurations
+# ============================================================================
+
+# Visual Studio
+.vs/
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.sln
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.opensdf
+*.sdf
+*.opendb
+*.VC.db
+*.VC.VC.opendb
+.vscode/
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+.history/
+
+# JetBrains IDEs (CLion, IntelliJ IDEA, etc.)
+.idea/
+*.iml
+*.ipr
+*.iws
+cmake-build-*/
+
+# Xcode
+*.xcodeproj
+*.xcworkspace
+xcuserdata/
+DerivedData/
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+
+# Eclipse
+.cproject
+.project
+.settings/
+
+# Qt Creator
+*.pro.user
+*.pro.user.*
+CMakeLists.txt.user
+CMakeLists.txt.user.*
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# Vim
+*.swp
+*.swo
+*~
+.*.swp
+.*.swo
+Session.vim
+.netrwhist
+
+# Emacs
+*~
+\#*\#
+.\#*
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Atom
+.atom/
+
+# NetBeans
+nbproject/
+nbbuild/
+nbdist/
+.nb-gradle/
+
+# Code::Blocks
+*.cbp
+*.depend
+*.layout
+
+# ============================================================================
+# Operating System Files
+# ============================================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+*.stackdump
+
+# Linux
+*~
+.directory
+.Trash-*
+.nfs*
+
+# ============================================================================
+# Compiler and Build System Outputs
+# ============================================================================
+
+# Object files
+*.o
+*.obj
+*.ko
+*.elf
+*.lo
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lai
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+*.ilk
+*.exp
+
+# ============================================================================
+# Testing and Coverage
+# ============================================================================
+
+# Test outputs
+Testing/
+test_results/
+*.gcov
+*.gcda
+*.gcno
+coverage/
+htmlcov/
+.coverage
+.pytest_cache/
+CTestTestfile.cmake
+
+# ============================================================================
+# Documentation
+# ============================================================================
+
+# Doxygen
+docs/html/
+docs/latex/
+docs/xml/
+Doxyfile.bak
+
+# ============================================================================
+# Package Managers and Dependencies
+# ============================================================================
+
+# vcpkg
+vcpkg_installed/
+.vcpkg-root
+
+# Conan
+conaninfo.txt
+conanbuildinfo.*
+conan.lock
+graph_info.json
+
+# ============================================================================
+# Temporary and Backup Files
+# ============================================================================
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.orig
+*.log
+*.tlog
+*.lastbuildstate
+
+# Backup files
+*~
+*.swp
+*.bak
+
+# ============================================================================
+# Project-Specific
+# ============================================================================
+
+# Compiled shaders (if generated)
+*.spv
+*.spirv
+
+# Generated files
+generated/
+gen/
+
+# Installation directory
+install/
+prefix/
+
+# Package files
+*.tar
+*.tar.gz
+*.zip
+*.7z
+*.rar
+
+# ============================================================================
+# Profiling and Analysis
+# ============================================================================
+
+# Profiling
+*.prof
+*.gprof
+callgrind.out.*
+perf.data
+perf.data.old
+
+# Sanitizers
+*.san
+
+# Static analysis
+cppcheck_report.xml
+scan_results/
+
+# ============================================================================
+# Misc
+# ============================================================================
+
+# Tags
+tags
+TAGS
+.tags
+.tags_sorted_by_file
+
+# ctags
+.ctags
+
+# cscope
+cscope.out
+cscope.in.out
+cscope.po.out
+cscope.files
+
+# Bazel (if used)
+bazel-*
+
+# Gradle (if used)
+.gradle/
+gradle/
+gradlew
+gradlew.bat
+
+# Meson (if used)
+builddir/
+meson-*
