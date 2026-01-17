@@ -70,6 +70,26 @@ set_target_properties(BackendInterfaceTests PROPERTIES
 
 add_test(NAME BackendInterfaceTests COMMAND BackendInterfaceTests)
 
+# Core API tests
+add_executable(CoreAPITests
+    unit/CoreAPITests.cpp
+)
+
+target_link_libraries(CoreAPITests
+    PRIVATE
+        VRHI::VRHI
+        gtest
+        gtest_main
+)
+
+set_target_properties(CoreAPITests PROPERTIES
+    CXX_STANDARD 23
+    CXX_STANDARD_REQUIRED ON
+    CXX_EXTENSIONS OFF
+)
+
+add_test(NAME CoreAPITests COMMAND CoreAPITests)
+
 # ============================================================================
 # Test Summary
 # ============================================================================
@@ -78,3 +98,4 @@ message(STATUS "Tests configured:")
 message(STATUS "  CoreTypesTests: Unit tests for core types and error handling")
 message(STATUS "  LoggingTests: Unit tests for logging system")
 message(STATUS "  BackendInterfaceTests: Unit tests for backend and device interfaces")
+message(STATUS "  CoreAPITests: Unit tests for Core API functions")

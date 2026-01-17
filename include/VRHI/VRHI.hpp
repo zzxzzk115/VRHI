@@ -283,6 +283,17 @@ struct Version {
 // Global Functions
 // ============================================================================
 
+/// Initialize VRHI library
+/// @note This is optional - CreateDevice() will auto-initialize if needed
+void Initialize() noexcept;
+
+/// Shutdown VRHI library
+void Shutdown() noexcept;
+
+/// Check if VRHI is initialized
+/// @return True if initialized, false otherwise
+bool IsInitialized() noexcept;
+
 /// Create a rendering device
 /// @param config Device configuration
 /// @return Device instance on success, error on failure
