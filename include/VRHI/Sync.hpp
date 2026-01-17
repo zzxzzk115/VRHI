@@ -169,9 +169,4 @@ protected:
     SwapChain() = default;
 };
 
-// Convenience aliases for the public API
-
-
-
-
 } // namespace VRHI

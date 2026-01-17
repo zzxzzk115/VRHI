@@ -328,7 +328,4 @@ protected:
     Pipeline() = default;
 };
 
-// Convenience alias for the public API
-
-
 } // namespace VRHI

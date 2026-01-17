@@ -16,7 +16,10 @@ namespace Mock {
 
 class MockBuffer : public Buffer {
 public:
-    explicit MockBuffer(const BufferDesc& desc) : m_desc(desc) {}
+    explicit MockBuffer(const BufferDesc& desc) 
+        : m_desc(desc)
+        , m_mappedMemory(desc.size > 0 ? desc.size : 1024) // Use actual size or 1KB minimum
+    {}
     
     size_t GetSize() const noexcept override { return m_desc.size; }
     BufferUsage GetUsage() const noexcept override { return m_desc.usage; }
@@ -41,7 +44,7 @@ public:
     
 private:
     BufferDesc m_desc;
-    std::vector<uint8_t> m_mappedMemory = std::vector<uint8_t>(1024 * 1024); // 1MB default
+    std::vector<uint8_t> m_mappedMemory;
 };
 
 class MockTexture : public Texture {

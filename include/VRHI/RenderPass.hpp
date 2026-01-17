@@ -166,8 +166,4 @@ protected:
     Framebuffer() = default;
 };
 
-// Convenience aliases for the public API
-
-
-
 } // namespace VRHI
