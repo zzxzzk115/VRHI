@@ -46,7 +46,7 @@ TEST_F(BackendInterfaceTest, GetSupportedFeatures) {
 }
 
 TEST_F(BackendInterfaceTest, ScoreCalculationWithRequirements) {
-    FeatureRequirements requirements;
+    FeatureRequirements requirements{};
     requirements.required = {Feature::Texture2D};
     requirements.optional = {Feature::TextureCube};
     
@@ -55,7 +55,7 @@ TEST_F(BackendInterfaceTest, ScoreCalculationWithRequirements) {
 }
 
 TEST_F(BackendInterfaceTest, ScoreCalculationUnsupportedRequirement) {
-    FeatureRequirements requirements;
+    FeatureRequirements requirements{};
     requirements.required = {Feature::RayTracing};
     
     float score = backend->CalculateScore(requirements);
@@ -63,7 +63,7 @@ TEST_F(BackendInterfaceTest, ScoreCalculationUnsupportedRequirement) {
 }
 
 TEST_F(BackendInterfaceTest, CreateDevice) {
-    DeviceConfig config;
+    DeviceConfig config{};
     config.width = 1280;
     config.height = 720;
     
@@ -79,7 +79,7 @@ class DeviceInterfaceTest : public ::testing::Test {
 protected:
     void SetUp() override {
         auto backend = std::make_unique<Mock::MockBackend>();
-        DeviceConfig config;
+        DeviceConfig config{};
         auto result = backend->CreateDevice(config);
         ASSERT_TRUE(result.has_value());
         device = std::move(result.value());
@@ -98,7 +98,7 @@ TEST_F(DeviceInterfaceTest, GetDeviceInfo) {
 }
 
 TEST_F(DeviceInterfaceTest, CreateBuffer) {
-    BufferDesc desc;
+    BufferDesc desc{};
     desc.size = 1024;
     desc.usage = BufferUsage::Vertex;
     
@@ -112,7 +112,7 @@ TEST_F(DeviceInterfaceTest, CreateBuffer) {
 }
 
 TEST_F(DeviceInterfaceTest, CreateTexture) {
-    TextureDesc desc;
+    TextureDesc desc{};
     desc.type = TextureType::Texture2D;
     desc.format = TextureFormat::RGBA8_UNorm;
     desc.width = 256;
@@ -130,7 +130,7 @@ TEST_F(DeviceInterfaceTest, CreateTexture) {
 }
 
 TEST_F(DeviceInterfaceTest, CreateSampler) {
-    SamplerDesc desc;
+    SamplerDesc desc{};
     desc.minFilter = FilterMode::Linear;
     desc.magFilter = FilterMode::Linear;
     
@@ -142,7 +142,7 @@ TEST_F(DeviceInterfaceTest, CreateSampler) {
 TEST_F(DeviceInterfaceTest, CreateShader) {
     const char* shaderCode = "void main() {}";
     
-    ShaderDesc desc;
+    ShaderDesc desc{};
     desc.stage = ShaderStage::Vertex;
     desc.language = ShaderLanguage::GLSL;
     desc.code = shaderCode;
@@ -158,7 +158,7 @@ TEST_F(DeviceInterfaceTest, CreateShader) {
 }
 
 TEST_F(DeviceInterfaceTest, CreatePipeline) {
-    PipelineDesc desc;
+    PipelineDesc desc{};
     desc.type = PipelineType::Graphics;
     
     auto result = device->CreatePipeline(desc);
@@ -188,7 +188,7 @@ class CommandBufferInterfaceTest : public ::testing::Test {
 protected:
     void SetUp() override {
         auto backend = std::make_unique<Mock::MockBackend>();
-        DeviceConfig config;
+        DeviceConfig config{};
         auto result = backend->CreateDevice(config);
         ASSERT_TRUE(result.has_value());
         device = std::move(result.value());
@@ -220,7 +220,7 @@ TEST_F(CommandBufferInterfaceTest, DrawCommands) {
     cmd->Draw(3);
     
     // Draw with parameters
-    DrawParams params;
+    DrawParams params{};
     params.vertexCount = 6;
     params.instanceCount = 2;
     cmd->Draw(params);
@@ -236,7 +236,7 @@ TEST_F(CommandBufferInterfaceTest, ComputeCommands) {
     cmd->Dispatch(1, 1, 1);
     
     // Dispatch with parameters
-    DispatchParams params;
+    DispatchParams params{};
     params.groupCountX = 8;
     params.groupCountY = 8;
     params.groupCountZ = 1;

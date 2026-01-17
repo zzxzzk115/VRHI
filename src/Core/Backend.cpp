@@ -58,7 +58,7 @@ BackendFactory::CreateBackend(BackendType type) {
     
     auto it = registry.creators.find(type);
     if (it == registry.creators.end()) {
-        Error error;
+        Error error{};
         error.code = Error::Code::NoCompatibleBackend;
         error.message = "Backend type not registered";
         return std::unexpected(error);
@@ -67,14 +67,14 @@ BackendFactory::CreateBackend(BackendType type) {
     try {
         auto backend = it->second();
         if (!backend) {
-            Error error;
+            Error error{};
             error.code = Error::Code::InitializationFailed;
             error.message = "Backend creator returned null";
             return std::unexpected(error);
         }
         return backend;
     } catch (const std::exception& e) {
-        Error error;
+        Error error{};
         error.code = Error::Code::InitializationFailed;
         error.message = std::string("Backend creation failed: ") + e.what();
         return std::unexpected(error);
@@ -87,7 +87,7 @@ BackendFactory::CreateBestBackend(const FeatureRequirements& requirements) {
     std::lock_guard<std::mutex> lock(registry.mutex);
     
     if (registry.creators.empty()) {
-        Error error;
+        Error error{};
         error.code = Error::Code::NoCompatibleBackend;
         error.message = "No backends registered";
         return std::unexpected(error);
@@ -95,7 +95,7 @@ BackendFactory::CreateBestBackend(const FeatureRequirements& requirements) {
     
     // Score all backends
     struct ScoredBackend {
-        BackendType type;
+        BackendType type{};
         float score;
         std::unique_ptr<IBackend> backend;
     };
@@ -120,7 +120,7 @@ BackendFactory::CreateBestBackend(const FeatureRequirements& requirements) {
     }
     
     if (scored.empty()) {
-        Error error;
+        Error error{};
         error.code = Error::Code::NoCompatibleBackend;
         error.message = "No backend meets the required features";
         return std::unexpected(error);

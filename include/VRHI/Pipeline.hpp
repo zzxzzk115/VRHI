@@ -167,8 +167,8 @@ struct DepthStencilState {
     CompareOp depthCompareOp = CompareOp::Less;
     bool depthBoundsTestEnable = false;
     bool stencilTestEnable = false;
-    StencilOpState front;
-    StencilOpState back;
+    StencilOpState front{};
+    StencilOpState back{};
     float minDepthBounds = 0.0f;
     float maxDepthBounds = 1.0f;
 };
@@ -258,12 +258,12 @@ struct GraphicsPipelineDesc {
     Shader* tessEvalShader = nullptr;
     
     // Fixed-function state
-    VertexInputState vertexInput;
-    InputAssemblyState inputAssembly;
-    RasterizationState rasterization;
-    MultisampleState multisample;
-    DepthStencilState depthStencil;
-    ColorBlendState colorBlend;
+    VertexInputState vertexInput{};
+    InputAssemblyState inputAssembly{};
+    RasterizationState rasterization{};
+    MultisampleState multisample{};
+    DepthStencilState depthStencil{};
+    ColorBlendState colorBlend{};
     
     // Dynamic state
     std::span<const DynamicState> dynamicStates;

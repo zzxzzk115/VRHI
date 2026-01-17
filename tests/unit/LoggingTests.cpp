@@ -16,7 +16,7 @@
 class TestLogger : public VRHI::ILogger {
 public:
     struct LogEntry {
-        VRHI::LogLevel level;
+        VRHI::LogLevel level{};
         std::string message;
     };
     
@@ -76,7 +76,7 @@ TEST(LoggingTests, SetAndGetLogLevel) {
 // ============================================================================
 
 TEST(LoggingTests, CustomLogger_BasicLog) {
-    TestLogger testLogger;
+    TestLogger testLogger{};
     VRHI::SetLogger(&testLogger);
     VRHI::SetLogLevel(VRHI::LogLevel::Debug);
     
@@ -93,7 +93,7 @@ TEST(LoggingTests, CustomLogger_BasicLog) {
 }
 
 TEST(LoggingTests, CustomLogger_FormattedLog) {
-    TestLogger testLogger;
+    TestLogger testLogger{};
     VRHI::SetLogger(&testLogger);
     VRHI::SetLogLevel(VRHI::LogLevel::Debug);
     
@@ -110,7 +110,7 @@ TEST(LoggingTests, CustomLogger_FormattedLog) {
 }
 
 TEST(LoggingTests, CustomLogger_LogLevelFiltering) {
-    TestLogger testLogger;
+    TestLogger testLogger{};
     VRHI::SetLogger(&testLogger);
     VRHI::SetLogLevel(VRHI::LogLevel::Warning);
     
@@ -132,7 +132,7 @@ TEST(LoggingTests, CustomLogger_LogLevelFiltering) {
 }
 
 TEST(LoggingTests, CustomLogger_MultipleMessages) {
-    TestLogger testLogger;
+    TestLogger testLogger{};
     VRHI::SetLogger(&testLogger);
     VRHI::SetLogLevel(VRHI::LogLevel::Debug);
     
@@ -169,7 +169,7 @@ TEST(LoggingTests, DefaultLogger_FallbackBehavior) {
 // ============================================================================
 
 TEST(LoggingTests, LogLevelOff_NoLogging) {
-    TestLogger testLogger;
+    TestLogger testLogger{};
     VRHI::SetLogger(&testLogger);
     VRHI::SetLogLevel(VRHI::LogLevel::Off);
     

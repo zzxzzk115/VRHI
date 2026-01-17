@@ -1,5 +1,17 @@
 [
 {
+  "directory": "/home/runner/work/VRHI/VRHI/_codeql_build_dir/external/googletest-1.17.0/googletest",
+  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/external/googletest-1.17.0/googletest/include -I/home/runner/work/VRHI/VRHI/external/googletest-1.17.0/googletest -O3 -DNDEBUG -std=c++23 -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/gtest.dir/src/gtest-all.cc.o -c /home/runner/work/VRHI/VRHI/external/googletest-1.17.0/googletest/src/gtest-all.cc",
+  "file": "/home/runner/work/VRHI/VRHI/external/googletest-1.17.0/googletest/src/gtest-all.cc",
+  "output": "external/googletest-1.17.0/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.o"
+},
+{
+  "directory": "/home/runner/work/VRHI/VRHI/_codeql_build_dir/external/googletest-1.17.0/googletest",
+  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_PLATFORM_LINUX -isystem /home/runner/work/VRHI/VRHI/external/googletest-1.17.0/googletest/include -isystem /home/runner/work/VRHI/VRHI/external/googletest-1.17.0/googletest -O3 -DNDEBUG -std=c++23 -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/gtest_main.dir/src/gtest_main.cc.o -c /home/runner/work/VRHI/VRHI/external/googletest-1.17.0/googletest/src/gtest_main.cc",
+  "file": "/home/runner/work/VRHI/VRHI/external/googletest-1.17.0/googletest/src/gtest_main.cc",
+  "output": "external/googletest-1.17.0/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o"
+},
+{
   "directory": "/home/runner/work/VRHI/VRHI/_codeql_build_dir/src",
   "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_BACKEND_OPENGL=1 -DVRHI_BACKEND_VULKAN=1 -DVRHI_ENABLE_VALIDATION=1 -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -I/home/runner/work/VRHI/VRHI/src -O3 -DNDEBUG -std=c++23 -fPIC -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/VRHI.dir/Core/Version.cpp.o -c /home/runner/work/VRHI/VRHI/src/Core/Version.cpp",
   "file": "/home/runner/work/VRHI/VRHI/src/Core/Version.cpp",
@@ -28,5 +40,35 @@
   "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_BACKEND_OPENGL=1 -DVRHI_BACKEND_VULKAN=1 -DVRHI_ENABLE_VALIDATION=1 -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -I/home/runner/work/VRHI/VRHI/src -O3 -DNDEBUG -std=c++23 -fPIC -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/VRHI.dir/Core/BackendScoring.cpp.o -c /home/runner/work/VRHI/VRHI/src/Core/BackendScoring.cpp",
   "file": "/home/runner/work/VRHI/VRHI/src/Core/BackendScoring.cpp",
   "output": "src/CMakeFiles/VRHI.dir/Core/BackendScoring.cpp.o"
+},
+{
+  "directory": "/home/runner/work/VRHI/VRHI/_codeql_build_dir/tests",
+  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -isystem /home/runner/work/VRHI/VRHI/external/googletest-1.17.0/googletest/include -isystem /home/runner/work/VRHI/VRHI/external/googletest-1.17.0/googletest -O3 -DNDEBUG -std=c++23 -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/CoreTypesTests.dir/unit/CoreTypesTests.cpp.o -c /home/runner/work/VRHI/VRHI/tests/unit/CoreTypesTests.cpp",
+  "file": "/home/runner/work/VRHI/VRHI/tests/unit/CoreTypesTests.cpp",
+  "output": "tests/CMakeFiles/CoreTypesTests.dir/unit/CoreTypesTests.cpp.o"
+},
+{
+  "directory": "/home/runner/work/VRHI/VRHI/_codeql_build_dir/tests",
+  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -isystem /home/runner/work/VRHI/VRHI/external/googletest-1.17.0/googletest/include -isystem /home/runner/work/VRHI/VRHI/external/googletest-1.17.0/googletest -O3 -DNDEBUG -std=c++23 -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/LoggingTests.dir/unit/LoggingTests.cpp.o -c /home/runner/work/VRHI/VRHI/tests/unit/LoggingTests.cpp",
+  "file": "/home/runner/work/VRHI/VRHI/tests/unit/LoggingTests.cpp",
+  "output": "tests/CMakeFiles/LoggingTests.dir/unit/LoggingTests.cpp.o"
+},
+{
+  "directory": "/home/runner/work/VRHI/VRHI/_codeql_build_dir/tests",
+  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -isystem /home/runner/work/VRHI/VRHI/external/googletest-1.17.0/googletest/include -isystem /home/runner/work/VRHI/VRHI/external/googletest-1.17.0/googletest -O3 -DNDEBUG -std=c++23 -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/BackendInterfaceTests.dir/unit/BackendInterfaceTests.cpp.o -c /home/runner/work/VRHI/VRHI/tests/unit/BackendInterfaceTests.cpp",
+  "file": "/home/runner/work/VRHI/VRHI/tests/unit/BackendInterfaceTests.cpp",
+  "output": "tests/CMakeFiles/BackendInterfaceTests.dir/unit/BackendInterfaceTests.cpp.o"
+},
+{
+  "directory": "/home/runner/work/VRHI/VRHI/_codeql_build_dir/tests",
+  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -isystem /home/runner/work/VRHI/VRHI/external/googletest-1.17.0/googletest/include -isystem /home/runner/work/VRHI/VRHI/external/googletest-1.17.0/googletest -O3 -DNDEBUG -std=c++23 -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/CoreAPITests.dir/unit/CoreAPITests.cpp.o -c /home/runner/work/VRHI/VRHI/tests/unit/CoreAPITests.cpp",
+  "file": "/home/runner/work/VRHI/VRHI/tests/unit/CoreAPITests.cpp",
+  "output": "tests/CMakeFiles/CoreAPITests.dir/unit/CoreAPITests.cpp.o"
+},
+{
+  "directory": "/home/runner/work/VRHI/VRHI/_codeql_build_dir/tests",
+  "command": "/home/runner/work/VRHI/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -DNDEBUG -DVRHI_PLATFORM_LINUX -I/home/runner/work/VRHI/VRHI/include -isystem /home/runner/work/VRHI/VRHI/external/googletest-1.17.0/googletest/include -isystem /home/runner/work/VRHI/VRHI/external/googletest-1.17.0/googletest -O3 -DNDEBUG -std=c++23 -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O3 -march=native -flto -fvisibility=hidden -fPIC -fdiagnostics-color=always -o CMakeFiles/BackendScoringTests.dir/unit/BackendScoringTests.cpp.o -c /home/runner/work/VRHI/VRHI/tests/unit/BackendScoringTests.cpp",
+  "file": "/home/runner/work/VRHI/VRHI/tests/unit/BackendScoringTests.cpp",
+  "output": "tests/CMakeFiles/BackendScoringTests.dir/unit/BackendScoringTests.cpp.o"
 }
 ]

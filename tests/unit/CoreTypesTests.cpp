@@ -9,20 +9,20 @@
 // ============================================================================
 
 TEST(ErrorTests, DefaultConstructor) {
-    VRHI::Error error;
+    VRHI::Error error{};
     EXPECT_EQ(error.code, VRHI::Error::Code::Success);
     EXPECT_TRUE(error.message.empty());
     EXPECT_TRUE(error);  // Success should evaluate to true
 }
 
 TEST(ErrorTests, SuccessCode) {
-    VRHI::Error error;
+    VRHI::Error error{};
     error.code = VRHI::Error::Code::Success;
     EXPECT_TRUE(error);
 }
 
 TEST(ErrorTests, ErrorCodes) {
-    VRHI::Error error;
+    VRHI::Error error{};
     
     error.code = VRHI::Error::Code::InvalidConfig;
     EXPECT_FALSE(error);
@@ -50,7 +50,7 @@ TEST(ErrorTests, ErrorCodes) {
 }
 
 TEST(ErrorTests, ErrorMessage) {
-    VRHI::Error error;
+    VRHI::Error error{};
     error.code = VRHI::Error::Code::InvalidConfig;
     error.message = "Test error message";
     
@@ -147,13 +147,13 @@ TEST(FeatureTests, DebugFeatures) {
 // ============================================================================
 
 TEST(FeatureRequirementsTests, DefaultConstructor) {
-    VRHI::FeatureRequirements requirements;
+    VRHI::FeatureRequirements requirements{};
     EXPECT_TRUE(requirements.required.empty());
     EXPECT_TRUE(requirements.optional.empty());
 }
 
 TEST(FeatureRequirementsTests, RequiredFeatures) {
-    VRHI::FeatureRequirements requirements;
+    VRHI::FeatureRequirements requirements{};
     requirements.required = {
         VRHI::Feature::Compute,
         VRHI::Feature::Texture2D,
@@ -167,7 +167,7 @@ TEST(FeatureRequirementsTests, RequiredFeatures) {
 }
 
 TEST(FeatureRequirementsTests, OptionalFeatures) {
-    VRHI::FeatureRequirements requirements;
+    VRHI::FeatureRequirements requirements{};
     requirements.optional = {
         VRHI::Feature::RayTracing,
         VRHI::Feature::MeshShading
@@ -179,7 +179,7 @@ TEST(FeatureRequirementsTests, OptionalFeatures) {
 }
 
 TEST(FeatureRequirementsTests, MixedFeatures) {
-    VRHI::FeatureRequirements requirements;
+    VRHI::FeatureRequirements requirements{};
     requirements.required = {VRHI::Feature::Compute};
     requirements.optional = {VRHI::Feature::RayTracing};
     
@@ -192,7 +192,7 @@ TEST(FeatureRequirementsTests, MixedFeatures) {
 // ============================================================================
 
 TEST(DeviceConfigTests, DefaultValues) {
-    VRHI::DeviceConfig config;
+    VRHI::DeviceConfig config{};
     
     EXPECT_EQ(config.preferredBackend, VRHI::BackendType::Auto);
     EXPECT_TRUE(config.features.required.empty());
@@ -208,14 +208,14 @@ TEST(DeviceConfigTests, DefaultValues) {
 }
 
 TEST(DeviceConfigTests, CustomBackend) {
-    VRHI::DeviceConfig config;
+    VRHI::DeviceConfig config{};
     config.preferredBackend = VRHI::BackendType::Vulkan;
     
     EXPECT_EQ(config.preferredBackend, VRHI::BackendType::Vulkan);
 }
 
 TEST(DeviceConfigTests, CustomFeatures) {
-    VRHI::DeviceConfig config;
+    VRHI::DeviceConfig config{};
     config.features.required = {VRHI::Feature::Compute};
     config.features.optional = {VRHI::Feature::RayTracing};
     
@@ -224,7 +224,7 @@ TEST(DeviceConfigTests, CustomFeatures) {
 }
 
 TEST(DeviceConfigTests, ValidationAndDebug) {
-    VRHI::DeviceConfig config;
+    VRHI::DeviceConfig config{};
     config.enableValidation = true;
     config.enableDebugMarkers = true;
     
@@ -233,7 +233,7 @@ TEST(DeviceConfigTests, ValidationAndDebug) {
 }
 
 TEST(DeviceConfigTests, WindowConfiguration) {
-    VRHI::DeviceConfig config;
+    VRHI::DeviceConfig config{};
     config.width = 1920;
     config.height = 1080;
     config.vsync = false;
@@ -246,7 +246,7 @@ TEST(DeviceConfigTests, WindowConfiguration) {
 }
 
 TEST(DeviceConfigTests, LogLevel) {
-    VRHI::DeviceConfig config;
+    VRHI::DeviceConfig config{};
     config.logLevel = VRHI::LogLevel::Debug;
     EXPECT_EQ(config.logLevel, VRHI::LogLevel::Debug);
     
@@ -287,7 +287,7 @@ TEST(VersionTests, VersionString) {
 // ============================================================================
 
 TEST(FeatureSetTests, DefaultConstructor) {
-    VRHI::FeatureSet features;
+    VRHI::FeatureSet features{};
     
     // Core features should be false by default
     EXPECT_FALSE(features.core.vertexShader);
@@ -310,7 +310,7 @@ TEST(FeatureSetTests, DefaultConstructor) {
 }
 
 TEST(FeatureSetTests, TextureFeatures) {
-    VRHI::FeatureSet features;
+    VRHI::FeatureSet features{};
     
     EXPECT_FALSE(features.texture.texture1D);
     EXPECT_FALSE(features.texture.texture2D);
@@ -335,7 +335,7 @@ TEST(FeatureSetTests, TextureFeatures) {
 }
 
 TEST(FeatureSetTests, RenderingFeatures) {
-    VRHI::FeatureSet features;
+    VRHI::FeatureSet features{};
     
     EXPECT_FALSE(features.rendering.multipleRenderTargets);
     EXPECT_EQ(features.rendering.maxColorAttachments, 0);
@@ -346,7 +346,7 @@ TEST(FeatureSetTests, RenderingFeatures) {
 }
 
 TEST(FeatureSetTests, ComputeFeatures) {
-    VRHI::FeatureSet features;
+    VRHI::FeatureSet features{};
     
     EXPECT_FALSE(features.compute.computeShader);
     EXPECT_EQ(features.compute.maxWorkGroupSizeX, 0);
@@ -357,7 +357,7 @@ TEST(FeatureSetTests, ComputeFeatures) {
 }
 
 TEST(FeatureSetTests, AdvancedFeatures) {
-    VRHI::FeatureSet features;
+    VRHI::FeatureSet features{};
     
     EXPECT_FALSE(features.advanced.rayTracing);
     EXPECT_FALSE(features.advanced.meshShading);
@@ -367,7 +367,7 @@ TEST(FeatureSetTests, AdvancedFeatures) {
 }
 
 TEST(FeatureSetTests, MemoryFeatures) {
-    VRHI::FeatureSet features;
+    VRHI::FeatureSet features{};
     
     EXPECT_EQ(features.memory.deviceLocalMemory, 0);
     EXPECT_EQ(features.memory.hostVisibleMemory, 0);
@@ -381,7 +381,7 @@ TEST(FeatureSetTests, MemoryFeatures) {
 // ============================================================================
 
 TEST(BackendInfoTests, DefaultConstructor) {
-    VRHI::BackendInfo info;
+    VRHI::BackendInfo info{};
     
     EXPECT_TRUE(info.name.empty());
     EXPECT_TRUE(info.version.empty());
@@ -393,9 +393,9 @@ TEST(BackendInfoTests, DefaultConstructor) {
 }
 
 TEST(BackendInfoTests, ScoreDetails) {
-    VRHI::BackendInfo info;
+    VRHI::BackendInfo info{};
     
-    VRHI::BackendInfo::ScoreDetail detail;
+    VRHI::BackendInfo::ScoreDetail detail{};
     detail.category = "Performance";
     detail.score = 85.0f;
     detail.weight = 0.3f;
@@ -413,7 +413,7 @@ TEST(BackendInfoTests, ScoreDetails) {
 // ============================================================================
 
 TEST(DevicePropertiesTests, DefaultConstructor) {
-    VRHI::DeviceProperties props;
+    VRHI::DeviceProperties props{};
     
     EXPECT_TRUE(props.deviceName.empty());
     EXPECT_TRUE(props.vendorName.empty());
