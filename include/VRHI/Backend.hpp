@@ -59,16 +59,6 @@ public:
     virtual float CalculateScore(const FeatureRequirements& requirements) const = 0;
     
     // ========================================================================
-    // Device Management
-    // ========================================================================
-    
-    /// Create a device instance
-    /// @param config Device configuration
-    /// @return Device instance on success, error on failure
-    virtual std::expected<std::unique_ptr<Device>, Error>
-    CreateDevice(const DeviceConfig& config) = 0;
-    
-    // ========================================================================
     // Native Handle Access (Optional)
     // ========================================================================
     

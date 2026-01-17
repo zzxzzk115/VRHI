@@ -435,11 +435,6 @@ public:
         auto features = GetSupportedFeatures();
         return BackendScorer::CalculateScore(GetType(), features, requirements);
     }
-    
-    std::expected<std::unique_ptr<Device>, Error>
-    CreateDevice(const DeviceConfig& config) override {
-        return std::make_unique<MockDevice>(config);
-    }
 };
 
 } // namespace Mock

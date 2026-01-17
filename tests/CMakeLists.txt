@@ -110,6 +110,26 @@ set_target_properties(BackendScoringTests PROPERTIES
 
 add_test(NAME BackendScoringTests COMMAND BackendScoringTests)
 
+# Feature detection tests
+add_executable(FeatureDetectionTests
+    unit/FeatureDetectionTests.cpp
+)
+
+target_link_libraries(FeatureDetectionTests
+    PRIVATE
+        VRHI::VRHI
+        gtest
+        gtest_main
+)
+
+set_target_properties(FeatureDetectionTests PROPERTIES
+    CXX_STANDARD 23
+    CXX_STANDARD_REQUIRED ON
+    CXX_EXTENSIONS OFF
+)
+
+add_test(NAME FeatureDetectionTests COMMAND FeatureDetectionTests)
+
 # ============================================================================
 # Test Summary
 # ============================================================================
@@ -120,3 +140,4 @@ message(STATUS "  LoggingTests: Unit tests for logging system")
 message(STATUS "  BackendInterfaceTests: Unit tests for backend and device interfaces")
 message(STATUS "  CoreAPITests: Unit tests for Core API functions")
 message(STATUS "  BackendScoringTests: Unit tests for backend scoring system")
+message(STATUS "  FeatureDetectionTests: Unit tests for feature detection system")
