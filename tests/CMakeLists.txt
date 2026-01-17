@@ -90,6 +90,26 @@ set_target_properties(CoreAPITests PROPERTIES
 
 add_test(NAME CoreAPITests COMMAND CoreAPITests)
 
+# Backend scoring tests
+add_executable(BackendScoringTests
+    unit/BackendScoringTests.cpp
+)
+
+target_link_libraries(BackendScoringTests
+    PRIVATE
+        VRHI::VRHI
+        gtest
+        gtest_main
+)
+
+set_target_properties(BackendScoringTests PROPERTIES
+    CXX_STANDARD 23
+    CXX_STANDARD_REQUIRED ON
+    CXX_EXTENSIONS OFF
+)
+
+add_test(NAME BackendScoringTests COMMAND BackendScoringTests)
+
 # ============================================================================
 # Test Summary
 # ============================================================================
@@ -99,3 +119,4 @@ message(STATUS "  CoreTypesTests: Unit tests for core types and error handling")
 message(STATUS "  LoggingTests: Unit tests for logging system")
 message(STATUS "  BackendInterfaceTests: Unit tests for backend and device interfaces")
 message(STATUS "  CoreAPITests: Unit tests for Core API functions")
+message(STATUS "  BackendScoringTests: Unit tests for backend scoring system")

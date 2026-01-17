@@ -12,6 +12,7 @@ set(VRHI_CORE_SOURCES
     Core/Device.cpp
     Core/Logging.cpp
     Core/Backend.cpp
+    Core/BackendScoring.cpp
     # Additional core implementation files will be added here
     # Core/Error.cpp
     # Core/Features.cpp
