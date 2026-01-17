@@ -212,15 +212,15 @@ struct FeatureSet {
 // ============================================================================
 
 struct BackendInfo {
-    BackendType type;
+    BackendType type = BackendType::Auto;
     std::string name;
     std::string version;
     
-    float score;
+    float score = 0.0f;
     struct ScoreDetail {
         std::string category;
-        float score;
-        float weight;
+        float score = 0.0f;
+        float weight = 0.0f;
     };
     std::vector<ScoreDetail> scoreDetails;
     
@@ -234,17 +234,17 @@ struct BackendInfo {
 struct DeviceProperties {
     std::string deviceName;
     std::string vendorName;
-    uint32_t vendorId;
-    uint32_t deviceId;
+    uint32_t vendorId = 0;
+    uint32_t deviceId = 0;
     
     std::string driverVersion;
     std::string apiVersion;
     
-    uint64_t totalMemory;
-    uint64_t availableMemory;
+    uint64_t totalMemory = 0;
+    uint64_t availableMemory = 0;
     
-    uint32_t computeUnits;
-    uint32_t maxThreadsPerGroup;
+    uint32_t computeUnits = 0;
+    uint32_t maxThreadsPerGroup = 0;
 };
 
 // ============================================================================
