@@ -65,7 +65,7 @@ void OpenGL33Backend::DetectFeatures() {
     // Geometry shaders: GL 3.2+ or via extension
     m_features.core.geometryShader = (majorVersion > 3 || (majorVersion == 3 && minorVersion >= 2)) ||
                                       hasExtension(GLCommonExtensions::ARB_geometry_shader4);
-    m_features.core.tessellationShader = (majorVersion > 4 || (majorVersion == 4 && minorVersion >= 0)) ||
+    m_features.core.tessellationShader = (majorVersion >= 4) ||
                                           hasExtension(GLCommonExtensions::ARB_tessellation_shader);
     m_features.core.computeShader = (majorVersion > 4 || (majorVersion == 4 && minorVersion >= 3)) ||
                                      hasExtension(GLCommonExtensions::ARB_compute_shader);
@@ -77,7 +77,7 @@ void OpenGL33Backend::DetectFeatures() {
     m_features.core.uniformBuffers = true;  // GL 3.1+
     m_features.core.storageBuffers = (majorVersion > 4 || (majorVersion == 4 && minorVersion >= 3)) ||
                                       hasExtension(GLCommonExtensions::ARB_shader_storage_buffer_object);
-    m_features.core.indirectBuffers = (majorVersion > 4 || (majorVersion == 4 && minorVersion >= 0));
+    m_features.core.indirectBuffers = (majorVersion >= 4);
     
     // Drawing features
     m_features.core.instancing = true;  // GL 3.3
@@ -137,7 +137,7 @@ void OpenGL33Backend::DetectFeatures() {
     m_features.rendering.maxColorAttachments = static_cast<uint32_t>(maxColorAttachments);
     
     // Independent blend: GL 4.0+ or via extension
-    m_features.rendering.independentBlend = (majorVersion > 4 || (majorVersion == 4 && minorVersion >= 0)) ||
+    m_features.rendering.independentBlend = (majorVersion >= 4) ||
                                              hasExtension("GL_ARB_draw_buffers_blend");
     // Depth clamp: GL 3.2+ or via extension
     m_features.rendering.depthClamp = (majorVersion > 3 || (majorVersion == 3 && minorVersion >= 2)) ||
