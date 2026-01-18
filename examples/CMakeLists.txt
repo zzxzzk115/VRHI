@@ -9,6 +9,7 @@ message(STATUS "Configuring examples...")
 
 # Example subdirectories
 add_subdirectory(HelloTriangle)
+add_subdirectory(FeatureDetection)
 
 # Future examples
 # add_subdirectory(TextureMapping)
