@@ -72,12 +72,15 @@ if(VRHI_WINDOW_GLFW)
     add_subdirectory(glfw-3.4)
     
     # GLFW has some warnings with strict compiler settings, disable Werror for it
+    # Only apply GCC/Clang-specific flags to avoid MSVC errors
     if(TARGET glfw)
-        target_compile_options(glfw PRIVATE 
-            -Wno-error=missing-field-initializers
-            -Wno-error=sign-compare
-            -Wno-error=pedantic
-        )
+        if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+            target_compile_options(glfw PRIVATE 
+                -Wno-error=missing-field-initializers
+                -Wno-error=sign-compare
+                -Wno-error=pedantic
+            )
+        endif()
     endif()
     
     list(APPEND VRHI_EXTERNAL_TARGETS glfw)

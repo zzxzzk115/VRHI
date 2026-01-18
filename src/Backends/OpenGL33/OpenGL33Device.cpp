@@ -44,16 +44,15 @@ std::expected<void, Error> OpenGL33Device::Initialize() {
         return {};
     }
     
-    // Note: For a real implementation, we would need a window/context creation system
-    // For now, we assume the context is already created externally
-    // This is acceptable for the initial implementation since window system
-    // abstraction is a separate task (Phase 7-8 in KANBAN)
+    // Note: OpenGL requires an active context to initialize
+    // The window system should have created the context before calling this
     
-    // Initialize GLAD
+    // Initialize GLAD - this requires an active OpenGL context
+    // On some platforms (especially macOS), this will fail/crash if no context exists
     if (!gladLoadGL()) {
         return std::unexpected(Error{
             Error::Code::InitializationFailed,
-            "Failed to initialize GLAD for OpenGL 3.3"
+            "Failed to initialize GLAD for OpenGL 3.3 - no active OpenGL context or unsupported version"
         });
     }
     
@@ -61,6 +60,13 @@ std::expected<void, Error> OpenGL33Device::Initialize() {
     GLint majorVersion = 0, minorVersion = 0;
     glGetIntegerv(GL_MAJOR_VERSION, &majorVersion);
     glGetIntegerv(GL_MINOR_VERSION, &minorVersion);
+    
+    if (majorVersion == 0) {
+        return std::unexpected(Error{
+            Error::Code::InitializationFailed,
+            "Failed to query OpenGL version - no active context"
+        });
+    }
     
     if (majorVersion < 3 || (majorVersion == 3 && minorVersion < 3)) {
         return std::unexpected(Error{
