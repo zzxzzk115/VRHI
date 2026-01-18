@@ -12,7 +12,80 @@
 namespace VRHI {
 
 OpenGL33Backend::OpenGL33Backend() {
-    // Features will be detected when creating device (after context creation)
+    // Initialize with baseline OpenGL 3.3 guaranteed features
+    // These will be refined with actual driver queries when a device is created
+    
+    // Core shader stages guaranteed by OpenGL 3.3
+    m_features.core.vertexShader = true;
+    m_features.core.fragmentShader = true;
+    m_features.core.geometryShader = false;  // GL 3.2+, will be queried
+    m_features.core.tessellationShader = false;  // GL 4.0+
+    m_features.core.computeShader = false;  // GL 4.3+
+    m_features.core.meshShader = false;  // Not available
+    
+    // Buffer features guaranteed by OpenGL 3.3
+    m_features.core.vertexBuffers = true;
+    m_features.core.indexBuffers = true;
+    m_features.core.uniformBuffers = true;  // GL 3.1+
+    m_features.core.storageBuffers = false;  // GL 4.3+
+    m_features.core.indirectBuffers = false;  // GL 4.0+
+    
+    // Drawing features guaranteed by OpenGL 3.3
+    m_features.core.instancing = true;
+    m_features.core.multiDrawIndirect = false;  // GL 4.3+
+    
+    // Texture features guaranteed by OpenGL 3.3
+    m_features.texture.texture1D = true;
+    m_features.texture.texture2D = true;
+    m_features.texture.texture3D = true;
+    m_features.texture.textureCube = true;
+    m_features.texture.texture2DArray = true;  // GL 3.0+
+    
+    m_features.texture.floatTextures = true;
+    m_features.texture.depthTextures = true;
+    m_features.texture.compressedTextures = true;
+    
+    // Compression formats - will be queried via extensions
+    m_features.texture.dxt = false;
+    m_features.texture.etc2 = false;
+    m_features.texture.astc = false;
+    m_features.texture.anisotropicFiltering = false;  // Extension dependent
+    
+    // Conservative texture limits (will be queried from driver)
+    m_features.texture.maxTextureSize = 1024;  // Minimum guaranteed by spec
+    m_features.texture.max3DTextureSize = 256;  // Minimum guaranteed by spec
+    m_features.texture.maxArrayLayers = 256;  // Minimum guaranteed by spec
+    m_features.texture.maxAnisotropy = 1.0f;
+    
+    // Rendering features guaranteed by OpenGL 3.3
+    m_features.rendering.multipleRenderTargets = true;
+    m_features.rendering.maxColorAttachments = 4;  // Minimum guaranteed by spec
+    m_features.rendering.independentBlend = false;  // GL 4.0+
+    m_features.rendering.depthClamp = false;  // GL 3.2+, will be queried
+    m_features.rendering.multisample = true;
+    m_features.rendering.maxSamples = 4;  // Minimum guaranteed by spec
+    
+    // Compute features (not available in GL 3.3)
+    m_features.compute.computeShader = false;
+    m_features.compute.maxWorkGroupSizeX = 0;
+    m_features.compute.maxWorkGroupSizeY = 0;
+    m_features.compute.maxWorkGroupSizeZ = 0;
+    m_features.compute.maxWorkGroupInvocations = 0;
+    m_features.compute.maxComputeSharedMemorySize = 0;
+    
+    // Advanced features (not available in GL 3.3)
+    m_features.advanced.rayTracing = false;
+    m_features.advanced.meshShading = false;
+    m_features.advanced.variableRateShading = false;
+    m_features.advanced.bindlessResources = false;
+    m_features.advanced.asyncCompute = false;
+    
+    // Memory features (conservative defaults)
+    m_features.memory.deviceLocalMemory = 0;  // Unknown
+    m_features.memory.hostVisibleMemory = 0;  // Unknown
+    m_features.memory.minUniformBufferAlignment = 256;  // Conservative default
+    m_features.memory.minStorageBufferAlignment = 0;
+    m_features.memory.unifiedMemory = false;
 }
 
 OpenGL33Backend::~OpenGL33Backend() = default;
@@ -59,9 +132,8 @@ void OpenGL33Backend::DetectFeatures() {
         return false;
     };
     
-    // Core shader stages
-    m_features.core.vertexShader = true;
-    m_features.core.fragmentShader = true;
+    // Refine shader stage support based on actual driver capabilities
+    // Note: vertex and fragment shaders are already set to true in constructor
     // Geometry shaders: GL 3.2+ or via extension
     m_features.core.geometryShader = (majorVersion > 3 || (majorVersion == 3 && minorVersion >= 2)) ||
                                       hasExtension(GLCommonExtensions::ARB_geometry_shader4);
@@ -69,44 +141,31 @@ void OpenGL33Backend::DetectFeatures() {
                                           hasExtension(GLCommonExtensions::ARB_tessellation_shader);
     m_features.core.computeShader = (majorVersion > 4 || (majorVersion == 4 && minorVersion >= 3)) ||
                                      hasExtension(GLCommonExtensions::ARB_compute_shader);
-    m_features.core.meshShader = false;  // Not available in core OpenGL
+    // meshShader remains false (not available in core OpenGL)
     
-    // Buffer features
-    m_features.core.vertexBuffers = true;
-    m_features.core.indexBuffers = true;
-    m_features.core.uniformBuffers = true;  // GL 3.1+
+    // Refine buffer features
+    // Note: basic buffers already set to true in constructor
     m_features.core.storageBuffers = (majorVersion > 4 || (majorVersion == 4 && minorVersion >= 3)) ||
                                       hasExtension(GLCommonExtensions::ARB_shader_storage_buffer_object);
     m_features.core.indirectBuffers = (majorVersion >= 4);
     
-    // Drawing features
-    m_features.core.instancing = true;  // GL 3.3
+    // Refine drawing features
     m_features.core.multiDrawIndirect = (majorVersion > 4 || (majorVersion == 4 && minorVersion >= 3)) ||
                                          hasExtension(GLCommonExtensions::ARB_multi_draw_indirect);
     
-    // Texture features
-    m_features.texture.texture1D = true;
-    m_features.texture.texture2D = true;
-    m_features.texture.texture3D = true;
-    m_features.texture.textureCube = true;
-    m_features.texture.texture2DArray = true;  // GL 3.0+
-    
-    m_features.texture.floatTextures = true;
-    m_features.texture.depthTextures = true;
-    m_features.texture.compressedTextures = true;
-    
-    // Compression formats
+    // Texture type features are already set in constructor
+    // Refine compression format support via extension queries
     m_features.texture.dxt = hasExtension(GLCommonExtensions::EXT_texture_compression_s3tc) ||
                               hasExtension(GLCommonExtensions::ARB_texture_compression_bptc);
     m_features.texture.etc2 = (majorVersion > 4 || (majorVersion == 4 && minorVersion >= 3)) ||
                                hasExtension(GLCommonExtensions::ARB_ES3_compatibility);
     m_features.texture.astc = hasExtension(GLCommonExtensions::KHR_texture_compression_astc_ldr);
     
-    // Anisotropic filtering - check via extension
+    // Refine anisotropic filtering support
     bool hasAnisotropic = hasExtension(GLCommonExtensions::EXT_texture_filter_anisotropic);
     m_features.texture.anisotropicFiltering = hasAnisotropic;
     
-    // Query texture limits
+    // Query actual texture limits from driver (refines conservative defaults)
     GLint maxTextureSize = 0;
     glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
     m_features.texture.maxTextureSize = static_cast<uint32_t>(maxTextureSize);
@@ -136,19 +195,17 @@ void OpenGL33Backend::DetectFeatures() {
     glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &maxColorAttachments);
     m_features.rendering.maxColorAttachments = static_cast<uint32_t>(maxColorAttachments);
     
-    // Independent blend: GL 4.0+ or via extension
+    // Refine rendering features
     m_features.rendering.independentBlend = (majorVersion >= 4) ||
                                              hasExtension(GLCommonExtensions::ARB_draw_buffers_blend);
-    // Depth clamp: GL 3.2+ or via extension
     m_features.rendering.depthClamp = (majorVersion > 3 || (majorVersion == 3 && minorVersion >= 2)) ||
                                        hasExtension(GLCommonExtensions::ARB_depth_clamp);
-    m_features.rendering.multisample = true;
     
     GLint maxSamples = 0;
     glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
     m_features.rendering.maxSamples = static_cast<uint32_t>(maxSamples);
     
-    // Compute features
+    // Refine compute features
     m_features.compute.computeShader = m_features.core.computeShader;
     
     if (m_features.compute.computeShader) {
@@ -168,31 +225,20 @@ void OpenGL33Backend::DetectFeatures() {
         GLint maxSharedMemory = 0;
         glGetIntegerv(GL_MAX_COMPUTE_SHARED_MEMORY_SIZE, &maxSharedMemory);
         m_features.compute.maxComputeSharedMemorySize = static_cast<uint32_t>(maxSharedMemory);
-    } else {
-        m_features.compute.maxWorkGroupSizeX = 0;
-        m_features.compute.maxWorkGroupSizeY = 0;
-        m_features.compute.maxWorkGroupSizeZ = 0;
-        m_features.compute.maxWorkGroupInvocations = 0;
-        m_features.compute.maxComputeSharedMemorySize = 0;
     }
+    // If compute shaders not available, limits remain at 0 (set in constructor)
     
-    // Advanced features
-    m_features.advanced.rayTracing = false;  // Not available in OpenGL
-    m_features.advanced.meshShading = false;  // Not available in core OpenGL
-    m_features.advanced.variableRateShading = false;  // Not available in OpenGL
+    // Refine advanced features
     m_features.advanced.bindlessResources = hasExtension(GLCommonExtensions::ARB_bindless_texture);
-    m_features.advanced.asyncCompute = false;  // Not available in OpenGL
+    // Other advanced features remain false (set in constructor)
     
-    // Memory features
-    m_features.memory.deviceLocalMemory = 0;  // OpenGL doesn't expose this
-    m_features.memory.hostVisibleMemory = 0;  // OpenGL doesn't expose this
-    
-    // Query uniform buffer alignment (instead of hardcoding 256)
+    // Refine memory features
+    // Query actual uniform buffer alignment from driver (refines conservative default)
     GLint uniformBufferAlignment = 0;
     glGetIntegerv(GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, &uniformBufferAlignment);
     m_features.memory.minUniformBufferAlignment = static_cast<uint32_t>(uniformBufferAlignment);
     
-    // Storage buffer alignment (if available)
+    // Query storage buffer alignment if available
     if (m_features.core.storageBuffers) {
         GLint storageBufferAlignment = 0;
         glGetIntegerv(GL_SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT, &storageBufferAlignment);
@@ -207,14 +253,9 @@ void OpenGL33Backend::DetectFeatures() {
 }
 
 const FeatureSet& OpenGL33Backend::GetSupportedFeatures() const {
-    // For const correctness, we return a reference
-    // Features should be detected during device creation
-    if (!m_featuresDetected) {
-        // Return empty feature set if not yet detected
-        // This is a limitation - features can only be detected with an active context
-        static const FeatureSet emptyFeatureSet{};
-        return emptyFeatureSet;
-    }
+    // Return current feature set
+    // If features haven't been refined with driver queries yet, baseline features are returned
+    // After device creation, these are refined with actual driver capabilities
     return m_features;
 }
 
