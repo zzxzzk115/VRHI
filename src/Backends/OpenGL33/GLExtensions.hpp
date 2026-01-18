@@ -30,6 +30,8 @@ struct GLCommonExtensions {
     static constexpr const char* ARB_compute_shader = "GL_ARB_compute_shader";
     static constexpr const char* ARB_tessellation_shader = "GL_ARB_tessellation_shader";
     static constexpr const char* ARB_geometry_shader4 = "GL_ARB_geometry_shader4";
+    static constexpr const char* ARB_draw_buffers_blend = "GL_ARB_draw_buffers_blend";
+    static constexpr const char* ARB_depth_clamp = "GL_ARB_depth_clamp";
 };
 
 } // namespace VRHI

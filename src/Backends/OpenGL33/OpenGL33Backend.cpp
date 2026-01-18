@@ -138,10 +138,10 @@ void OpenGL33Backend::DetectFeatures() {
     
     // Independent blend: GL 4.0+ or via extension
     m_features.rendering.independentBlend = (majorVersion >= 4) ||
-                                             hasExtension("GL_ARB_draw_buffers_blend");
+                                             hasExtension(GLCommonExtensions::ARB_draw_buffers_blend);
     // Depth clamp: GL 3.2+ or via extension
     m_features.rendering.depthClamp = (majorVersion > 3 || (majorVersion == 3 && minorVersion >= 2)) ||
-                                       hasExtension("GL_ARB_depth_clamp");
+                                       hasExtension(GLCommonExtensions::ARB_depth_clamp);
     m_features.rendering.multisample = true;
     
     GLint maxSamples = 0;
