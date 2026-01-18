@@ -17,6 +17,7 @@ set(VRHI_CORE_SOURCES
     Core/NullBackend.cpp
     Core/NullDevice.cpp
     Core/MockBackend.cpp
+    Core/ShaderCompiler.cpp
     # Additional core implementation files will be added here
     # Core/Error.cpp
     # Core/Features.cpp
@@ -192,6 +193,21 @@ else()
     # Link libraries
     target_link_libraries(VRHI PRIVATE Threads::Threads)
     
+    # Shader compilation libraries (link directly instead of through interface)
+    target_link_libraries(VRHI PRIVATE
+        glslang
+        glslang-default-resource-limits
+        SPIRV
+        spirv-cross-core
+        spirv-cross-glsl
+    )
+    
+    # Add include directories for shader compilation
+    target_include_directories(VRHI PRIVATE
+        ${CMAKE_SOURCE_DIR}/external/glslang-16.1.0
+        ${CMAKE_SOURCE_DIR}/external/SPIRV-Cross-vulkan-sdk-1.4.335
+    )
+    
     # Backend-specific libraries
     if(VRHI_ENABLE_OPENGL)
         target_link_libraries(VRHI PRIVATE glad::gl33)
@@ -246,7 +262,7 @@ include(GNUInstallDirs)
 
 # Install library (only when not in interface mode)
 if(TARGET VRHI AND NOT CMAKE_SKIP_INSTALL_RULES)
-    # Install library target
+    # Install VRHI library target
     install(TARGETS VRHI
         EXPORT VRHITargets
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -255,9 +271,29 @@ if(TARGET VRHI AND NOT CMAKE_SKIP_INSTALL_RULES)
         INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     )
     
+    # Install shader compilation dependencies to the same export set
+    # This ensures they're available when VRHI is imported
+    if(TARGET glslang)
+        install(TARGETS glslang glslang-default-resource-limits SPIRV
+            EXPORT VRHITargets
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        )
+    endif()
+    
+    if(TARGET spirv-cross-core)
+        install(TARGETS spirv-cross-core spirv-cross-glsl
+            EXPORT VRHITargets
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        )
+    endif()
+    
     # Install export targets
-    # Note: External dependencies (like GLFW, GLAD) are not exported
-    # They should be found through find_package in the consuming project
+    # This exports VRHI along with its required shader compilation dependencies
+    # External dependencies like GLFW and GLAD are not exported
     install(EXPORT VRHITargets
         FILE VRHITargets.cmake
         NAMESPACE VRHI::

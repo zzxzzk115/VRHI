@@ -14,14 +14,27 @@ namespace VRHI {
 // ============================================================================
 
 enum class ShaderStage : uint32_t {
+    // Graphics pipeline stages
     Vertex        = 1 << 0,
     Fragment      = 1 << 1,
     Geometry      = 1 << 2,
     TessControl   = 1 << 3,
     TessEval      = 1 << 4,
+    
+    // Compute stage
     Compute       = 1 << 5,
+    
+    // Mesh shading stages (modern GPU features)
     Mesh          = 1 << 6,
     Task          = 1 << 7,
+    
+    // Ray tracing stages
+    RayGeneration      = 1 << 8,   // Ray generation shader
+    AnyHit             = 1 << 9,   // Any-hit shader
+    ClosestHit         = 1 << 10,  // Closest-hit shader
+    Miss               = 1 << 11,  // Miss shader
+    Intersection       = 1 << 12,  // Intersection shader
+    Callable           = 1 << 13,  // Callable shader
 };
 
 // Bitwise operators for ShaderStage

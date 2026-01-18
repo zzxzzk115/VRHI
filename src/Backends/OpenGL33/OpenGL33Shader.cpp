@@ -3,6 +3,7 @@
 
 #include "OpenGL33Shader.hpp"
 #include <VRHI/Logging.hpp>
+#include <VRHI/ShaderCompiler.hpp>
 #include <glad/glad.h>
 #include <cstring>
 
@@ -40,9 +41,53 @@ OpenGL33Shader::Create(const ShaderDesc& desc) {
         });
     }
     
-    // For GLSL, code should be null-terminated string
-    const char* source = static_cast<const char*>(desc.code);
-    GLint length = static_cast<GLint>(desc.codeSize);
+    // Determine the shader source to compile
+    // Always go through GLSL -> SPIR-V -> GLSL 3.30 pipeline to ensure compatibility
+    std::string glslSource;
+    
+    std::vector<uint32_t> spirvData;
+    
+    // Step 1: Get or compile to SPIR-V
+    if (desc.language == ShaderLanguage::SPIRV) {
+        // Already have SPIR-V, just wrap it
+        const uint32_t* spirvPtr = static_cast<const uint32_t*>(desc.code);
+        size_t spirvCount = desc.codeSize / sizeof(uint32_t);
+        spirvData.assign(spirvPtr, spirvPtr + spirvCount);
+    } 
+    else if (desc.language == ShaderLanguage::GLSL) {
+        // Compile GLSL to SPIR-V first
+        std::string glslInput(static_cast<const char*>(desc.code), desc.codeSize);
+        
+        auto spirvResult = ShaderCompiler::CompileGLSLToSPIRV(glslInput, desc.stage, desc.entryPoint);
+        if (!spirvResult) {
+            glDeleteShader(shader);
+            return std::unexpected(spirvResult.error());
+        }
+        
+        spirvData = std::move(*spirvResult);
+        LogInfo("Compiled GLSL to SPIR-V");
+    }
+    else {
+        glDeleteShader(shader);
+        return std::unexpected(Error{
+            Error::Code::InvalidConfig,
+            "Unsupported shader language for OpenGL 3.3 (only GLSL and SPIRV supported)"
+        });
+    }
+    
+    // Step 2: Convert SPIR-V to GLSL 3.30 for OpenGL 3.3 compatibility
+    auto glslResult = ShaderCompiler::ConvertSPIRVToGLSL(spirvData, 330);
+    if (!glslResult) {
+        glDeleteShader(shader);
+        return std::unexpected(glslResult.error());
+    }
+    
+    glslSource = std::move(*glslResult);
+    LogInfo("Converted SPIR-V to GLSL 3.30 for OpenGL 3.3");
+    
+    // Compile the GLSL source
+    const char* source = glslSource.c_str();
+    GLint length = static_cast<GLint>(glslSource.length());
     
     glShaderSource(shader, 1, &source, &length);
     glCompileShader(shader);

@@ -101,6 +101,7 @@ struct Error {
         OutOfMemory,
         ValidationError,
         CompilationError,
+        ShaderCompilationFailed,
         UnsupportedFeature,
     };
     
