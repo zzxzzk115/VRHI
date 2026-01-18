@@ -204,7 +204,7 @@ int main() {
             cmd->Begin();
 
             // Clear screen
-            VRHI::ClearColorValue clearColor;
+            VRHI::ClearColorValue clearColor{};
             clearColor.float32[0] = 0.1f;  // R
             clearColor.float32[1] = 0.1f;  // G
             clearColor.float32[2] = 0.1f;  // B

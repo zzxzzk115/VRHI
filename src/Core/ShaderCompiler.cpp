@@ -199,7 +199,7 @@ ShaderCompiler::ConvertSPIRVToGLSL(
         spirv_cross::CompilerGLSL compiler(spirv.data(), spirv.size());
         
         // Set GLSL version options
-        spirv_cross::CompilerGLSL::Options options;
+        spirv_cross::CompilerGLSL::Options options{};
         options.version = targetVersion;
         options.es = false; // Desktop GLSL
         options.enable_420pack_extension = (targetVersion >= 420);
@@ -227,7 +227,7 @@ ShaderCompiler::ReflectSPIRV(std::span<const uint32_t> spirv) {
         // Create SPIRV-Cross compiler for reflection
         spirv_cross::CompilerGLSL compiler(spirv.data(), spirv.size());
         
-        ShaderCompilationResult::ReflectionData reflection;
+        ShaderCompilationResult::ReflectionData reflection{};
         
         // Get shader resources
         spirv_cross::ShaderResources resources = compiler.get_shader_resources();
