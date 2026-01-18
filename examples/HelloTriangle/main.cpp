@@ -12,6 +12,9 @@
 #include <VRHI/VRHI.hpp>
 #include <VRHI/Window.hpp>
 
+// Include GLFW for buffer swapping
+#include <GLFW/glfw3.h>
+
 int main() {
     try {
         std::cout << "VRHI HelloTriangle Example\n";
@@ -172,6 +175,20 @@ int main() {
             // Begin command buffer
             cmd->Begin();
 
+            // Clear screen
+            VRHI::ClearColorValue clearColor;
+            clearColor.float32[0] = 0.1f;  // R
+            clearColor.float32[1] = 0.1f;  // G
+            clearColor.float32[2] = 0.1f;  // B
+            clearColor.float32[3] = 1.0f;  // A
+            
+            VRHI::Rect2D clearRect{};
+            clearRect.x = 0;
+            clearRect.y = 0;
+            clearRect.width = window->GetWidth();
+            clearRect.height = window->GetHeight();
+            cmd->ClearColorAttachment(0, clearColor, clearRect);
+
             // Set viewport and scissor
             VRHI::Viewport viewport{};
             viewport.x = 0;
@@ -189,9 +206,6 @@ int main() {
             scissor.height = window->GetHeight();
             cmd->SetScissor(scissor);
 
-            // Clear screen (using OpenGL directly for now - simplified)
-            // Note: Proper render pass integration will be added later
-
             // Bind pipeline and draw triangle
             cmd->BindPipeline(pipeline.get());
 
@@ -207,7 +221,10 @@ int main() {
 
             // Submit and present
             device->Submit(std::move(cmd));
-            device->Present();
+            
+            // Swap buffers to display the frame
+            auto* glfwWindow = static_cast<GLFWwindow*>(window->GetNativeHandle());
+            glfwSwapBuffers(glfwWindow);
         }
 
         // Wait for all operations to complete

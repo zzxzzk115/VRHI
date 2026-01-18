@@ -3,6 +3,7 @@
 
 #include "OpenGL33CommandBuffer.hpp"
 #include "OpenGL33Buffer.hpp"
+#include "OpenGL33Pipeline.hpp"
 #include <VRHI/Logging.hpp>
 #include <glad/glad.h>
 
@@ -34,10 +35,29 @@ void OpenGL33CommandBuffer::EndRenderPass() {
 
 void OpenGL33CommandBuffer::BindPipeline(Pipeline* pipeline) {
     // Bind shader program
+    if (pipeline) {
+        auto* glPipeline = static_cast<OpenGL33Pipeline*>(pipeline);
+        glUseProgram(glPipeline->GetHandle());
+    }
 }
 
 void OpenGL33CommandBuffer::BindVertexBuffers(uint32_t firstBinding, std::span<Buffer* const> buffers, std::span<const uint64_t> offsets) {
     // Bind vertex buffers
+    // In OpenGL, we need to set up vertex attributes
+    // For now, we'll just bind the first buffer as a simple array buffer
+    if (!buffers.empty() && buffers[0]) {
+        auto* glBuffer = static_cast<OpenGL33Buffer*>(buffers[0]);
+        glBindBuffer(GL_ARRAY_BUFFER, glBuffer->GetHandle());
+        
+        // Enable vertex attributes (assuming position + color layout)
+        // Position attribute (location = 0)
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+        
+        // Color attribute (location = 1)
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    }
 }
 
 void OpenGL33CommandBuffer::BindIndexBuffer(Buffer* buffer, uint64_t offset, bool use16BitIndices) {
