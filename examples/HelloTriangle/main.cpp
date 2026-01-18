@@ -59,7 +59,109 @@ int main() {
         auto backendInfo = device->GetBackendInfo();
         std::cout << "\nBackend: " << backendInfo.name << "\n";
         std::cout << "Device: " << backendInfo.deviceName << "\n";
-        std::cout << "Vendor: " << backendInfo.vendorName << "\n\n";
+        std::cout << "Vendor: " << backendInfo.vendorName << "\n";
+
+        // Print feature support
+        std::cout << "\n=== Feature Support ===\n";
+        const auto& features = device->GetFeatures();
+        
+        std::cout << "\nCore Features:\n";
+        std::cout << "  Vertex Shader:       " << (features.core.vertexShader ? "✓" : "✗") << "\n";
+        std::cout << "  Fragment Shader:     " << (features.core.fragmentShader ? "✓" : "✗") << "\n";
+        std::cout << "  Geometry Shader:     " << (features.core.geometryShader ? "✓" : "✗") << "\n";
+        std::cout << "  Tessellation Shader: " << (features.core.tessellationShader ? "✓" : "✗") << "\n";
+        std::cout << "  Compute Shader:      " << (features.core.computeShader ? "✓" : "✗") << "\n";
+        std::cout << "  Mesh Shader:         " << (features.core.meshShader ? "✓" : "✗") << "\n";
+        std::cout << "  Instancing:          " << (features.core.instancing ? "✓" : "✗") << "\n";
+        std::cout << "  Multi Draw Indirect: " << (features.core.multiDrawIndirect ? "✓" : "✗") << "\n";
+        
+        std::cout << "\nBuffer Features:\n";
+        std::cout << "  Vertex Buffers:   " << (features.core.vertexBuffers ? "✓" : "✗") << "\n";
+        std::cout << "  Index Buffers:    " << (features.core.indexBuffers ? "✓" : "✗") << "\n";
+        std::cout << "  Uniform Buffers:  " << (features.core.uniformBuffers ? "✓" : "✗") << "\n";
+        std::cout << "  Storage Buffers:  " << (features.core.storageBuffers ? "✓" : "✗") << "\n";
+        std::cout << "  Indirect Buffers: " << (features.core.indirectBuffers ? "✓" : "✗") << "\n";
+        
+        std::cout << "\nTexture Features:\n";
+        std::cout << "  Texture 1D:              " << (features.texture.texture1D ? "✓" : "✗") << "\n";
+        std::cout << "  Texture 2D:              " << (features.texture.texture2D ? "✓" : "✗") << "\n";
+        std::cout << "  Texture 3D:              " << (features.texture.texture3D ? "✓" : "✗") << "\n";
+        std::cout << "  Texture Cube:            " << (features.texture.textureCube ? "✓" : "✗") << "\n";
+        std::cout << "  Texture 2D Array:        " << (features.texture.texture2DArray ? "✓" : "✗") << "\n";
+        std::cout << "  Float Textures:          " << (features.texture.floatTextures ? "✓" : "✗") << "\n";
+        std::cout << "  Depth Textures:          " << (features.texture.depthTextures ? "✓" : "✗") << "\n";
+        std::cout << "  Compressed Textures:     " << (features.texture.compressedTextures ? "✓" : "✗") << "\n";
+        std::cout << "  Anisotropic Filtering:   " << (features.texture.anisotropicFiltering ? "✓" : "✗") << "\n";
+        std::cout << "  Max Texture Size:        " << features.texture.maxTextureSize << "\n";
+        std::cout << "  Max 3D Texture Size:     " << features.texture.max3DTextureSize << "\n";
+        std::cout << "  Max Array Layers:        " << features.texture.maxArrayLayers << "\n";
+        std::cout << "  Max Anisotropy:          " << features.texture.maxAnisotropy << "x\n";
+        
+        std::cout << "\nTexture Compression Formats:\n";
+        std::cout << "  DXT/BC:  " << (features.texture.dxt ? "✓" : "✗") << "\n";
+        std::cout << "  ETC2:    " << (features.texture.etc2 ? "✓" : "✗") << "\n";
+        std::cout << "  ASTC:    " << (features.texture.astc ? "✓" : "✗") << "\n";
+        
+        std::cout << "\nRendering Features:\n";
+        std::cout << "  Multiple Render Targets: " << (features.rendering.multipleRenderTargets ? "✓" : "✗") << "\n";
+        std::cout << "  Max Color Attachments:   " << features.rendering.maxColorAttachments << "\n";
+        std::cout << "  Independent Blend:       " << (features.rendering.independentBlend ? "✓" : "✗") << "\n";
+        std::cout << "  Depth Clamp:             " << (features.rendering.depthClamp ? "✓" : "✗") << "\n";
+        std::cout << "  Multisample:             " << (features.rendering.multisample ? "✓" : "✗") << "\n";
+        std::cout << "  Max Samples:             " << features.rendering.maxSamples << "\n";
+        
+        std::cout << "\nCompute Features:\n";
+        std::cout << "  Compute Shader:            " << (features.compute.computeShader ? "✓" : "✗") << "\n";
+        if (features.compute.computeShader) {
+            std::cout << "  Max Work Group Size X:     " << features.compute.maxWorkGroupSizeX << "\n";
+            std::cout << "  Max Work Group Size Y:     " << features.compute.maxWorkGroupSizeY << "\n";
+            std::cout << "  Max Work Group Size Z:     " << features.compute.maxWorkGroupSizeZ << "\n";
+            std::cout << "  Max Work Group Invocations: " << features.compute.maxWorkGroupInvocations << "\n";
+            std::cout << "  Max Shared Memory Size:    " << features.compute.maxComputeSharedMemorySize << " bytes\n";
+        }
+        
+        std::cout << "\nAdvanced Features:\n";
+        std::cout << "  Ray Tracing:          " << (features.advanced.rayTracing ? "✓" : "✗") << "\n";
+        std::cout << "  Mesh Shading:         " << (features.advanced.meshShading ? "✓" : "✗") << "\n";
+        std::cout << "  Variable Rate Shading: " << (features.advanced.variableRateShading ? "✓" : "✗") << "\n";
+        std::cout << "  Bindless Resources:   " << (features.advanced.bindlessResources ? "✓" : "✗") << "\n";
+        std::cout << "  Async Compute:        " << (features.advanced.asyncCompute ? "✓" : "✗") << "\n";
+        
+        std::cout << "\nMemory Features:\n";
+        if (features.memory.deviceLocalMemory > 0) {
+            std::cout << "  Device Local Memory:  " << (features.memory.deviceLocalMemory / 1024 / 1024) << " MB\n";
+        } else {
+            std::cout << "  Device Local Memory:  Unknown\n";
+        }
+        if (features.memory.hostVisibleMemory > 0) {
+            std::cout << "  Host Visible Memory:  " << (features.memory.hostVisibleMemory / 1024 / 1024) << " MB\n";
+        } else {
+            std::cout << "  Host Visible Memory:  Unknown\n";
+        }
+        std::cout << "  Unified Memory:       " << (features.memory.unifiedMemory ? "✓" : "✗") << "\n";
+        if (features.memory.minUniformBufferAlignment > 0) {
+            std::cout << "  Min Uniform Buffer Alignment: " << features.memory.minUniformBufferAlignment << " bytes\n";
+        }
+        if (features.memory.minStorageBufferAlignment > 0) {
+            std::cout << "  Min Storage Buffer Alignment: " << features.memory.minStorageBufferAlignment << " bytes\n";
+        }
+        
+        // Test individual feature queries
+        std::cout << "\n=== Feature Query Tests ===\n";
+        std::cout << "IsFeatureSupported(Feature::Compute): " 
+                  << (device->IsFeatureSupported(VRHI::Feature::Compute) ? "✓" : "✗") << "\n";
+        std::cout << "IsFeatureSupported(Feature::Geometry): " 
+                  << (device->IsFeatureSupported(VRHI::Feature::Geometry) ? "✓" : "✗") << "\n";
+        std::cout << "IsFeatureSupported(Feature::Tessellation): " 
+                  << (device->IsFeatureSupported(VRHI::Feature::Tessellation) ? "✓" : "✗") << "\n";
+        std::cout << "IsFeatureSupported(Feature::Texture3D): " 
+                  << (device->IsFeatureSupported(VRHI::Feature::Texture3D) ? "✓" : "✗") << "\n";
+        std::cout << "IsFeatureSupported(Feature::AnisotropicFiltering): " 
+                  << (device->IsFeatureSupported(VRHI::Feature::AnisotropicFiltering) ? "✓" : "✗") << "\n";
+        std::cout << "IsFeatureSupported(Feature::RayTracing): " 
+                  << (device->IsFeatureSupported(VRHI::Feature::RayTracing) ? "✓" : "✗") << "\n";
+        
+        std::cout << "\n======================\n\n";
 
         // Create vertex buffer
         std::cout << "Creating vertex buffer...\n";

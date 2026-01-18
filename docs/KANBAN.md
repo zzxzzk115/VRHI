@@ -83,9 +83,9 @@ This document tracks all work items for VRHI v1.0 development. Tasks can be assi
 
 | ID | Task | Priority | Effort | Status |
 |----|------|----------|--------|--------|
-| B2.1 | Implement `IsFeatureSupported()` interface | P0 | S | Backlog |
-| B2.2 | Add required feature validation logic | P0 | M | Backlog |
-| B2.3 | Implement feature query for OpenGL | P0 | L | Backlog |
+| B2.1 | Implement `IsFeatureSupported()` interface | P0 | S | Done |
+| B2.2 | Add required feature validation logic | P0 | M | Done |
+| B2.3 | Implement feature query for OpenGL | P0 | L | Done |
 | B2.4 | Implement feature query for Vulkan | P1 | L | Backlog |
 | B2.5 | Add texture format capability queries | P1 | M | Backlog |
 | B2.6 | Add compute shader detection | P1 | S | Backlog |
@@ -234,7 +234,7 @@ This document tracks all work items for VRHI v1.0 development. Tasks can be assi
 |----|------|----------|--------|--------|
 | W4.1 | Create HelloTriangle example | P0 | M | Done |
 | W4.2 | Create TexturedCube example | P0 | L | Backlog |
-| W4.3 | Create FeatureDetection example | P1 | M | Backlog |
+| W4.3 | Create FeatureDetection example | P1 | M | Done |
 | W4.4 | Create MultiBackend example | P1 | M | Backlog |
 | W4.5 | Add example READMEs | P1 | S | Backlog |
 | W4.6 | Create example assets (shaders, textures) | P1 | M | Backlog |
