@@ -101,11 +101,17 @@ void NullBuffer::Read(void* data, size_t size, size_t offset) {
 // ============================================================================
 
 namespace {
+    // Bytes per pixel for different texture formats
+    constexpr size_t BYTES_PER_PIXEL_RGBA8 = 4;
+    
     // Helper to calculate texture data size
+    // NOTE: Simplified calculation - assumes RGBA8 format for demonstration
+    // A real implementation would use format-specific calculations
     size_t CalculateTextureSize(const TextureDesc& desc) {
-        // Simplified calculation - in a real implementation, this would
-        // account for format, mip levels, alignment, etc.
-        size_t bytesPerPixel = 4;  // Assume RGBA8 for simplicity
+        size_t bytesPerPixel = BYTES_PER_PIXEL_RGBA8;  // Simplified for demo
+        
+        // TODO: Implement format-specific byte calculations based on desc.format
+        // For now, we assume RGBA8 (4 bytes per pixel)
         
         size_t totalSize = 0;
         for (uint32_t mip = 0; mip < desc.mipLevels; ++mip) {
@@ -129,7 +135,7 @@ NullTexture::NullTexture(const TextureDesc& desc)
     // Copy initial data if provided
     if (desc.initialData) {
         std::memcpy(m_data.data(), desc.initialData, 
-                   std::min(dataSize, static_cast<size_t>(desc.width * desc.height * desc.depth * 4)));
+                   std::min(dataSize, static_cast<size_t>(desc.width * desc.height * desc.depth * BYTES_PER_PIXEL_RGBA8)));
     }
 }
 
@@ -271,10 +277,10 @@ NullSampler::NullSampler(const SamplerDesc& desc)
 std::expected<std::unique_ptr<Sampler>, Error>
 NullSampler::Create(const SamplerDesc& desc) {
     // Validate descriptor (basic validation)
-    if (desc.maxAnisotropy < 1.0f) {
+    if (desc.maxAnisotropy <= 0.0f) {
         return std::unexpected(Error{
             Error::Code::InvalidConfig,
-            "Sampler max anisotropy must be at least 1.0"
+            "Sampler max anisotropy must be greater than 0.0"
         });
     }
     

@@ -258,7 +258,7 @@ TEST_F(ResourceManagementTest, SamplerCreation_Invalid_Anisotropy) {
     ASSERT_NE(device, nullptr);
     
     VRHI::SamplerDesc desc{};
-    desc.maxAnisotropy = 0.0f;  // Invalid
+    desc.maxAnisotropy = 0.0f;  // Invalid: must be > 0
     
     auto result = device->CreateSampler(desc);
     ASSERT_FALSE(result.has_value());
@@ -270,7 +270,7 @@ TEST_F(ResourceManagementTest, SamplerCreation_Invalid_LodRange) {
     
     VRHI::SamplerDesc desc{};
     desc.minLod = 10.0f;
-    desc.maxLod = 1.0f;  // Invalid: min > max
+    desc.maxLod = 1.0f;  // Invalid: minLod > maxLod
     
     auto result = device->CreateSampler(desc);
     ASSERT_FALSE(result.has_value());
