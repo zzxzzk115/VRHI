@@ -119,27 +119,39 @@ OpenGL33Pipeline::Create(const PipelineDesc& desc) {
     }
     
     // Copy vertex input state for graphics pipelines
-    VertexInputState vertexInput{};
     if (desc.type == PipelineType::Graphics) {
-        vertexInput = desc.graphics.vertexInput;
+        return std::unique_ptr<Pipeline>(new OpenGL33Pipeline(program, desc.type, desc.graphics));
+    } else {
+        return std::unique_ptr<Pipeline>(new OpenGL33Pipeline(program, desc.type, {}));
     }
-    
-    return std::unique_ptr<Pipeline>(new OpenGL33Pipeline(program, desc.type, vertexInput));
 }
 
-OpenGL33Pipeline::OpenGL33Pipeline(GLuint program, PipelineType type, const VertexInputState& vertexInput)
+OpenGL33Pipeline::OpenGL33Pipeline(GLuint program, PipelineType type, const GraphicsPipelineDesc& desc)
     : m_program(program)
     , m_type(type)
 {
     // Copy vertex attributes and bindings to internal storage
-    if (!vertexInput.attributes.empty()) {
-        m_vertexAttributes.assign(vertexInput.attributes.begin(), vertexInput.attributes.end());
+    if (!desc.vertexInput.attributes.empty()) {
+        m_vertexAttributes.assign(desc.vertexInput.attributes.begin(), desc.vertexInput.attributes.end());
         m_vertexInputState.attributes = m_vertexAttributes;
     }
     
-    if (!vertexInput.bindings.empty()) {
-        m_vertexBindings.assign(vertexInput.bindings.begin(), vertexInput.bindings.end());
+    if (!desc.vertexInput.bindings.empty()) {
+        m_vertexBindings.assign(desc.vertexInput.bindings.begin(), desc.vertexInput.bindings.end());
         m_vertexInputState.bindings = m_vertexBindings;
+    }
+    
+    // Store pipeline state
+    if (type == PipelineType::Graphics) {
+        m_depthStencilState = desc.depthStencil;
+        m_rasterizationState = desc.rasterization;
+        m_colorBlendState = desc.colorBlend;
+        
+        // Copy color blend attachments
+        if (!desc.colorBlend.attachments.empty()) {
+            m_colorBlendAttachments.assign(desc.colorBlend.attachments.begin(), desc.colorBlend.attachments.end());
+            m_colorBlendState.attachments = m_colorBlendAttachments;
+        }
     }
 }
 

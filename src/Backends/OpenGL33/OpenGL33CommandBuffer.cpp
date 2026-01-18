@@ -4,6 +4,8 @@
 #include "OpenGL33CommandBuffer.hpp"
 #include "OpenGL33Buffer.hpp"
 #include "OpenGL33Pipeline.hpp"
+#include "OpenGL33Texture.hpp"
+#include "OpenGL33Sampler.hpp"
 #include <VRHI/Logging.hpp>
 #include <glad/glad.h>
 
@@ -66,6 +68,30 @@ void OpenGL33CommandBuffer::BindPipeline(Pipeline* pipeline) {
         auto* glPipeline = static_cast<OpenGL33Pipeline*>(pipeline);
         glUseProgram(glPipeline->GetHandle());
         m_currentPipeline = pipeline;  // Track for vertex layout
+        
+        // Apply pipeline state for graphics pipelines
+        if (glPipeline->GetType() == PipelineType::Graphics) {
+            const auto& depthStencil = glPipeline->GetDepthStencilState();
+            const auto& rasterization = glPipeline->GetRasterizationState();
+            
+            // Depth test
+            if (depthStencil.depthTestEnable) {
+                glEnable(GL_DEPTH_TEST);
+                glDepthFunc(GL_LESS);  // TODO: Map from depthCompareOp
+                glDepthMask(depthStencil.depthWriteEnable ? GL_TRUE : GL_FALSE);
+            } else {
+                glDisable(GL_DEPTH_TEST);
+            }
+            
+            // Face culling
+            if (rasterization.cullMode != CullMode::None) {
+                glEnable(GL_CULL_FACE);
+                glCullFace(rasterization.cullMode == CullMode::Front ? GL_FRONT : GL_BACK);
+                glFrontFace(rasterization.frontFace == FrontFace::Clockwise ? GL_CW : GL_CCW);
+            } else {
+                glDisable(GL_CULL_FACE);
+            }
+        }
     }
 }
 
@@ -260,6 +286,63 @@ void OpenGL33CommandBuffer::CopyTexture(Texture* src, Texture* dst, uint32_t src
 
 void OpenGL33CommandBuffer::PipelineBarrier() {
     // OpenGL has implicit barriers
+}
+
+void OpenGL33CommandBuffer::BindUniformBuffer(uint32_t binding, Buffer* buffer, uint64_t offset, uint64_t size) {
+    if (!buffer) {
+        LogWarning("BindUniformBuffer called with null buffer");
+        return;
+    }
+    
+    auto* glBuffer = static_cast<OpenGL33Buffer*>(buffer);
+    
+    if (size == 0) {
+        size = buffer->GetSize() - offset;
+    }
+    
+    glBindBufferRange(GL_UNIFORM_BUFFER, binding, glBuffer->GetHandle(), offset, size);
+}
+
+void OpenGL33CommandBuffer::BindTexture(uint32_t binding, Texture* texture, Sampler* sampler) {
+    if (!texture) {
+        LogWarning("BindTexture called with null texture");
+        return;
+    }
+    
+    auto* glTexture = static_cast<OpenGL33Texture*>(texture);
+    
+    // Activate texture unit and bind texture
+    glActiveTexture(GL_TEXTURE0 + binding);
+    
+    GLenum target = GL_TEXTURE_2D;
+    switch (glTexture->GetType()) {
+        case TextureType::Texture1D:
+            target = GL_TEXTURE_1D;
+            break;
+        case TextureType::Texture2D:
+            target = GL_TEXTURE_2D;
+            break;
+        case TextureType::Texture3D:
+            target = GL_TEXTURE_3D;
+            break;
+        case TextureType::TextureCube:
+            target = GL_TEXTURE_CUBE_MAP;
+            break;
+        default:
+            target = GL_TEXTURE_2D;
+            break;
+    }
+    
+    glBindTexture(target, glTexture->GetHandle());
+    
+    // If sampler is provided, bind it
+    if (sampler) {
+        auto* glSampler = static_cast<OpenGL33Sampler*>(sampler);
+        glBindSampler(binding, glSampler->GetHandle());
+    }
+    
+    // Reset to texture unit 0
+    glActiveTexture(GL_TEXTURE0);
 }
 
 void OpenGL33CommandBuffer::BeginDebugMarker(const char* name, const float color[4]) {

@@ -156,6 +156,13 @@ public:
     virtual void BindIndexBuffer(Buffer* buffer, uint64_t offset = 0,
                                 bool use16BitIndices = false) = 0;
     
+    /// Bind uniform buffer to binding point
+    virtual void BindUniformBuffer(uint32_t binding, Buffer* buffer, 
+                                   uint64_t offset = 0, uint64_t size = 0) = 0;
+    
+    /// Bind texture to binding point
+    virtual void BindTexture(uint32_t binding, Texture* texture, Sampler* sampler = nullptr) = 0;
+    
     // ========================================================================
     // Dynamic State
     // ========================================================================
