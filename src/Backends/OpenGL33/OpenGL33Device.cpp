@@ -108,7 +108,7 @@ BackendType OpenGL33Device::GetBackendType() const noexcept {
 }
 
 BackendInfo OpenGL33Device::GetBackendInfo() const {
-    BackendInfo info;
+    BackendInfo info{};
     info.type = BackendType::OpenGL33;
     info.name = "OpenGL 3.3";
     info.version = "3.3";

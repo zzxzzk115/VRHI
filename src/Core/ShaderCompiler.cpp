@@ -162,7 +162,7 @@ ShaderCompiler::CompileGLSLToSPIRV(
     }
     
     // Link shader
-    glslang::TProgram program;
+    glslang::TProgram program{};
     program.addShader(&shader);
     
     if (!program.link(EShMsgDefault)) {
@@ -176,7 +176,7 @@ ShaderCompiler::CompileGLSLToSPIRV(
     
     // Convert to SPIR-V
     std::vector<uint32_t> spirv;
-    glslang::SpvOptions spvOptions;
+    glslang::SpvOptions spvOptions{};
     spvOptions.generateDebugInfo = false;
     spvOptions.disableOptimizer = true;
     spvOptions.optimizeSize = false;
@@ -199,7 +199,7 @@ ShaderCompiler::ConvertSPIRVToGLSL(
         spirv_cross::CompilerGLSL compiler(spirv.data(), spirv.size());
         
         // Set GLSL version options
-        spirv_cross::CompilerGLSL::Options options;
+        spirv_cross::CompilerGLSL::Options options{};
         options.version = targetVersion;
         options.es = false; // Desktop GLSL
         options.enable_420pack_extension = (targetVersion >= 420);
@@ -227,7 +227,7 @@ ShaderCompiler::ReflectSPIRV(std::span<const uint32_t> spirv) {
         // Create SPIRV-Cross compiler for reflection
         spirv_cross::CompilerGLSL compiler(spirv.data(), spirv.size());
         
-        ShaderCompilationResult::ReflectionData reflection;
+        ShaderCompilationResult::ReflectionData reflection{};
         
         // Get shader resources
         spirv_cross::ShaderResources resources = compiler.get_shader_resources();
@@ -280,7 +280,7 @@ ShaderCompiler::CompileGLSL(
         return std::unexpected(spirvResult.error());
     }
     
-    ShaderCompilationResult result;
+    ShaderCompilationResult result{};
     result.spirv = std::move(*spirvResult);
     
     // Optionally generate reflection data

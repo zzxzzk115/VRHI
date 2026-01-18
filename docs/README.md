@@ -6,6 +6,9 @@ Welcome to the VRHI (Versatile Render Hardware Interface) documentation.
 
 ## Table of Contents
 
+### Coding Standards
+- [Coding Standards](CODING_STANDARDS.md) - Code style and conventions for VRHI
+
 ### Design Documents
 - [Architecture Design](design/architecture.md) - VRHI overall architecture
 - [Backend Scoring System](design/backend_scoring.md) - Backend selection and scoring mechanism

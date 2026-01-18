@@ -4,6 +4,9 @@
 
 ## 目录
 
+### 编码规范
+- [编码规范](CODING_STANDARDS.md) - VRHI 的代码风格和约定
+
 ### 设计文档
 - [架构设计](design/architecture.md) - VRHI 的整体架构设计
 - [后端评分系统](design/backend_scoring.md) - 后端选择和评分机制
