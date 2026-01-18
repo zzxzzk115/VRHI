@@ -19,9 +19,10 @@ Version NullBackend::GetVersion() const noexcept {
     return Version{0, 0, 0, "0.0.0"};
 }
 
-FeatureSet NullBackend::GetSupportedFeatures() const {
+const FeatureSet& NullBackend::GetSupportedFeatures() const {
     // Return empty feature set - null backend supports nothing
-    return FeatureSet{};
+    static const FeatureSet emptyFeatureSet{};
+    return emptyFeatureSet;
 }
 
 bool NullBackend::IsFeatureSupported(Feature feature) const noexcept {

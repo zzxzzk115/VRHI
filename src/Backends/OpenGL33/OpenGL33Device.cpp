@@ -86,9 +86,6 @@ std::expected<void, Error> OpenGL33Device::Initialize() {
     
     m_properties.apiVersion = "OpenGL 3.3";
     
-    // Get features from backend
-    m_features = m_backend->GetSupportedFeatures();
-    
     // Create and bind a default VAO (required for OpenGL 3.3 core profile)
     glGenVertexArrays(1, &m_defaultVAO);
     glBindVertexArray(m_defaultVAO);
@@ -115,12 +112,12 @@ BackendInfo OpenGL33Device::GetBackendInfo() const {
     info.deviceName = m_properties.deviceName;
     info.vendorName = m_properties.vendorName;
     info.driverVersion = m_properties.driverVersion;
-    info.features = m_features;
+    info.features = m_backend->GetSupportedFeatures();
     return info;
 }
 
 const FeatureSet& OpenGL33Device::GetFeatures() const noexcept {
-    return m_features;
+    return m_backend->GetSupportedFeatures();
 }
 
 bool OpenGL33Device::IsFeatureSupported(Feature feature) const noexcept {

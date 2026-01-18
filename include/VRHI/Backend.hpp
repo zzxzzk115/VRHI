@@ -44,7 +44,7 @@ public:
     // ========================================================================
     
     /// Get all supported features
-    virtual FeatureSet GetSupportedFeatures() const = 0;
+    virtual const FeatureSet& GetSupportedFeatures() const = 0;
     
     /// Check if a specific feature is supported
     virtual bool IsFeatureSupported(Feature feature) const noexcept = 0;

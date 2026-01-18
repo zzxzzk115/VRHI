@@ -67,7 +67,6 @@ public:
 private:
     DeviceConfig m_config;
     OpenGL33Backend* m_backend;
-    FeatureSet m_features;
     DeviceProperties m_properties;
     
     // OpenGL context handle (platform-specific, will be void* for now)

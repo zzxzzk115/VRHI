@@ -393,7 +393,18 @@ private:
 
 class MockBackend : public IBackend {
 public:
-    MockBackend() = default;
+    MockBackend() {
+        // Initialize features
+        m_features.core.vertexShader = true;
+        m_features.core.fragmentShader = true;
+        m_features.core.uniformBuffers = true;
+        m_features.core.vertexBuffers = true;
+        m_features.core.indexBuffers = true;
+        m_features.texture.texture2D = true;
+        m_features.texture.maxTextureSize = 16384;
+        m_features.rendering.multipleRenderTargets = true;
+        m_features.rendering.maxColorAttachments = 8;
+    }
     
     BackendType GetType() const noexcept override { 
         return BackendType::Auto; 
@@ -407,18 +418,8 @@ public:
         return {1, 0, 0, "1.0.0"};
     }
     
-    FeatureSet GetSupportedFeatures() const override {
-        FeatureSet features{};
-        features.core.vertexShader = true;
-        features.core.fragmentShader = true;
-        features.core.uniformBuffers = true;
-        features.core.vertexBuffers = true;
-        features.core.indexBuffers = true;
-        features.texture.texture2D = true;
-        features.texture.maxTextureSize = 16384;
-        features.rendering.multipleRenderTargets = true;
-        features.rendering.maxColorAttachments = 8;
-        return features;
+    const FeatureSet& GetSupportedFeatures() const override {
+        return m_features;
     }
     
     bool IsFeatureSupported(Feature feature) const noexcept override {
@@ -432,14 +433,16 @@ public:
     }
     
     float CalculateScore(const FeatureRequirements& requirements) const override {
-        auto features = GetSupportedFeatures();
-        return BackendScorer::CalculateScore(GetType(), features, requirements);
+        return BackendScorer::CalculateScore(GetType(), m_features, requirements);
     }
     
     std::expected<std::unique_ptr<Device>, Error>
     CreateDevice(const DeviceConfig& config) override {
         return std::make_unique<MockDevice>(config);
     }
+
+private:
+    FeatureSet m_features{};
 };
 
 } // namespace Mock
