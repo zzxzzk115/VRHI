@@ -28,6 +28,11 @@ public:
     bool ShouldClose() const noexcept override;
     WindowSystemType GetType() const noexcept override;
     
+    // HiDPI/Retina support
+    uint32_t GetFramebufferWidth() const noexcept override;
+    uint32_t GetFramebufferHeight() const noexcept override;
+    void GetContentScale(float* xscale, float* yscale) const noexcept override;
+    
     void SetTitle(std::string_view title) override;
     void SetSize(uint32_t width, uint32_t height) override;
     void Show() override;

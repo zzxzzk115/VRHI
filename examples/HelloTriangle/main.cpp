@@ -34,6 +34,13 @@ int main() {
         }
         auto window = std::move(*windowResult);
         std::cout << "Window created successfully\n";
+        
+        // Display window and framebuffer dimensions (for HiDPI awareness)
+        float xscale = 1.0f, yscale = 1.0f;
+        window->GetContentScale(&xscale, &yscale);
+        std::cout << "Window size: " << window->GetWidth() << "x" << window->GetHeight() << "\n";
+        std::cout << "Framebuffer size: " << window->GetFramebufferWidth() << "x" << window->GetFramebufferHeight() << "\n";
+        std::cout << "Content scale: " << xscale << "x" << yscale << "\n\n";
 
         // Create device
         std::cout << "Creating device...\n";
@@ -179,19 +186,23 @@ int main() {
             clearColor.float32[2] = 0.1f;  // B
             clearColor.float32[3] = 1.0f;  // A
             
+            // Use framebuffer size for rendering (accounts for HiDPI/Retina displays)
+            uint32_t fbWidth = window->GetFramebufferWidth();
+            uint32_t fbHeight = window->GetFramebufferHeight();
+            
             VRHI::Rect2D clearRect{};
             clearRect.x = 0;
             clearRect.y = 0;
-            clearRect.width = window->GetWidth();
-            clearRect.height = window->GetHeight();
+            clearRect.width = fbWidth;
+            clearRect.height = fbHeight;
             cmd->ClearColorAttachment(0, clearColor, clearRect);
 
-            // Set viewport and scissor
+            // Set viewport and scissor using framebuffer dimensions
             VRHI::Viewport viewport{};
             viewport.x = 0;
             viewport.y = 0;
-            viewport.width = static_cast<float>(window->GetWidth());
-            viewport.height = static_cast<float>(window->GetHeight());
+            viewport.width = static_cast<float>(fbWidth);
+            viewport.height = static_cast<float>(fbHeight);
             viewport.minDepth = 0.0f;
             viewport.maxDepth = 1.0f;
             cmd->SetViewport(viewport);
@@ -199,8 +210,8 @@ int main() {
             VRHI::Rect2D scissor{};
             scissor.x = 0;
             scissor.y = 0;
-            scissor.width = window->GetWidth();
-            scissor.height = window->GetHeight();
+            scissor.width = fbWidth;
+            scissor.height = fbHeight;
             cmd->SetScissor(scissor);
 
             // Bind pipeline and draw triangle

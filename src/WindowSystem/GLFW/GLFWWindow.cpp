@@ -125,6 +125,32 @@ uint32_t GLFWWindow::GetHeight() const noexcept {
     return m_height;
 }
 
+uint32_t GLFWWindow::GetFramebufferWidth() const noexcept {
+    if (!m_window) return m_width;
+    
+    int width = 0;
+    glfwGetFramebufferSize(m_window, &width, nullptr);
+    return static_cast<uint32_t>(width);
+}
+
+uint32_t GLFWWindow::GetFramebufferHeight() const noexcept {
+    if (!m_window) return m_height;
+    
+    int height = 0;
+    glfwGetFramebufferSize(m_window, nullptr, &height);
+    return static_cast<uint32_t>(height);
+}
+
+void GLFWWindow::GetContentScale(float* xscale, float* yscale) const noexcept {
+    if (!m_window) {
+        if (xscale) *xscale = 1.0f;
+        if (yscale) *yscale = 1.0f;
+        return;
+    }
+    
+    glfwGetWindowContentScale(m_window, xscale, yscale);
+}
+
 bool GLFWWindow::ShouldClose() const noexcept {
     if (!m_window) return true;
     return glfwWindowShouldClose(m_window);

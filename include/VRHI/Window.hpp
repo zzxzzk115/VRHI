@@ -225,6 +225,14 @@ public:
     virtual bool ShouldClose() const noexcept = 0;
     virtual WindowSystemType GetType() const noexcept = 0;
     
+    // HiDPI/Retina support
+    // Get the actual framebuffer size (for rendering) - accounts for HiDPI scaling
+    virtual uint32_t GetFramebufferWidth() const noexcept = 0;
+    virtual uint32_t GetFramebufferHeight() const noexcept = 0;
+    
+    // Get the content scale factor (for UI scaling)
+    virtual void GetContentScale(float* xscale, float* yscale) const noexcept = 0;
+    
     // Window operations
     virtual void SetTitle(std::string_view title) = 0;
     virtual void SetSize(uint32_t width, uint32_t height) = 0;
