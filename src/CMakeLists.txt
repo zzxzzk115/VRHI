@@ -13,6 +13,7 @@ set(VRHI_CORE_SOURCES
     Core/Logging.cpp
     Core/Backend.cpp
     Core/BackendScoring.cpp
+    Core/BackendInit.cpp
     Core/NullBackend.cpp
     Core/NullDevice.cpp
     Core/MockBackend.cpp

@@ -4,6 +4,7 @@
 #include <VRHI/VRHI.hpp>
 #include <VRHI/Backend.hpp>
 #include <VRHI/Logging.hpp>
+#include "BackendInit.hpp"
 #include <algorithm>
 
 namespace VRHI {
@@ -23,6 +24,10 @@ void Initialize() noexcept {
     }
     
     LogInfo("Initializing VRHI v1.0.0");
+    
+    // Initialize all available backends
+    InitializeBackends();
+    
     g_initialized = true;
 }
 
