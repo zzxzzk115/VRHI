@@ -196,6 +196,7 @@ else()
     # Shader compilation libraries (link directly instead of through interface)
     target_link_libraries(VRHI PRIVATE
         glslang
+        glslang-default-resource-limits
         SPIRV
         spirv-cross-core
         spirv-cross-glsl
@@ -273,7 +274,7 @@ if(TARGET VRHI AND NOT CMAKE_SKIP_INSTALL_RULES)
     # Install shader compilation dependencies to the same export set
     # This ensures they're available when VRHI is imported
     if(TARGET glslang)
-        install(TARGETS glslang SPIRV
+        install(TARGETS glslang glslang-default-resource-limits SPIRV
             EXPORT VRHITargets
             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
