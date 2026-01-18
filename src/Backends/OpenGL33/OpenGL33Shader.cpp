@@ -3,6 +3,7 @@
 
 #include "OpenGL33Shader.hpp"
 #include <VRHI/Logging.hpp>
+#include <VRHI/ShaderCompiler.hpp>
 #include <glad/glad.h>
 #include <cstring>
 
@@ -40,9 +41,41 @@ OpenGL33Shader::Create(const ShaderDesc& desc) {
         });
     }
     
-    // For GLSL, code should be null-terminated string
-    const char* source = static_cast<const char*>(desc.code);
-    GLint length = static_cast<GLint>(desc.codeSize);
+    // Determine the shader source to compile
+    std::string glslSource;
+    
+    // If input is SPIR-V, convert to GLSL 330
+    if (desc.language == ShaderLanguage::SPIRV) {
+        // Convert SPIR-V to GLSL 3.30 for OpenGL 3.3
+        std::span<const uint32_t> spirvData(
+            static_cast<const uint32_t*>(desc.code),
+            desc.codeSize / sizeof(uint32_t)
+        );
+        
+        auto glslResult = ShaderCompiler::ConvertSPIRVToGLSL(spirvData, 330);
+        if (!glslResult) {
+            glDeleteShader(shader);
+            return std::unexpected(glslResult.error());
+        }
+        
+        glslSource = std::move(*glslResult);
+        LogInfo("Converted SPIR-V to GLSL 3.30 for OpenGL 3.3");
+    } 
+    // If input is GLSL source, use it directly
+    else if (desc.language == ShaderLanguage::GLSL) {
+        glslSource = std::string(static_cast<const char*>(desc.code), desc.codeSize);
+    }
+    else {
+        glDeleteShader(shader);
+        return std::unexpected(Error{
+            Error::Code::InvalidConfig,
+            "Unsupported shader language for OpenGL 3.3 (only GLSL and SPIRV supported)"
+        });
+    }
+    
+    // Compile the GLSL source
+    const char* source = glslSource.c_str();
+    GLint length = static_cast<GLint>(glslSource.length());
     
     glShaderSource(shader, 1, &source, &length);
     glCompileShader(shader);

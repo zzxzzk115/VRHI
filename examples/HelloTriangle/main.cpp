@@ -91,7 +91,7 @@ int main() {
 
         // Simple vertex shader
         const char* vertexShaderSource = R"(
-            #version 330 core
+            #version 460 core
             layout (location = 0) in vec3 aPos;
             layout (location = 1) in vec3 aColor;
 
@@ -105,7 +105,7 @@ int main() {
 
         // Simple fragment shader
         const char* fragmentShaderSource = R"(
-            #version 330 core
+            #version 460 core
             in vec3 vertexColor;
             out vec4 FragColor;
 
