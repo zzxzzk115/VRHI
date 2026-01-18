@@ -62,9 +62,33 @@ CreateDevice(const DeviceConfig& config) {
     std::expected<std::unique_ptr<IBackend>, Error> backendResult;
     
     if (config.preferredBackend == BackendType::Auto) {
-        // Automatically select best backend
-        LogInfo("Auto-selecting best backend based on requirements");
-        backendResult = BackendFactory::CreateBestBackend(config.features);
+        // First, try to create a backend registered specifically for Auto type
+        // This allows tests to override auto-selection by registering a mock backend
+        backendResult = BackendFactory::CreateBackend(BackendType::Auto);
+        
+        // If a backend was registered for Auto, verify it meets requirements
+        if (backendResult.has_value()) {
+            auto& backend = backendResult.value();
+            
+            // Check required features
+            for (const auto& feature : config.features.required) {
+                if (!backend->IsFeatureSupported(feature)) {
+                    // Backend doesn't meet requirements, fall back to auto-selection
+                    backendResult = std::unexpected(Error{
+                        Error::Code::NoCompatibleBackend,
+                        "Registered Auto backend does not support all required features"
+                    });
+                    break;
+                }
+            }
+        }
+        
+        // If no backend is registered for Auto or it doesn't meet requirements,
+        // automatically select best backend
+        if (!backendResult.has_value()) {
+            LogInfo("Auto-selecting best backend based on requirements");
+            backendResult = BackendFactory::CreateBestBackend(config.features);
+        }
     } else {
         // Use specified backend
         LogInfo("Creating requested backend");
