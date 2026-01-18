@@ -9,6 +9,13 @@ add_executable(TexturedCube
 target_link_libraries(TexturedCube
     PRIVATE
         VRHI::VRHI
+        glad_gl33
+)
+
+target_include_directories(TexturedCube
+    PRIVATE
+        ${CMAKE_SOURCE_DIR}/external/glad_gl33/include
+        ${CMAKE_SOURCE_DIR}/src/Backends/OpenGL33
 )
 
 # Set output directory

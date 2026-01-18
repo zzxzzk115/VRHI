@@ -14,6 +14,13 @@
 #include <VRHI/VRHI.hpp>
 #include <VRHI/Window.hpp>
 
+// Include OpenGL for direct uniform buffer and texture binding
+#include <glad/glad.h>
+
+// Include OpenGL backend headers to access native handles
+#include "../../src/Backends/OpenGL33/OpenGL33Buffer.hpp"
+#include "../../src/Backends/OpenGL33/OpenGL33Texture.hpp"
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "../../external/stb/stb_image.h"
 
@@ -413,6 +420,20 @@ int main() {
         }
         auto pipeline = std::move(*pipelineResult);
         std::cout << "Pipeline created\n\n";
+
+        // NOTE: Temporary workaround to bind resources until VRHI API is extended
+        // In OpenGL, we need to bind uniform buffers and textures to their binding points
+        
+        // Get native GL handles and bind resources
+        auto* glUBO = static_cast<VRHI::OpenGL33Buffer*>(uniformBuffer.get());
+        auto* glTex = static_cast<VRHI::OpenGL33Texture*>(texture.get());
+        
+        glBindBufferBase(GL_UNIFORM_BUFFER, 0, glUBO->GetHandle());
+        
+        // Texture binding (persistent)
+        glActiveTexture(GL_TEXTURE0 + 1);
+        glBindTexture(GL_TEXTURE_2D, glTex->GetHandle());
+        glActiveTexture(GL_TEXTURE0);
 
         std::cout << "Starting render loop...\n";
         std::cout << "Press ESC or close window to exit\n\n";
