@@ -172,10 +172,10 @@ This document tracks all work items for VRHI v1.0 development. Tasks can be assi
 
 | ID | Task | Priority | Effort | Status |
 |----|------|----------|--------|--------|
-| R5.1 | Define PipelineDesc struct | P0 | M | Backlog |
-| R5.2 | Define blend/raster/depth state | P0 | M | Backlog |
-| R5.3 | Implement CreatePipeline() for OpenGL | P0 | L | Backlog |
-| R5.4 | Add pipeline binding | P0 | M | Backlog |
+| R5.1 | Define PipelineDesc struct | P0 | M | Done |
+| R5.2 | Define blend/raster/depth state | P0 | M | Done |
+| R5.3 | Implement CreatePipeline() for OpenGL | P0 | L | Done |
+| R5.4 | Add pipeline binding | P0 | M | Done |
 | R5.5 | Implement state caching | P2 | M | Backlog |
 
 ### Vulkan Backend (Basic Skeleton)
@@ -233,7 +233,7 @@ This document tracks all work items for VRHI v1.0 development. Tasks can be assi
 | ID | Task | Priority | Effort | Status |
 |----|------|----------|--------|--------|
 | W4.1 | Create HelloTriangle example | P0 | M | Done |
-| W4.2 | Create TexturedCube example | P0 | L | Backlog |
+| W4.2 | Create TexturedCube example | P0 | L | Done |
 | W4.3 | Create FeatureDetection example | P1 | M | Done |
 | W4.4 | Create MultiBackend example | P1 | M | Backlog |
 | W4.5 | Add example READMEs | P1 | S | Backlog |
