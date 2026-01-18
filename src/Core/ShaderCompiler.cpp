@@ -162,7 +162,7 @@ ShaderCompiler::CompileGLSLToSPIRV(
     }
     
     // Link shader
-    glslang::TProgram program;
+    glslang::TProgram program{};
     program.addShader(&shader);
     
     if (!program.link(EShMsgDefault)) {
@@ -176,7 +176,7 @@ ShaderCompiler::CompileGLSLToSPIRV(
     
     // Convert to SPIR-V
     std::vector<uint32_t> spirv;
-    glslang::SpvOptions spvOptions;
+    glslang::SpvOptions spvOptions{};
     spvOptions.generateDebugInfo = false;
     spvOptions.disableOptimizer = true;
     spvOptions.optimizeSize = false;
@@ -280,7 +280,7 @@ ShaderCompiler::CompileGLSL(
         return std::unexpected(spirvResult.error());
     }
     
-    ShaderCompilationResult result;
+    ShaderCompilationResult result{};
     result.spirv = std::move(*spirvResult);
     
     // Optionally generate reflection data
