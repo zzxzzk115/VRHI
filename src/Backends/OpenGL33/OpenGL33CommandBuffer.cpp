@@ -343,14 +343,15 @@ void OpenGL33CommandBuffer::BindTexture(uint32_t binding, Texture* texture, Samp
     
     glBindTexture(target, glTexture->GetHandle());
     
-    // If sampler is provided, bind it
+    // If sampler is provided, bind it to the same texture unit
     if (sampler) {
         auto* glSampler = static_cast<OpenGL33Sampler*>(sampler);
         glBindSampler(binding, glSampler->GetHandle());
     }
     
-    // Reset to texture unit 0
-    glActiveTexture(GL_TEXTURE0);
+    // Note: We don't reset to texture unit 0 here because that would
+    // interfere with the binding we just set up. The active texture unit
+    // will be changed as needed by subsequent bind calls.
 }
 
 void OpenGL33CommandBuffer::BeginDebugMarker(const char* name, const float color[4]) {

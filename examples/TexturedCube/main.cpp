@@ -17,6 +17,10 @@
 // stb_image for texture loading (now properly integrated as a library)
 #include <stb_image.h>
 
+// OpenGL for setting sampler uniforms (temporary until API extended)
+#include <glad/glad.h>
+#include "../../src/Backends/OpenGL33/OpenGL33Pipeline.hpp"
+
 // Simple matrix math for MVP transformations
 struct Matrix4x4 {
     float m[16];
@@ -344,7 +348,7 @@ int main() {
         std::cout << "Creating shaders...\n";
 
         const char* vertexShaderSource = R"(
-            #version 460
+            #version 330 core
             layout (location = 0) in vec3 aPos;
             layout (location = 1) in vec3 aNormal;
             layout (location = 2) in vec2 aTexCoord;
@@ -353,7 +357,7 @@ int main() {
             layout (location = 1) out vec3 Normal;
             layout (location = 2) out vec2 TexCoord;
 
-            layout (binding = 0) uniform UniformBufferObject {
+            layout (std140, binding = 0) uniform UniformBufferObject {
                 mat4 mvp;
             } ubo;
 
@@ -366,14 +370,14 @@ int main() {
         )";
 
         const char* fragmentShaderSource = R"(
-            #version 460
+            #version 330 core
             layout (location = 0) in vec3 FragPos;
             layout (location = 1) in vec3 Normal;
             layout (location = 2) in vec2 TexCoord;
 
             layout (location = 0) out vec4 FragColor;
 
-            layout (binding = 1) uniform sampler2D texSampler;
+            uniform sampler2D texSampler;
 
             void main() {
                 vec3 lightDir = normalize(vec3(1.0, 1.0, 1.0));
@@ -461,6 +465,19 @@ int main() {
         }
         auto pipeline = std::move(*pipelineResult);
         std::cout << "Pipeline created\n\n";
+
+        // In OpenGL 3.3, we need to manually set the sampler uniform to use texture unit 1
+        // since layout(binding = N) for samplers requires OpenGL 4.2+
+        auto* glPipeline = static_cast<VRHI::OpenGL33Pipeline*>(pipeline.get());
+        GLuint program = glPipeline->GetHandle();
+        glUseProgram(program);
+        GLint samplerLocation = glGetUniformLocation(program, "texSampler");
+        if (samplerLocation >= 0) {
+            glUniform1i(samplerLocation, 1);  // Bind to texture unit 1
+            std::cout << "Sampler uniform set to texture unit 1\n";
+        } else {
+            std::cerr << "Warning: Could not find texSampler uniform\n";
+        }
 
         std::cout << "Starting render loop...\n";
         std::cout << "Press ESC or close window to exit\n\n";
