@@ -21,8 +21,8 @@
 #include "../../src/Backends/OpenGL33/OpenGL33Buffer.hpp"
 #include "../../src/Backends/OpenGL33/OpenGL33Texture.hpp"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "../../external/stb/stb_image.h"
+// stb_image for texture loading (now properly integrated as a library)
+#include <stb_image.h>
 
 // Simple matrix math for MVP transformations
 struct Matrix4x4 {
