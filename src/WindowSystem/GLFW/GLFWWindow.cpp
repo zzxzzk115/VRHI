@@ -174,6 +174,12 @@ void GLFWWindow::WaitEvents() {
     glfwWaitEvents();
 }
 
+void GLFWWindow::SwapBuffers() {
+    if (m_window) {
+        glfwSwapBuffers(m_window);
+    }
+}
+
 void* GLFWWindow::GetNativeHandle() const noexcept {
     return m_window;
 }

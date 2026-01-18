@@ -9,7 +9,6 @@ add_executable(HelloTriangle
 target_link_libraries(HelloTriangle
     PRIVATE
         VRHI::VRHI
-        glfw
 )
 
 # Set output directory

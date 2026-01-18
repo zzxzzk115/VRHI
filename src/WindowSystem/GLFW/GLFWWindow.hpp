@@ -37,6 +37,8 @@ public:
     void PollEvents() override;
     void WaitEvents() override;
     
+    void SwapBuffers() override;
+    
     void* GetNativeHandle() const noexcept override;
     
     void SetKeyCallback(KeyCallback callback) override;

@@ -236,6 +236,9 @@ public:
     virtual void PollEvents() = 0;
     virtual void WaitEvents() = 0;
     
+    // Rendering
+    virtual void SwapBuffers() = 0;
+    
     // Native handle access (for backend integration)
     virtual void* GetNativeHandle() const noexcept = 0;
     

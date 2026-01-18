@@ -12,9 +12,6 @@
 #include <VRHI/VRHI.hpp>
 #include <VRHI/Window.hpp>
 
-// Include GLFW for buffer swapping
-#include <GLFW/glfw3.h>
-
 int main() {
     try {
         std::cout << "VRHI HelloTriangle Example\n";
@@ -223,8 +220,7 @@ int main() {
             device->Submit(std::move(cmd));
             
             // Swap buffers to display the frame
-            auto* glfwWindow = static_cast<GLFWwindow*>(window->GetNativeHandle());
-            glfwSwapBuffers(glfwWindow);
+            window->SwapBuffers();
         }
 
         // Wait for all operations to complete
