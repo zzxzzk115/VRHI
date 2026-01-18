@@ -27,6 +27,13 @@ OpenGL33Device::OpenGL33Device(const DeviceConfig& config, OpenGL33Backend* back
 OpenGL33Device::~OpenGL33Device() {
     if (m_initialized) {
         WaitIdle();
+        
+        // Clean up default VAO
+        if (m_defaultVAO != 0) {
+            glDeleteVertexArrays(1, &m_defaultVAO);
+            m_defaultVAO = 0;
+        }
+        
         // Context cleanup will happen here
         // For now, we're not managing the context ourselves
     }
@@ -75,6 +82,10 @@ std::expected<void, Error> OpenGL33Device::Initialize() {
     
     // Get features from backend
     m_features = m_backend->GetSupportedFeatures();
+    
+    // Create and bind a default VAO (required for OpenGL 3.3 core profile)
+    glGenVertexArrays(1, &m_defaultVAO);
+    glBindVertexArray(m_defaultVAO);
     
     m_initialized = true;
     
