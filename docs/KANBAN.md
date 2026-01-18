@@ -123,37 +123,37 @@ This document tracks all work items for VRHI v1.0 development. Tasks can be assi
 
 | ID | Task | Priority | Effort | Status |
 |----|------|----------|--------|--------|
-| R1.1 | Implement Buffer class with RAII | P0 | M | Backlog |
-| R1.2 | Implement Texture class with RAII | P0 | M | Backlog |
+| R1.1 | Implement Buffer class with RAII | P0 | M | Done |
+| R1.2 | Implement Texture class with RAII | P0 | M | Done |
 | R1.3 | Implement Shader class with RAII | P0 | M | Backlog |
 | R1.4 | Implement Pipeline class with RAII | P0 | M | Backlog |
-| R1.5 | Add resource descriptor structs | P0 | M | Backlog |
-| R1.6 | Implement resource creation via Device | P0 | M | Backlog |
-| R1.7 | Add proper cleanup/destruction | P0 | M | Backlog |
-| R1.8 | Write resource lifecycle tests | P1 | L | Backlog |
+| R1.5 | Add resource descriptor structs | P0 | M | Done |
+| R1.6 | Implement resource creation via Device | P0 | M | Done |
+| R1.7 | Add proper cleanup/destruction | P0 | M | Done |
+| R1.8 | Write resource lifecycle tests | P1 | L | Done |
 
 ### Buffer Implementation
 
 | ID | Task | Priority | Effort | Status |
 |----|------|----------|--------|--------|
-| R2.1 | Define BufferUsage flags | P0 | S | Backlog |
-| R2.2 | Define BufferDesc struct | P0 | S | Backlog |
-| R2.3 | Implement CreateBuffer() for OpenGL | P0 | M | Backlog |
-| R2.4 | Implement buffer mapping/unmapping | P0 | M | Backlog |
-| R2.5 | Add buffer update operations | P0 | M | Backlog |
+| R2.1 | Define BufferUsage flags | P0 | S | Done |
+| R2.2 | Define BufferDesc struct | P0 | S | Done |
+| R2.3 | Implement CreateBuffer() for OpenGL | P0 | M | Done |
+| R2.4 | Implement buffer mapping/unmapping | P0 | M | Done |
+| R2.5 | Add buffer update operations | P0 | M | Done |
 | R2.6 | Implement vertex/index buffer binding | P0 | M | Backlog |
-| R2.7 | Add uniform buffer support | P1 | M | Backlog |
+| R2.7 | Add uniform buffer support | P1 | M | Done |
 
 ### Texture Implementation
 
 | ID | Task | Priority | Effort | Status |
 |----|------|----------|--------|--------|
-| R3.1 | Define TextureFormat enum | P0 | S | Backlog |
-| R3.2 | Define TextureUsage flags | P0 | S | Backlog |
-| R3.3 | Define TextureDesc struct | P0 | M | Backlog |
-| R3.4 | Implement CreateTexture() for OpenGL | P0 | M | Backlog |
-| R3.5 | Add texture upload (1D/2D/3D) | P0 | L | Backlog |
-| R3.6 | Implement sampler creation | P1 | M | Backlog |
+| R3.1 | Define TextureFormat enum | P0 | S | Done |
+| R3.2 | Define TextureUsage flags | P0 | S | Done |
+| R3.3 | Define TextureDesc struct | P0 | M | Done |
+| R3.4 | Implement CreateTexture() for OpenGL | P0 | M | Done |
+| R3.5 | Add texture upload (1D/2D/3D) | P0 | L | Done |
+| R3.6 | Implement sampler creation | P1 | M | Done |
 | R3.7 | Add texture binding | P0 | S | Backlog |
 
 ### Shader Compilation
