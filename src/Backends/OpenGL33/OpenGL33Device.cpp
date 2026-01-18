@@ -14,6 +14,7 @@
 #include "OpenGL33Sync.hpp"
 #include "OpenGL33SwapChain.hpp"
 #include <VRHI/Logging.hpp>
+#include <VRHI/BackendScoring.hpp>
 #include <glad/glad.h>
 
 namespace VRHI {
@@ -86,6 +87,9 @@ std::expected<void, Error> OpenGL33Device::Initialize() {
     
     m_properties.apiVersion = "OpenGL 3.3";
     
+    // Note: Features will be obtained from backend after DetectFeatures() is called
+    // This happens in Backend::CreateDevice() after Initialize() returns
+    
     // Create and bind a default VAO (required for OpenGL 3.3 core profile)
     glGenVertexArrays(1, &m_defaultVAO);
     glBindVertexArray(m_defaultVAO);
@@ -98,6 +102,17 @@ std::expected<void, Error> OpenGL33Device::Initialize() {
     }
     
     return {};
+}
+
+void OpenGL33Device::UpdateFeatures() {
+    // Get features from backend after it has detected them
+    auto featuresResult = m_backend->GetSupportedFeatures();
+    if (featuresResult) {
+        m_features = featuresResult.value();
+    } else {
+        // This shouldn't happen after Initialize() succeeds
+        LogWarning("Failed to get features from backend: " + featuresResult.error().message);
+    }
 }
 
 BackendType OpenGL33Device::GetBackendType() const noexcept {
@@ -116,21 +131,11 @@ BackendInfo OpenGL33Device::GetBackendInfo() const {
 }
 
 const FeatureSet& OpenGL33Device::GetFeatures() const noexcept {
-    // Device is created after features are detected, so this should always succeed
-    // If it fails, we return a static empty feature set (shouldn't happen in normal use)
-    static FeatureSet cachedFeatures{};
-    auto featuresResult = m_backend->GetSupportedFeatures();
-    if (featuresResult) {
-        cachedFeatures = featuresResult.value();
-        return cachedFeatures;
-    }
-    
-    static const FeatureSet emptyFeatureSet{};
-    return emptyFeatureSet;
+    return m_features;
 }
 
 bool OpenGL33Device::IsFeatureSupported(Feature feature) const noexcept {
-    return m_backend->IsFeatureSupported(feature);
+    return VRHI::IsFeatureSupported(m_features, feature);
 }
 
 const DeviceProperties& OpenGL33Device::GetProperties() const noexcept {

@@ -263,6 +263,9 @@ OpenGL33Backend::CreateDevice(const DeviceConfig& config) {
     // Detect features now that we have a context
     const_cast<OpenGL33Backend*>(this)->DetectFeatures();
     
+    // Update device's feature cache from backend
+    device->UpdateFeatures();
+    
     return device;
 }
 
