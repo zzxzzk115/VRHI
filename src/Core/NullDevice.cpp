@@ -37,7 +37,6 @@ BackendInfo NullDevice::GetBackendInfo() const {
     info.type = BackendType::Auto;
     info.name = "Null Backend";
     info.version = "0.0.0";
-    info.features = m_features;
     info.score = -1.0f;
     info.deviceName = m_properties.deviceName;
     info.vendorName = m_properties.vendorName;

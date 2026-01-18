@@ -14,6 +14,7 @@
 #include "OpenGL33Sync.hpp"
 #include "OpenGL33SwapChain.hpp"
 #include <VRHI/Logging.hpp>
+#include <VRHI/BackendScoring.hpp>
 #include <glad/glad.h>
 
 namespace VRHI {
@@ -86,8 +87,8 @@ std::expected<void, Error> OpenGL33Device::Initialize() {
     
     m_properties.apiVersion = "OpenGL 3.3";
     
-    // Get features from backend
-    m_features = m_backend->GetSupportedFeatures();
+    // Note: Features will be obtained from backend after DetectFeatures() is called
+    // This happens in Backend::CreateDevice() after Initialize() returns
     
     // Create and bind a default VAO (required for OpenGL 3.3 core profile)
     glGenVertexArrays(1, &m_defaultVAO);
@@ -103,6 +104,17 @@ std::expected<void, Error> OpenGL33Device::Initialize() {
     return {};
 }
 
+void OpenGL33Device::UpdateFeatures() {
+    // Get features from backend after it has detected them
+    auto featuresResult = m_backend->GetSupportedFeatures();
+    if (featuresResult) {
+        m_features = featuresResult.value();
+    } else {
+        // This shouldn't happen after Initialize() succeeds
+        LogWarning("Failed to get features from backend: " + featuresResult.error().message);
+    }
+}
+
 BackendType OpenGL33Device::GetBackendType() const noexcept {
     return BackendType::OpenGL33;
 }
@@ -115,7 +127,6 @@ BackendInfo OpenGL33Device::GetBackendInfo() const {
     info.deviceName = m_properties.deviceName;
     info.vendorName = m_properties.vendorName;
     info.driverVersion = m_properties.driverVersion;
-    info.features = m_features;
     return info;
 }
 
@@ -124,7 +135,7 @@ const FeatureSet& OpenGL33Device::GetFeatures() const noexcept {
 }
 
 bool OpenGL33Device::IsFeatureSupported(Feature feature) const noexcept {
-    return m_backend->IsFeatureSupported(feature);
+    return VRHI::IsFeatureSupported(m_features, feature);
 }
 
 const DeviceProperties& OpenGL33Device::GetProperties() const noexcept {

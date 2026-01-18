@@ -48,7 +48,7 @@ Version MockBackend::GetVersion() const noexcept {
     return Version{1, 0, 0, "1.0.0"};
 }
 
-FeatureSet MockBackend::GetSupportedFeatures() const {
+std::expected<FeatureSet, Error> MockBackend::GetSupportedFeatures() const {
     return m_features;
 }
 

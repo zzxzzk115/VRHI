@@ -35,8 +35,10 @@ TEST_F(BackendInterfaceTest, FeatureSupport) {
 }
 
 TEST_F(BackendInterfaceTest, GetSupportedFeatures) {
-    auto features = backend->GetSupportedFeatures();
+    auto featuresResult = backend->GetSupportedFeatures();
+    ASSERT_TRUE(featuresResult.has_value());
     
+    const auto& features = featuresResult.value();
     EXPECT_TRUE(features.core.vertexShader);
     EXPECT_TRUE(features.core.fragmentShader);
     EXPECT_TRUE(features.core.uniformBuffers);

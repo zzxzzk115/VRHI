@@ -19,6 +19,9 @@ public:
     // Initialize the device (create context, etc.)
     std::expected<void, Error> Initialize();
     
+    // Called by Backend after DetectFeatures() to update device's feature cache
+    void UpdateFeatures();
+    
     // Device Information
     BackendType GetBackendType() const noexcept override;
     BackendInfo GetBackendInfo() const override;
