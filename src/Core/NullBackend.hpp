@@ -19,7 +19,7 @@ public:
     std::string_view GetName() const noexcept override;
     Version GetVersion() const noexcept override;
     
-    const FeatureSet& GetSupportedFeatures() const override;
+    std::expected<FeatureSet, Error> GetSupportedFeatures() const override;
     bool IsFeatureSupported(Feature feature) const noexcept override;
     
     float CalculateScore(const FeatureRequirements& requirements) const override;

@@ -44,7 +44,8 @@ public:
     // ========================================================================
     
     /// Get all supported features
-    virtual const FeatureSet& GetSupportedFeatures() const = 0;
+    /// @return Features on success, error if features cannot be queried (e.g., no OpenGL context)
+    virtual std::expected<FeatureSet, Error> GetSupportedFeatures() const = 0;
     
     /// Check if a specific feature is supported
     virtual bool IsFeatureSupported(Feature feature) const noexcept = 0;

@@ -167,7 +167,13 @@ std::vector<BackendInfo> EnumerateBackends() {
         auto version = backend->GetVersion();
         info.version = std::string(version.string);
         
-        info.features = backend->GetSupportedFeatures();
+        auto featuresResult = backend->GetSupportedFeatures();
+        if (!featuresResult) {
+            LogWarning("Failed to get features for backend: " + std::string(backend->GetName()) + 
+                      " - " + featuresResult.error().message);
+            continue;
+        }
+        info.features = featuresResult.value();
         
         // Calculate score with empty requirements (baseline score)
         FeatureRequirements emptyReqs{};

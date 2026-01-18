@@ -418,7 +418,7 @@ public:
         return {1, 0, 0, "1.0.0"};
     }
     
-    const FeatureSet& GetSupportedFeatures() const override {
+    std::expected<FeatureSet, Error> GetSupportedFeatures() const override {
         return m_features;
     }
     
@@ -433,7 +433,11 @@ public:
     }
     
     float CalculateScore(const FeatureRequirements& requirements) const override {
-        return BackendScorer::CalculateScore(GetType(), m_features, requirements);
+        auto featuresResult = GetSupportedFeatures();
+        if (!featuresResult) {
+            return -1.0f;
+        }
+        return BackendScorer::CalculateScore(GetType(), featuresResult.value(), requirements);
     }
     
     std::expected<std::unique_ptr<Device>, Error>

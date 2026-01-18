@@ -112,12 +112,28 @@ BackendInfo OpenGL33Device::GetBackendInfo() const {
     info.deviceName = m_properties.deviceName;
     info.vendorName = m_properties.vendorName;
     info.driverVersion = m_properties.driverVersion;
-    info.features = m_backend->GetSupportedFeatures();
+    
+    auto featuresResult = m_backend->GetSupportedFeatures();
+    if (featuresResult) {
+        info.features = featuresResult.value();
+    }
+    // If features not available, info.features will be default-initialized
+    
     return info;
 }
 
 const FeatureSet& OpenGL33Device::GetFeatures() const noexcept {
-    return m_backend->GetSupportedFeatures();
+    // Device is created after features are detected, so this should always succeed
+    // If it fails, we return a static empty feature set (shouldn't happen in normal use)
+    static FeatureSet cachedFeatures{};
+    auto featuresResult = m_backend->GetSupportedFeatures();
+    if (featuresResult) {
+        cachedFeatures = featuresResult.value();
+        return cachedFeatures;
+    }
+    
+    static const FeatureSet emptyFeatureSet{};
+    return emptyFeatureSet;
 }
 
 bool OpenGL33Device::IsFeatureSupported(Feature feature) const noexcept {
