@@ -191,7 +191,7 @@ git clone --depth 1 --branch vulkan-sdk-1.3.275.0 \
 - 详细英文指南: [docs/NEXT_STEPS.md](../NEXT_STEPS.md)
 - 详细中文指南: [docs/zh-CN/NEXT_STEPS.md](NEXT_STEPS.md)
 - 更新的任务板: [docs/KANBAN.md](../KANBAN.md)
-- 项目路线图: [docs/ROADMAP_v1.0.md](ROADMAP_v1.0.md)
+- 项目路线图: [ROADMAP_v1.0.md](ROADMAP_v1.0.md)
 
 ---
 
