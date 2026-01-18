@@ -5,6 +5,8 @@
 #include <VRHI/Backend.hpp>
 #include <VRHI/Logging.hpp>
 
+#include <cstring>
+
 // glslang includes
 #include <glslang/Public/ShaderLang.h>
 #include <glslang/Public/ResourceLimits.h>
@@ -16,6 +18,60 @@
 #include <mutex>
 
 namespace VRHI {
+
+// ============================================================================
+// glslang Includer Implementation
+// ============================================================================
+
+namespace {
+
+/// Wrapper around IShaderIncluder for glslang's TShader::Includer interface
+class GlslangIncluder : public glslang::TShader::Includer {
+public:
+    explicit GlslangIncluder(IShaderIncluder* includer) : m_includer(includer) {}
+    
+    IncludeResult* includeLocal(const char* headerName,
+                                const char* includerName,
+                                size_t inclusionDepth) override {
+        return includeSystem(headerName, includerName, inclusionDepth);
+    }
+    
+    IncludeResult* includeSystem(const char* headerName,
+                                 const char* includerName,
+                                 size_t inclusionDepth) override {
+        if (!m_includer) {
+            return nullptr;
+        }
+        
+        std::string content = m_includer->ResolveInclude(
+            headerName,
+            includerName,
+            inclusionDepth
+        );
+        
+        if (content.empty()) {
+            return nullptr;
+        }
+        
+        // Allocate storage for the included content
+        char* data = new char[content.size()];
+        std::memcpy(data, content.data(), content.size());
+        
+        return new IncludeResult(headerName, data, content.size(), nullptr);
+    }
+    
+    void releaseInclude(IncludeResult* result) override {
+        if (result) {
+            delete[] static_cast<const char*>(result->headerData);
+            delete result;
+        }
+    }
+    
+private:
+    IShaderIncluder* m_includer;
+};
+
+} // anonymous namespace (for GlslangIncluder)
 
 // ============================================================================
 // glslang Initialization
@@ -39,11 +95,21 @@ namespace {
             case ShaderStage::TessControl: return EShLangTessControl;
             case ShaderStage::TessEval:    return EShLangTessEvaluation;
             case ShaderStage::Compute:     return EShLangCompute;
+            case ShaderStage::Mesh:        return EShLangMesh;
+            case ShaderStage::Task:        return EShLangTask;
+            // Ray tracing stages
+            case ShaderStage::RayGeneration: return EShLangRayGen;
+            case ShaderStage::AnyHit:        return EShLangAnyHit;
+            case ShaderStage::ClosestHit:    return EShLangClosestHit;
+            case ShaderStage::Miss:          return EShLangMiss;
+            case ShaderStage::Intersection:  return EShLangIntersect;
+            case ShaderStage::Callable:      return EShLangCallable;
             default:
                 return EShLangVertex;
         }
     }
-}
+
+} // anonymous namespace
 
 // ============================================================================
 // Shader Compiler Implementation
@@ -53,7 +119,8 @@ std::expected<std::vector<uint32_t>, Error>
 ShaderCompiler::CompileGLSLToSPIRV(
     const std::string& source,
     ShaderStage stage,
-    const char* entryPoint
+    const char* entryPoint,
+    IShaderIncluder* includer
 ) {
     InitializeGlslang();
     
@@ -74,9 +141,18 @@ ShaderCompiler::CompileGLSLToSPIRV(
     shader.setEnvClient(glslang::EShClientVulkan, glslang::EShTargetVulkan_1_0);
     shader.setEnvTarget(glslang::EShTargetSpv, glslang::EShTargetSpv_1_0);
     
-    // Parse shader
+    // Parse shader with optional includer support
     const TBuiltInResource* resources = GetDefaultResources();
-    if (!shader.parse(resources, 100, false, EShMsgDefault)) {
+    bool parseResult = false;
+    
+    if (includer) {
+        GlslangIncluder glslangIncluder(includer);
+        parseResult = shader.parse(resources, 100, false, EShMsgDefault, glslangIncluder);
+    } else {
+        parseResult = shader.parse(resources, 100, false, EShMsgDefault);
+    }
+    
+    if (!parseResult) {
         std::string errorMsg = "Failed to parse GLSL shader:\n";
         errorMsg += shader.getInfoLog();
         errorMsg += shader.getInfoDebugLog();
@@ -195,10 +271,11 @@ ShaderCompiler::CompileGLSL(
     const std::string& source,
     ShaderStage stage,
     const char* entryPoint,
-    bool enableReflection
+    bool enableReflection,
+    IShaderIncluder* includer
 ) {
     // Compile to SPIR-V
-    auto spirvResult = CompileGLSLToSPIRV(source, stage, entryPoint);
+    auto spirvResult = CompileGLSLToSPIRV(source, stage, entryPoint, includer);
     if (!spirvResult) {
         return std::unexpected(spirvResult.error());
     }

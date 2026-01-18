@@ -16,6 +16,28 @@ namespace VRHI {
 class Error;
 
 // ============================================================================
+// Custom Includer Interface
+// ============================================================================
+
+/// Custom include handler for shader compilation
+/// Implement this interface to provide custom #include resolution
+class IShaderIncluder {
+public:
+    virtual ~IShaderIncluder() = default;
+    
+    /// Resolve an include directive
+    /// @param headerName The name from the #include directive
+    /// @param includerName The name of the file doing the including
+    /// @param includeDepth Current include depth
+    /// @return The content of the included file, or empty if not found
+    virtual std::string ResolveInclude(
+        const std::string& headerName,
+        const std::string& includerName,
+        size_t includeDepth
+    ) = 0;
+};
+
+// ============================================================================
 // Shader Compilation Result
 // ============================================================================
 
@@ -53,12 +75,14 @@ public:
     /// @param source GLSL source code
     /// @param stage Shader stage
     /// @param entryPoint Entry point function name (default: "main")
+    /// @param includer Optional custom include handler for #include directives
     /// @return SPIR-V bytecode or error
     static std::expected<std::vector<uint32_t>, Error> 
     CompileGLSLToSPIRV(
         const std::string& source,
         ShaderStage stage,
-        const char* entryPoint = "main"
+        const char* entryPoint = "main",
+        IShaderIncluder* includer = nullptr
     );
     
     /// Convert SPIR-V to GLSL
@@ -82,13 +106,15 @@ public:
     /// @param stage Shader stage
     /// @param entryPoint Entry point function name
     /// @param enableReflection Whether to generate reflection data
+    /// @param includer Optional custom include handler for #include directives
     /// @return Compilation result with SPIR-V and optional reflection
     static std::expected<ShaderCompilationResult, Error>
     CompileGLSL(
         const std::string& source,
         ShaderStage stage,
         const char* entryPoint = "main",
-        bool enableReflection = false
+        bool enableReflection = false,
+        IShaderIncluder* includer = nullptr
     );
 };
 
