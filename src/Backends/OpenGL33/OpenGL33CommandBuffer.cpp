@@ -144,9 +144,17 @@ void OpenGL33CommandBuffer::BindVertexBuffers(uint32_t firstBinding, std::span<B
 }
 
 void OpenGL33CommandBuffer::BindIndexBuffer(Buffer* buffer, uint64_t offset, bool use16BitIndices) {
+    if (!buffer) {
+        LogWarning("BindIndexBuffer called with null buffer");
+        return;
+    }
+    
     // Store the index type for later use in DrawIndexed
     m_indexType = use16BitIndices ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
-    // Bind index buffer would be implemented here
+    
+    // Bind the index buffer
+    auto* glBuffer = static_cast<OpenGL33Buffer*>(buffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glBuffer->GetHandle());
 }
 
 void OpenGL33CommandBuffer::SetViewport(const Viewport& viewport) {
