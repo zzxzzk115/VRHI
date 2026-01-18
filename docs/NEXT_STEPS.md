@@ -64,7 +64,7 @@ The following critical components are still in **Backlog** status:
 
 ### Priority: **P0 (Critical)**
 
-The shader compilation system is essential for VRHI v1.0. According to the [Shader System Design](zh-CN/design/shader_system.md), the following libraries are required:
+The shader compilation system is essential for VRHI v1.0. According to the [Shader System Design](design/shader_system.md), the following libraries are required:
 
 ### 1. glslang (GLSL → SPIR-V Compiler)
 
