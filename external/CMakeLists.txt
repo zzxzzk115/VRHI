@@ -96,9 +96,8 @@ message(STATUS "  Adding Shader Compilation Libraries")
 # ----------------------------------------------------------------------------
 message(STATUS "    Adding glslang")
 
-# Disable glslang tests and install
+# Disable glslang tests and binaries
 set(ENABLE_GLSLANG_BINARIES OFF CACHE BOOL "" FORCE)
-set(ENABLE_GLSLANG_INSTALL OFF CACHE BOOL "" FORCE)
 set(BUILD_EXTERNAL OFF CACHE BOOL "" FORCE)
 set(ENABLE_SPVREMAPPER OFF CACHE BOOL "" FORCE)
 set(ENABLE_CTEST OFF CACHE BOOL "" FORCE)
@@ -108,6 +107,9 @@ set(ENABLE_SPIRV ON CACHE BOOL "" FORCE)
 
 # Disable SPIRV-Tools optimization (we don't need it for v1.0)
 set(ENABLE_OPT OFF CACHE BOOL "" FORCE)
+
+# Always skip glslang's own installation - we'll handle it ourselves
+set(ENABLE_GLSLANG_INSTALL OFF CACHE BOOL "" FORCE)
 
 # Add glslang
 add_subdirectory(glslang-16.1.0)
@@ -135,6 +137,8 @@ message(STATUS "    Adding SPIRV-Cross")
 # Disable SPIRV-Cross tests and CLI
 set(SPIRV_CROSS_CLI OFF CACHE BOOL "" FORCE)
 set(SPIRV_CROSS_ENABLE_TESTS OFF CACHE BOOL "" FORCE)
+
+# Always skip SPIRV-Cross's own installation - we'll handle it ourselves
 set(SPIRV_CROSS_SKIP_INSTALL ON CACHE BOOL "" FORCE)
 
 # Enable only the backends we need for v1.0

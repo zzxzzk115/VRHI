@@ -160,13 +160,13 @@ This document tracks all work items for VRHI v1.0 development. Tasks can be assi
 
 | ID | Task | Priority | Effort | Status |
 |----|------|----------|--------|--------|
-| R4.1 | Integrate glslang library | P0 | M | Backlog |
-| R4.2 | Integrate SPIRV-Cross library | P0 | M | Backlog |
-| R4.3 | Implement GLSL → SPIR-V compilation | P0 | M | Backlog |
-| R4.4 | Implement SPIR-V → GLSL conversion (GL) | P0 | M | Backlog |
-| R4.5 | Implement shader reflection | P1 | L | Backlog |
+| R4.1 | Integrate glslang library | P0 | M | Done |
+| R4.2 | Integrate SPIRV-Cross library | P0 | M | Done |
+| R4.3 | Implement GLSL → SPIR-V compilation | P0 | M | Done |
+| R4.4 | Implement SPIR-V → GLSL conversion (GL) | P0 | M | Done |
+| R4.5 | Implement shader reflection | P1 | L | Done |
 | R4.6 | Add shader caching | P2 | M | Backlog |
-| R4.7 | Create shader compilation example | P1 | M | Backlog |
+| R4.7 | Create shader compilation example | P1 | M | Done |
 
 ### Pipeline State
 
