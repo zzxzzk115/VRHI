@@ -13,7 +13,7 @@
 namespace VRHI {
 
 // Forward declare Error from VRHI
-class Error;
+struct Error;
 
 // ============================================================================
 // Custom Includer Interface
