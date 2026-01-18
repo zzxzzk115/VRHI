@@ -112,13 +112,6 @@ BackendInfo OpenGL33Device::GetBackendInfo() const {
     info.deviceName = m_properties.deviceName;
     info.vendorName = m_properties.vendorName;
     info.driverVersion = m_properties.driverVersion;
-    
-    auto featuresResult = m_backend->GetSupportedFeatures();
-    if (featuresResult) {
-        info.features = featuresResult.value();
-    }
-    // If features not available, info.features will be default-initialized
-    
     return info;
 }
 

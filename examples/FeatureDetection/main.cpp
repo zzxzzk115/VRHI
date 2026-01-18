@@ -108,9 +108,8 @@ int main() {
             std::cout << "  Score:   " << backend.score << "\n";
             std::cout << "  Type:    " << static_cast<int>(backend.type) << "\n\n";
             
-            std::cout << "  Features:\n";
-            PrintFeatures(backend.features, "    ");
-            std::cout << "\n";
+            // Note: Features are only available after creating a device with GL context
+            // Backend enumeration only provides basic backend metadata
         }
         
         // Test feature requirement validation

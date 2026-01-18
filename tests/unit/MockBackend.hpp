@@ -288,7 +288,6 @@ public:
         info.deviceName = m_properties.deviceName;
         info.vendorName = m_properties.vendorName;
         info.driverVersion = m_properties.driverVersion;
-        info.features = m_features;
         return info;
     }
     

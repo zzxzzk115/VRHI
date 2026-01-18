@@ -228,8 +228,6 @@ struct BackendInfo {
     std::string deviceName;
     std::string vendorName;
     std::string driverVersion;
-    
-    FeatureSet features{};
 };
 
 struct DeviceProperties {
