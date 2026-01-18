@@ -70,8 +70,8 @@
 ## Detailed Recommendations
 
 See the comprehensive documents:
-- **English**: [docs/NEXT_STEPS.md](docs/NEXT_STEPS.md)
-- **中文**: [docs/zh-CN/NEXT_STEPS.md](docs/zh-CN/NEXT_STEPS.md)
+- **English**: [NEXT_STEPS.md](NEXT_STEPS.md)
+- **中文**: [zh-CN/NEXT_STEPS.md](zh-CN/NEXT_STEPS.md)
 
 ## Immediate Action Plan
 
@@ -133,8 +133,8 @@ All recommended libraries are official Khronos projects:
 ## Progress Tracking
 
 Track detailed progress in:
-- [docs/KANBAN.md](docs/KANBAN.md) - Detailed task board
-- [docs/ROADMAP_v1.0.md](docs/ROADMAP_v1.0.md) - Phase-by-phase roadmap
+- [KANBAN.md](KANBAN.md) - Detailed task board
+- [ROADMAP_v1.0.md](ROADMAP_v1.0.md) - Phase-by-phase roadmap
 
 **Current Phase**: Phase 3-4 (Backend Implementation)  
 **Current Sprint**: Shader compilation integration  

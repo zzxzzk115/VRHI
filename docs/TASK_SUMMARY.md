@@ -148,10 +148,12 @@ git clone --depth 1 --branch vulkan-sdk-1.3.275.0 \
 
 ## Files Created
 
-1. ✅ `RECOMMENDATIONS.md` - Quick reference at repository root
-2. ✅ `docs/NEXT_STEPS.md` - Detailed English recommendations
-3. ✅ `docs/zh-CN/NEXT_STEPS.md` - Detailed Chinese recommendations
-4. ✅ `TASK_SUMMARY.md` - This summary document
+1. ✅ `docs/RECOMMENDATIONS.md` - Quick reference (English)
+2. ✅ `docs/zh-CN/RECOMMENDATIONS.md` - Quick reference (Chinese)
+3. ✅ `docs/NEXT_STEPS.md` - Detailed English recommendations
+4. ✅ `docs/zh-CN/NEXT_STEPS.md` - Detailed Chinese recommendations
+5. ✅ `docs/TASK_SUMMARY.md` - This summary document (English)
+6. ✅ `docs/zh-CN/TASK_SUMMARY.md` - Task summary (Chinese)
 
 ## Files Modified
 
@@ -179,11 +181,12 @@ The task has been completed successfully. All documentation has been reviewed, K
 
 ## References
 
-- Main recommendations: [RECOMMENDATIONS.md](RECOMMENDATIONS.md)
-- Detailed English guide: [docs/NEXT_STEPS.md](docs/NEXT_STEPS.md)
-- 详细中文指南: [docs/zh-CN/NEXT_STEPS.md](docs/zh-CN/NEXT_STEPS.md)
-- Updated task board: [docs/KANBAN.md](docs/KANBAN.md)
-- Project roadmap: [docs/ROADMAP_v1.0.md](docs/ROADMAP_v1.0.md)
+- English quick reference: [RECOMMENDATIONS.md](RECOMMENDATIONS.md)
+- Chinese quick reference: [zh-CN/RECOMMENDATIONS.md](zh-CN/RECOMMENDATIONS.md)
+- Detailed English guide: [NEXT_STEPS.md](NEXT_STEPS.md)
+- Detailed Chinese guide: [zh-CN/NEXT_STEPS.md](zh-CN/NEXT_STEPS.md)
+- Updated task board: [KANBAN.md](KANBAN.md)
+- Project roadmap: [ROADMAP_v1.0.md](ROADMAP_v1.0.md)
 
 ---
 
