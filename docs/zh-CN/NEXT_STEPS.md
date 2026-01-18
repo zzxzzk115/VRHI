@@ -99,7 +99,7 @@ add_subdirectory(glslang)
 
 **仓库**: https://github.com/KhronosGroup/SPIRV-Cross
 
-**版本**: 最新稳定版（推荐 v2024-01-04 或更高）
+**版本**: 最新稳定版（推荐 vulkan-sdk-1.3.275.0 标签或更高）
 
 **许可证**: Apache 2.0（与 MIT 兼容）
 
