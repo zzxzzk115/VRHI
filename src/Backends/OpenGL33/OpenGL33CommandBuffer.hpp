@@ -80,6 +80,7 @@ public:
 private:
     CommandBufferState m_state = CommandBufferState::Initial;
     GLenum m_indexType = GL_UNSIGNED_INT;  // Track bound index buffer type
+    Pipeline* m_currentPipeline = nullptr;  // Track currently bound pipeline for vertex layout
 };
 
 } // namespace VRHI

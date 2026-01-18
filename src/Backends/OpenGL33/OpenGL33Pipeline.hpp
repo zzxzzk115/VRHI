@@ -13,7 +13,7 @@ namespace VRHI {
 
 class OpenGL33Pipeline : public Pipeline {
 public:
-    ~OpenGL33Pipeline() override = default;
+    ~OpenGL33Pipeline() override;
     
     static std::expected<std::unique_ptr<Pipeline>, Error>
     Create(const PipelineDesc& desc);
@@ -22,10 +22,18 @@ public:
     
     GLuint GetHandle() const noexcept { return m_program; }
     
+    const VertexInputState& GetVertexInputState() const noexcept { return m_vertexInputState; }
+    
 private:
-    OpenGL33Pipeline(GLuint program, PipelineType type) : m_program(program), m_type(type) {}
+    OpenGL33Pipeline(GLuint program, PipelineType type, const VertexInputState& vertexInput);
+    
     GLuint m_program = 0;
     PipelineType m_type = PipelineType::Graphics;
+    
+    // Store vertex layout for use during rendering
+    VertexInputState m_vertexInputState;
+    std::vector<VertexAttribute> m_vertexAttributes;
+    std::vector<VertexBinding> m_vertexBindings;
 };
 
 } // namespace VRHI

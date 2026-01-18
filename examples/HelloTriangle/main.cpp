@@ -144,14 +144,38 @@ int main() {
         // Create pipeline
         std::cout << "Creating pipeline...\n";
 
+        // Define vertex layout (position + color)
+        VRHI::VertexAttribute vertexAttributes[] = {
+            {
+                .location = 0,
+                .binding = 0,
+                .format = VRHI::VertexFormat::Float3,  // Position (x, y, z)
+                .offset = 0
+            },
+            {
+                .location = 1,
+                .binding = 0,
+                .format = VRHI::VertexFormat::Float3,  // Color (r, g, b)
+                .offset = 3 * sizeof(float)
+            }
+        };
+        
+        VRHI::VertexBinding vertexBindings[] = {
+            {
+                .binding = 0,
+                .stride = 6 * sizeof(float),  // Position (3 floats) + Color (3 floats)
+                .inputRate = VRHI::VertexInputRate::Vertex
+            }
+        };
+
         VRHI::PipelineDesc pipelineDesc{};
         pipelineDesc.type = VRHI::PipelineType::Graphics;
         pipelineDesc.graphics.vertexShader = vertexShader.get();
         pipelineDesc.graphics.fragmentShader = fragmentShader.get();
 
-        // Vertex input layout
-        // Note: For simplicity, we're not setting up detailed vertex layout here
-        // The OpenGL backend will infer it from the shader
+        // Set vertex input layout
+        pipelineDesc.graphics.vertexInput.attributes = vertexAttributes;
+        pipelineDesc.graphics.vertexInput.bindings = vertexBindings;
 
         // Rasterization state
         pipelineDesc.graphics.rasterization.cullMode = VRHI::CullMode::None;

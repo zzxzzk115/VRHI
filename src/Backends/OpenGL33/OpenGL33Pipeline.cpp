@@ -118,7 +118,36 @@ OpenGL33Pipeline::Create(const PipelineDesc& desc) {
         }
     }
     
-    return std::unique_ptr<Pipeline>(new OpenGL33Pipeline(program, desc.type));
+    // Copy vertex input state for graphics pipelines
+    VertexInputState vertexInput{};
+    if (desc.type == PipelineType::Graphics) {
+        vertexInput = desc.graphics.vertexInput;
+    }
+    
+    return std::unique_ptr<Pipeline>(new OpenGL33Pipeline(program, desc.type, vertexInput));
+}
+
+OpenGL33Pipeline::OpenGL33Pipeline(GLuint program, PipelineType type, const VertexInputState& vertexInput)
+    : m_program(program)
+    , m_type(type)
+{
+    // Copy vertex attributes and bindings to internal storage
+    if (!vertexInput.attributes.empty()) {
+        m_vertexAttributes.assign(vertexInput.attributes.begin(), vertexInput.attributes.end());
+        m_vertexInputState.attributes = m_vertexAttributes;
+    }
+    
+    if (!vertexInput.bindings.empty()) {
+        m_vertexBindings.assign(vertexInput.bindings.begin(), vertexInput.bindings.end());
+        m_vertexInputState.bindings = m_vertexBindings;
+    }
+}
+
+OpenGL33Pipeline::~OpenGL33Pipeline() {
+    if (m_program != 0) {
+        glDeleteProgram(m_program);
+        m_program = 0;
+    }
 }
 
 } // namespace VRHI

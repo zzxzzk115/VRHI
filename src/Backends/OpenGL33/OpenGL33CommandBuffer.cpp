@@ -9,6 +9,33 @@
 
 namespace VRHI {
 
+namespace {
+    // Helper function to convert VertexFormat to OpenGL type info
+    struct VertexFormatInfo {
+        GLint componentCount;
+        GLenum type;
+        GLboolean normalized;
+    };
+    
+    VertexFormatInfo GetVertexFormatInfo(VertexFormat format) {
+        switch (format) {
+            case VertexFormat::Float:    return {1, GL_FLOAT, GL_FALSE};
+            case VertexFormat::Float2:   return {2, GL_FLOAT, GL_FALSE};
+            case VertexFormat::Float3:   return {3, GL_FLOAT, GL_FALSE};
+            case VertexFormat::Float4:   return {4, GL_FLOAT, GL_FALSE};
+            case VertexFormat::Int:      return {1, GL_INT, GL_FALSE};
+            case VertexFormat::Int2:     return {2, GL_INT, GL_FALSE};
+            case VertexFormat::Int3:     return {3, GL_INT, GL_FALSE};
+            case VertexFormat::Int4:     return {4, GL_INT, GL_FALSE};
+            case VertexFormat::UInt:     return {1, GL_UNSIGNED_INT, GL_FALSE};
+            case VertexFormat::UInt2:    return {2, GL_UNSIGNED_INT, GL_FALSE};
+            case VertexFormat::UInt3:    return {3, GL_UNSIGNED_INT, GL_FALSE};
+            case VertexFormat::UInt4:    return {4, GL_UNSIGNED_INT, GL_FALSE};
+            default:                     return {3, GL_FLOAT, GL_FALSE};
+        }
+    }
+} // anonymous namespace
+
 void OpenGL33CommandBuffer::Begin() {
     m_state = CommandBufferState::Recording;
 }
@@ -38,25 +65,55 @@ void OpenGL33CommandBuffer::BindPipeline(Pipeline* pipeline) {
     if (pipeline) {
         auto* glPipeline = static_cast<OpenGL33Pipeline*>(pipeline);
         glUseProgram(glPipeline->GetHandle());
+        m_currentPipeline = pipeline;  // Track for vertex layout
     }
 }
 
 void OpenGL33CommandBuffer::BindVertexBuffers(uint32_t firstBinding, std::span<Buffer* const> buffers, std::span<const uint64_t> offsets) {
-    // Bind vertex buffers
-    // In OpenGL, we need to set up vertex attributes
-    // For now, we'll just bind the first buffer as a simple array buffer
-    if (!buffers.empty() && buffers[0]) {
-        auto* glBuffer = static_cast<OpenGL33Buffer*>(buffers[0]);
+    // Get vertex layout from the currently bound pipeline
+    if (!m_currentPipeline) {
+        LogWarning("BindVertexBuffers called without a bound pipeline");
+        return;
+    }
+    
+    auto* glPipeline = static_cast<OpenGL33Pipeline*>(m_currentPipeline);
+    const auto& vertexInput = glPipeline->GetVertexInputState();
+    
+    if (vertexInput.attributes.empty() || vertexInput.bindings.empty()) {
+        LogWarning("Pipeline has no vertex input layout defined");
+        return;
+    }
+    
+    // Bind vertex buffers and set up attributes according to the pipeline's vertex layout
+    for (const auto& binding : vertexInput.bindings) {
+        if (binding.binding < firstBinding || binding.binding >= firstBinding + buffers.size()) {
+            continue;
+        }
+        
+        uint32_t bufferIndex = binding.binding - firstBinding;
+        if (!buffers[bufferIndex]) {
+            continue;
+        }
+        
+        auto* glBuffer = static_cast<OpenGL33Buffer*>(buffers[bufferIndex]);
         glBindBuffer(GL_ARRAY_BUFFER, glBuffer->GetHandle());
         
-        // Enable vertex attributes (assuming position + color layout)
-        // Position attribute (location = 0)
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-        
-        // Color attribute (location = 1)
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+        // Set up all attributes that use this binding
+        for (const auto& attr : vertexInput.attributes) {
+            if (attr.binding == binding.binding) {
+                auto formatInfo = GetVertexFormatInfo(attr.format);
+                
+                glEnableVertexAttribArray(attr.location);
+                glVertexAttribPointer(
+                    attr.location,
+                    formatInfo.componentCount,
+                    formatInfo.type,
+                    formatInfo.normalized,
+                    binding.stride,
+                    reinterpret_cast<const void*>(static_cast<uintptr_t>(attr.offset))
+                );
+            }
+        }
     }
 }
 
