@@ -16,6 +16,7 @@ set(VRHI_CORE_SOURCES
     Core/BackendInit.cpp
     Core/NullBackend.cpp
     Core/NullDevice.cpp
+    Core/NullResources.cpp
     Core/MockBackend.cpp
     Core/ShaderCompiler.cpp
     # Additional core implementation files will be added here

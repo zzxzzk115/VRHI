@@ -130,6 +130,26 @@ set_target_properties(FeatureDetectionTests PROPERTIES
 
 add_test(NAME FeatureDetectionTests COMMAND FeatureDetectionTests)
 
+# Resource management tests
+add_executable(ResourceManagementTests
+    unit/ResourceManagementTests.cpp
+)
+
+target_link_libraries(ResourceManagementTests
+    PRIVATE
+        VRHI::VRHI
+        gtest
+        gtest_main
+)
+
+set_target_properties(ResourceManagementTests PROPERTIES
+    CXX_STANDARD 23
+    CXX_STANDARD_REQUIRED ON
+    CXX_EXTENSIONS OFF
+)
+
+add_test(NAME ResourceManagementTests COMMAND ResourceManagementTests)
+
 # ============================================================================
 # Test Summary
 # ============================================================================
@@ -141,3 +161,4 @@ message(STATUS "  BackendInterfaceTests: Unit tests for backend and device inter
 message(STATUS "  CoreAPITests: Unit tests for Core API functions")
 message(STATUS "  BackendScoringTests: Unit tests for backend scoring system")
 message(STATUS "  FeatureDetectionTests: Unit tests for feature detection system")
+message(STATUS "  ResourceManagementTests: Unit tests for resource management (Buffer, Texture, Sampler)")

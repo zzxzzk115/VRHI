@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 #include "NullDevice.hpp"
+#include "NullResources.hpp"
 #include <VRHI/Resources.hpp>
 #include <VRHI/Shader.hpp>
 #include <VRHI/Pipeline.hpp>
@@ -56,29 +57,20 @@ const DeviceProperties& NullDevice::GetProperties() const noexcept {
     return m_properties;
 }
 
-// Resource creation stubs - all return errors
+// Resource creation - now using actual implementations
 std::expected<std::unique_ptr<Buffer>, Error>
 NullDevice::CreateBuffer(const struct BufferDesc& desc) {
-    Error error{};
-    error.code = Error::Code::UnsupportedFeature;
-    error.message = "NullDevice: Buffer creation not supported";
-    return std::unexpected(error);
+    return NullBuffer::Create(desc);
 }
 
 std::expected<std::unique_ptr<Texture>, Error>
 NullDevice::CreateTexture(const struct TextureDesc& desc) {
-    Error error{};
-    error.code = Error::Code::UnsupportedFeature;
-    error.message = "NullDevice: Texture creation not supported";
-    return std::unexpected(error);
+    return NullTexture::Create(desc);
 }
 
 std::expected<std::unique_ptr<Sampler>, Error>
 NullDevice::CreateSampler(const struct SamplerDesc& desc) {
-    Error error{};
-    error.code = Error::Code::UnsupportedFeature;
-    error.message = "NullDevice: Sampler creation not supported";
-    return std::unexpected(error);
+    return NullSampler::Create(desc);
 }
 
 std::expected<std::unique_ptr<Shader>, Error>
