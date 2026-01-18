@@ -31,11 +31,12 @@ struct Matrix4x4 {
         Matrix4x4 mat = {};
         float tanHalfFovy = std::tan(fovY / 2.0f);
         
+        // Column-major OpenGL perspective matrix
         mat.m[0] = 1.0f / (aspect * tanHalfFovy);
         mat.m[5] = 1.0f / tanHalfFovy;
         mat.m[10] = -(farZ + nearZ) / (farZ - nearZ);
-        mat.m[11] = -1.0f;
         mat.m[14] = -(2.0f * farZ * nearZ) / (farZ - nearZ);
+        mat.m[11] = -1.0f;
         return mat;
     }
     
@@ -44,14 +45,14 @@ struct Matrix4x4 {
                            float upX, float upY, float upZ) {
         Matrix4x4 mat = {};
         
-        // Forward vector
+        // Forward vector (normalized)
         float fx = centerX - eyeX;
         float fy = centerY - eyeY;
         float fz = centerZ - eyeZ;
         float flen = std::sqrt(fx*fx + fy*fy + fz*fz);
         fx /= flen; fy /= flen; fz /= flen;
         
-        // Right vector
+        // Right vector (normalized)
         float rx = fy * upZ - fz * upY;
         float ry = fz * upX - fx * upZ;
         float rz = fx * upY - fy * upX;
@@ -63,13 +64,31 @@ struct Matrix4x4 {
         float uy = rz * fx - rx * fz;
         float uz = rx * fy - ry * fx;
         
-        mat.m[0] = rx; mat.m[4] = ux; mat.m[8] = -fx; mat.m[12] = 0.0f;
-        mat.m[1] = ry; mat.m[5] = uy; mat.m[9] = -fy; mat.m[13] = 0.0f;
-        mat.m[2] = rz; mat.m[6] = uz; mat.m[10] = -fz; mat.m[14] = 0.0f;
-        mat.m[3] = -(rx*eyeX + ry*eyeY + rz*eyeZ);
-        mat.m[7] = -(ux*eyeX + uy*eyeY + uz*eyeZ);
-        mat.m[11] = fx*eyeX + fy*eyeY + fz*eyeZ;
+        // Column-major OpenGL view matrix
+        // Column 0: right vector
+        mat.m[0] = rx;
+        mat.m[1] = ry;
+        mat.m[2] = rz;
+        mat.m[3] = 0.0f;
+        
+        // Column 1: up vector
+        mat.m[4] = ux;
+        mat.m[5] = uy;
+        mat.m[6] = uz;
+        mat.m[7] = 0.0f;
+        
+        // Column 2: -forward vector
+        mat.m[8] = -fx;
+        mat.m[9] = -fy;
+        mat.m[10] = -fz;
+        mat.m[11] = 0.0f;
+        
+        // Column 3: translation
+        mat.m[12] = -(rx*eyeX + ry*eyeY + rz*eyeZ);
+        mat.m[13] = -(ux*eyeX + uy*eyeY + uz*eyeZ);
+        mat.m[14] = fx*eyeX + fy*eyeY + fz*eyeZ;
         mat.m[15] = 1.0f;
+        
         return mat;
     }
     
@@ -79,19 +98,48 @@ struct Matrix4x4 {
         float s = std::sin(angle);
         float t = 1.0f - c;
         
-        mat.m[0] = t*x*x + c;     mat.m[4] = t*x*y - s*z;  mat.m[8] = t*x*z + s*y;
-        mat.m[1] = t*x*y + s*z;   mat.m[5] = t*y*y + c;    mat.m[9] = t*y*z - s*x;
-        mat.m[2] = t*x*z - s*y;   mat.m[6] = t*y*z + s*x;  mat.m[10] = t*z*z + c;
+        // Normalize axis
+        float len = std::sqrt(x*x + y*y + z*z);
+        if (len > 0.0f) {
+            x /= len; y /= len; z /= len;
+        }
+        
+        // Column-major rotation matrix
+        // Column 0
+        mat.m[0] = t*x*x + c;
+        mat.m[1] = t*x*y + s*z;
+        mat.m[2] = t*x*z - s*y;
+        mat.m[3] = 0.0f;
+        
+        // Column 1
+        mat.m[4] = t*x*y - s*z;
+        mat.m[5] = t*y*y + c;
+        mat.m[6] = t*y*z + s*x;
+        mat.m[7] = 0.0f;
+        
+        // Column 2
+        mat.m[8] = t*x*z + s*y;
+        mat.m[9] = t*y*z - s*x;
+        mat.m[10] = t*z*z + c;
+        mat.m[11] = 0.0f;
+        
+        // Column 3
+        mat.m[12] = 0.0f;
+        mat.m[13] = 0.0f;
+        mat.m[14] = 0.0f;
+        mat.m[15] = 1.0f;
+        
         return mat;
     }
     
     static Matrix4x4 Multiply(const Matrix4x4& a, const Matrix4x4& b) {
         Matrix4x4 result = {};
-        for (int i = 0; i < 4; ++i) {
-            for (int j = 0; j < 4; ++j) {
-                result.m[i*4 + j] = 0.0f;
+        // Column-major multiplication
+        for (int col = 0; col < 4; ++col) {
+            for (int row = 0; row < 4; ++row) {
+                result.m[col*4 + row] = 0.0f;
                 for (int k = 0; k < 4; ++k) {
-                    result.m[i*4 + j] += a.m[i*4 + k] * b.m[k*4 + j];
+                    result.m[col*4 + row] += a.m[k*4 + row] * b.m[col*4 + k];
                 }
             }
         }
