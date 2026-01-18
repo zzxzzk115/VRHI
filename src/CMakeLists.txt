@@ -17,6 +17,7 @@ set(VRHI_CORE_SOURCES
     Core/NullBackend.cpp
     Core/NullDevice.cpp
     Core/MockBackend.cpp
+    Core/ShaderCompiler.cpp
     # Additional core implementation files will be added here
     # Core/Error.cpp
     # Core/Features.cpp
@@ -191,6 +192,20 @@ else()
     
     # Link libraries
     target_link_libraries(VRHI PRIVATE Threads::Threads)
+    
+    # Shader compilation libraries (link directly instead of through interface)
+    target_link_libraries(VRHI PRIVATE
+        glslang
+        SPIRV
+        spirv-cross-core
+        spirv-cross-glsl
+    )
+    
+    # Add include directories for shader compilation
+    target_include_directories(VRHI PRIVATE
+        ${CMAKE_SOURCE_DIR}/external/glslang-16.1.0
+        ${CMAKE_SOURCE_DIR}/external/SPIRV-Cross-vulkan-sdk-1.4.335
+    )
     
     # Backend-specific libraries
     if(VRHI_ENABLE_OPENGL)

@@ -83,9 +83,23 @@ inline void LogDebug(std::string_view message) {
     Internal::Log(LogLevel::Debug, message);
 }
 
+/// Log a debug message with printf-style formatting (requires at least one argument)
+template<typename... Args>
+    requires (sizeof...(Args) > 0)
+inline void LogDebug(const char* format, Args&&... args) {
+    Internal::LogFormatted(LogLevel::Debug, format, std::forward<Args>(args)...);
+}
+
 /// Log an info message
 inline void LogInfo(std::string_view message) {
     Internal::Log(LogLevel::Info, message);
+}
+
+/// Log an info message with printf-style formatting (requires at least one argument)
+template<typename... Args>
+    requires (sizeof...(Args) > 0)
+inline void LogInfo(const char* format, Args&&... args) {
+    Internal::LogFormatted(LogLevel::Info, format, std::forward<Args>(args)...);
 }
 
 /// Log a warning message
@@ -93,9 +107,23 @@ inline void LogWarning(std::string_view message) {
     Internal::Log(LogLevel::Warning, message);
 }
 
+/// Log a warning message with printf-style formatting (requires at least one argument)
+template<typename... Args>
+    requires (sizeof...(Args) > 0)
+inline void LogWarning(const char* format, Args&&... args) {
+    Internal::LogFormatted(LogLevel::Warning, format, std::forward<Args>(args)...);
+}
+
 /// Log an error message
 inline void LogError(std::string_view message) {
     Internal::Log(LogLevel::Error, message);
+}
+
+/// Log an error message with printf-style formatting (requires at least one argument)
+template<typename... Args>
+    requires (sizeof...(Args) > 0)
+inline void LogError(const char* format, Args&&... args) {
+    Internal::LogFormatted(LogLevel::Error, format, std::forward<Args>(args)...);
 }
 
 } // namespace VRHI
