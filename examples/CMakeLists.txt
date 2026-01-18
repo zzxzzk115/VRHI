@@ -10,9 +10,9 @@ message(STATUS "Configuring examples...")
 # Example subdirectories
 add_subdirectory(HelloTriangle)
 add_subdirectory(FeatureDetection)
+add_subdirectory(TexturedCube)
 
 # Future examples
-# add_subdirectory(TextureMapping)
 # add_subdirectory(ComputeShader)
 # add_subdirectory(MultiBackend)
 
