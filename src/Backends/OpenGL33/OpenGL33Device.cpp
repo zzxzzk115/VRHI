@@ -27,6 +27,13 @@ OpenGL33Device::OpenGL33Device(const DeviceConfig& config, OpenGL33Backend* back
 OpenGL33Device::~OpenGL33Device() {
     if (m_initialized) {
         WaitIdle();
+        
+        // Clean up default VAO
+        if (m_defaultVAO != 0) {
+            glDeleteVertexArrays(1, &m_defaultVAO);
+            m_defaultVAO = 0;
+        }
+        
         // Context cleanup will happen here
         // For now, we're not managing the context ourselves
     }
@@ -37,16 +44,15 @@ std::expected<void, Error> OpenGL33Device::Initialize() {
         return {};
     }
     
-    // Note: For a real implementation, we would need a window/context creation system
-    // For now, we assume the context is already created externally
-    // This is acceptable for the initial implementation since window system
-    // abstraction is a separate task (Phase 7-8 in KANBAN)
+    // Note: OpenGL requires an active context to initialize
+    // The window system should have created the context before calling this
     
-    // Initialize GLAD
+    // Initialize GLAD - this requires an active OpenGL context
+    // On some platforms (especially macOS), this will fail/crash if no context exists
     if (!gladLoadGL()) {
         return std::unexpected(Error{
             Error::Code::InitializationFailed,
-            "Failed to initialize GLAD for OpenGL 3.3"
+            "Failed to initialize GLAD for OpenGL 3.3 - no active OpenGL context or unsupported version"
         });
     }
     
@@ -54,6 +60,13 @@ std::expected<void, Error> OpenGL33Device::Initialize() {
     GLint majorVersion = 0, minorVersion = 0;
     glGetIntegerv(GL_MAJOR_VERSION, &majorVersion);
     glGetIntegerv(GL_MINOR_VERSION, &minorVersion);
+    
+    if (majorVersion == 0) {
+        return std::unexpected(Error{
+            Error::Code::InitializationFailed,
+            "Failed to query OpenGL version - no active context"
+        });
+    }
     
     if (majorVersion < 3 || (majorVersion == 3 && minorVersion < 3)) {
         return std::unexpected(Error{
@@ -75,6 +88,10 @@ std::expected<void, Error> OpenGL33Device::Initialize() {
     
     // Get features from backend
     m_features = m_backend->GetSupportedFeatures();
+    
+    // Create and bind a default VAO (required for OpenGL 3.3 core profile)
+    glGenVertexArrays(1, &m_defaultVAO);
+    glBindVertexArray(m_defaultVAO);
     
     m_initialized = true;
     

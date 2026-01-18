@@ -75,6 +75,9 @@ private:
     // Currently, we assume the context is created externally
     [[maybe_unused]] void* m_context = nullptr;
     
+    // Default VAO (required for OpenGL 3.3 core profile)
+    unsigned int m_defaultVAO = 0;
+    
     bool m_initialized = false;
 };
 

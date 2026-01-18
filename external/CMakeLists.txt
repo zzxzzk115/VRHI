@@ -49,12 +49,48 @@ if(VRHI_ENABLE_OPENGL)
     # add_subdirectory(glad_gl46)
 endif()
 
+# ============================================================================
+# GLFW (Window System)
+# ============================================================================
+if(VRHI_WINDOW_GLFW)
+    message(STATUS "  Adding GLFW 3.4")
+    
+    # Configure GLFW options
+    set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+    set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+    set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+    
+    # Platform-specific GLFW options
+    if(UNIX AND NOT APPLE)
+        set(GLFW_BUILD_WAYLAND OFF CACHE BOOL "" FORCE)
+        set(GLFW_BUILD_X11 ON CACHE BOOL "" FORCE)
+    endif()
+    
+    # Enable GLFW install so it can be exported with VRHI
+    set(GLFW_INSTALL ON CACHE BOOL "" FORCE)
+    
+    add_subdirectory(glfw-3.4)
+    
+    # GLFW has some warnings with strict compiler settings, disable Werror for it
+    # Only apply GCC/Clang-specific flags to avoid MSVC errors
+    if(TARGET glfw)
+        if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+            target_compile_options(glfw PRIVATE 
+                -Wno-error=missing-field-initializers
+                -Wno-error=sign-compare
+                -Wno-error=pedantic
+            )
+        endif()
+    endif()
+    
+    list(APPEND VRHI_EXTERNAL_TARGETS glfw)
+endif()
+
 # Placeholder for future third-party dependencies
 # Examples:
 #   - Vulkan headers (header-only)
 #   - vk-bootstrap (Vulkan initialization helper)
 #   - SDL2/SDL3 (optional window system)
-#   - GLFW (optional window system)
 #   - etc.
 
 # Export list of external targets

@@ -242,3 +242,14 @@ namespace {
     };
     static OpenGL33BackendRegistrar s_opengl33Registrar;
 }
+
+// Export registration function for explicit initialization
+namespace VRHI {
+namespace detail {
+    void RegisterOpenGL33Backend() {
+        // Force the static registrar to be instantiated
+        // This is a dummy function that ensures the static initializer runs
+        (void)&s_opengl33Registrar;
+    }
+}
+}
