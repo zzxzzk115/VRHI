@@ -95,24 +95,24 @@ This document tracks all work items for VRHI v1.0 development. Tasks can be assi
 
 | ID | Task | Priority | Effort | Status |
 |----|------|----------|--------|--------|
-| B3.1 | Integrate GLAD (glad_gl33) | P0 | M | Backlog |
-| B3.2 | Implement OpenGL33Backend class | P0 | L | Backlog |
-| B3.3 | Implement OpenGL33Device class | P0 | L | Backlog |
-| B3.4 | Implement context creation | P0 | M | Backlog |
-| B3.5 | Implement basic state management | P0 | M | Backlog |
-| B3.6 | Add error checking/debugging | P1 | M | Backlog |
-| B3.7 | Implement backend registration | P0 | S | Backlog |
+| B3.1 | Integrate GLAD (glad_gl33) | P0 | M | Done |
+| B3.2 | Implement OpenGL33Backend class | P0 | L | Done |
+| B3.3 | Implement OpenGL33Device class | P0 | L | Done |
+| B3.4 | Implement context creation | P0 | M | Done |
+| B3.5 | Implement basic state management | P0 | M | Done |
+| B3.6 | Add error checking/debugging | P1 | M | Done |
+| B3.7 | Implement backend registration | P0 | S | Done |
 | B3.8 | Write integration tests | P1 | L | Backlog |
 
 ### Basic Rendering (Triangle Example)
 
 | ID | Task | Priority | Effort | Status |
 |----|------|----------|--------|--------|
-| B4.1 | Create basic vertex buffer | P0 | M | Backlog |
-| B4.2 | Create basic shader program | P0 | M | Backlog |
-| B4.3 | Implement draw call | P0 | M | Backlog |
-| B4.4 | Add clear/present operations | P0 | S | Backlog |
-| B4.5 | Create HelloTriangle example | P0 | M | Backlog |
+| B4.1 | Create basic vertex buffer | P0 | M | Done |
+| B4.2 | Create basic shader program | P0 | M | Done |
+| B4.3 | Implement draw call | P0 | M | Done |
+| B4.4 | Add clear/present operations | P0 | S | Done |
+| B4.5 | Create HelloTriangle example | P0 | M | Done |
 | B4.6 | Verify triangle renders correctly | P0 | S | Backlog |
 
 ---
@@ -199,22 +199,22 @@ This document tracks all work items for VRHI v1.0 development. Tasks can be assi
 
 | ID | Task | Priority | Effort | Status |
 |----|------|----------|--------|--------|
-| W1.1 | Define IWindow interface | P0 | M | Backlog |
-| W1.2 | Define WindowConfig struct | P0 | S | Backlog |
-| W1.3 | Define WindowSystemType enum | P0 | S | Backlog |
-| W1.4 | Implement WindowFactory | P0 | M | Backlog |
-| W1.5 | Add platform-specific selection logic | P0 | S | Backlog |
+| W1.1 | Define IWindow interface | P0 | M | Done |
+| W1.2 | Define WindowConfig struct | P0 | S | Done |
+| W1.3 | Define WindowSystemType enum | P0 | S | Done |
+| W1.4 | Implement WindowFactory | P0 | M | Done |
+| W1.5 | Add platform-specific selection logic | P0 | S | Done |
 
 ### GLFW Integration
 
 | ID | Task | Priority | Effort | Status |
 |----|------|----------|--------|--------|
-| W2.1 | Integrate GLFW library (external/) | P0 | S | Backlog |
-| W2.2 | Implement GLFWWindow class | P0 | M | Backlog |
-| W2.3 | Add window creation/destruction | P0 | M | Backlog |
-| W2.4 | Implement event polling | P0 | M | Backlog |
-| W2.5 | Add callback system | P0 | M | Backlog |
-| W2.6 | Implement CreateSurface() for OpenGL | P0 | M | Backlog |
+| W2.1 | Integrate GLFW library (external/) | P0 | S | Done |
+| W2.2 | Implement GLFWWindow class | P0 | M | Done |
+| W2.3 | Add window creation/destruction | P0 | M | Done |
+| W2.4 | Implement event polling | P0 | M | Done |
+| W2.5 | Add callback system | P0 | M | Done |
+| W2.6 | Implement CreateSurface() for OpenGL | P0 | M | Done |
 | W2.7 | Implement CreateSurface() for Vulkan | P0 | M | Backlog |
 
 ### KeyCode Abstraction
@@ -232,7 +232,7 @@ This document tracks all work items for VRHI v1.0 development. Tasks can be assi
 
 | ID | Task | Priority | Effort | Status |
 |----|------|----------|--------|--------|
-| W4.1 | Create HelloTriangle example | P0 | M | Backlog |
+| W4.1 | Create HelloTriangle example | P0 | M | Done |
 | W4.2 | Create TexturedCube example | P0 | L | Backlog |
 | W4.3 | Create FeatureDetection example | P1 | M | Backlog |
 | W4.4 | Create MultiBackend example | P1 | M | Backlog |
@@ -424,4 +424,4 @@ Recommended workflow:
 
 ---
 
-Last Updated: 2026-01-17
+Last Updated: 2026-01-18
