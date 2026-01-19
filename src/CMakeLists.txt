@@ -30,10 +30,18 @@ set(VRHI_BACKEND_SOURCES)
 # Vulkan backend
 if(VRHI_ENABLE_VULKAN)
     list(APPEND VRHI_BACKEND_SOURCES
-        # Backends/Vulkan/VulkanBackend.cpp
-        # Backends/Vulkan/VulkanDevice.cpp
-        # Backends/Vulkan/VulkanResources.cpp
-        # Backends/Vulkan/VulkanCommands.cpp
+        Backends/Vulkan/VulkanBackend.cpp
+        Backends/Vulkan/VulkanDevice.cpp
+        Backends/Vulkan/VulkanBuffer.cpp
+        Backends/Vulkan/VulkanTexture.cpp
+        Backends/Vulkan/VulkanSampler.cpp
+        Backends/Vulkan/VulkanShader.cpp
+        Backends/Vulkan/VulkanPipeline.cpp
+        Backends/Vulkan/VulkanRenderPass.cpp
+        Backends/Vulkan/VulkanFramebuffer.cpp
+        Backends/Vulkan/VulkanCommandBuffer.cpp
+        Backends/Vulkan/VulkanSync.cpp
+        Backends/Vulkan/VulkanSwapChain.cpp
     )
     message(STATUS "Vulkan backend enabled")
 endif()
@@ -210,6 +218,11 @@ else()
     )
     
     # Backend-specific libraries
+    if(VRHI_ENABLE_VULKAN)
+        # Link to Vulkan-Headers (interface library)
+        target_link_libraries(VRHI PRIVATE Vulkan-Headers)
+    endif()
+    
     if(VRHI_ENABLE_OPENGL)
         target_link_libraries(VRHI PRIVATE glad::gl33)
     endif()

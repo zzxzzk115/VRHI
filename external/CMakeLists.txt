@@ -94,6 +94,18 @@ if(VRHI_WINDOW_GLFW)
 endif()
 
 # ============================================================================
+# Vulkan-Headers (Vulkan API Headers)
+# ============================================================================
+if(VRHI_ENABLE_VULKAN)
+    message(STATUS "  Adding Vulkan-Headers")
+    
+    # Vulkan-Headers is a header-only library
+    add_subdirectory(Vulkan-Headers-vulkan-sdk-1.4.335)
+    
+    # Note: Don't add to VRHI_EXTERNAL_TARGETS as it's linked privately
+endif()
+
+# ============================================================================
 # Shader Compilation Libraries (glslang + SPIRV-Cross)
 # ============================================================================
 message(STATUS "  Adding Shader Compilation Libraries")
