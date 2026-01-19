@@ -348,7 +348,7 @@ int main() {
         std::cout << "Creating shaders...\n";
 
         const char* vertexShaderSource = R"(
-            #version 330 core
+            #version 460
             layout (location = 0) in vec3 aPos;
             layout (location = 1) in vec3 aNormal;
             layout (location = 2) in vec2 aTexCoord;
@@ -370,14 +370,14 @@ int main() {
         )";
 
         const char* fragmentShaderSource = R"(
-            #version 330 core
+            #version 460
             layout (location = 0) in vec3 FragPos;
             layout (location = 1) in vec3 Normal;
             layout (location = 2) in vec2 TexCoord;
 
             layout (location = 0) out vec4 FragColor;
 
-            uniform sampler2D texSampler;
+            layout (binding = 0) uniform sampler2D texSampler;
 
             void main() {
                 vec3 lightDir = normalize(vec3(1.0, 1.0, 1.0));
