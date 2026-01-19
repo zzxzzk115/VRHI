@@ -58,10 +58,19 @@ OpenGL33Texture::Create(const TextureDesc& desc) {
     }
     
     // Set default texture parameters
-    glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    // For textures with only 1 mip level, don't use mipmap filtering
+    if (desc.mipLevels > 1) {
+        glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    } else {
+        glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    }
     glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(target, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(target, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    
+    // Set mipmap levels - important for textures without full mipmap chains
+    glTexParameteri(target, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(target, GL_TEXTURE_MAX_LEVEL, desc.mipLevels - 1);
     
     glBindTexture(target, 0);
     

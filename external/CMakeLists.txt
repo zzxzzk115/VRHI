@@ -50,6 +50,13 @@ if(VRHI_ENABLE_OPENGL)
 endif()
 
 # ============================================================================
+# stb_image (Image Loading)
+# ============================================================================
+message(STATUS "  Adding stb_image")
+add_subdirectory(stb)
+list(APPEND VRHI_EXTERNAL_TARGETS stb_image)
+
+# ============================================================================
 # GLFW (Window System)
 # ============================================================================
 if(VRHI_WINDOW_GLFW)

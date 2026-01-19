@@ -29,6 +29,8 @@ public:
     // Resource binding
     void BindVertexBuffers(uint32_t firstBinding, std::span<Buffer* const> buffers, std::span<const uint64_t> offsets = {}) override;
     void BindIndexBuffer(Buffer* buffer, uint64_t offset = 0, bool use16BitIndices = false) override;
+    void BindUniformBuffer(uint32_t binding, Buffer* buffer, uint64_t offset = 0, uint64_t size = 0) override;
+    void BindTexture(uint32_t binding, Texture* texture, Sampler* sampler = nullptr) override;
     
     // Dynamic state
     void SetViewport(const Viewport& viewport) override;

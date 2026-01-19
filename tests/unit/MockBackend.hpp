@@ -193,6 +193,8 @@ public:
     void BindPipeline(Pipeline*) override {}
     void BindVertexBuffers(uint32_t, std::span<Buffer* const>, std::span<const uint64_t>) override {}
     void BindIndexBuffer(Buffer*, uint64_t, bool) override {}
+    void BindUniformBuffer(uint32_t, Buffer*, uint64_t, uint64_t) override {}
+    void BindTexture(uint32_t, Texture*, Sampler*) override {}
     
     void SetViewport(const Viewport&) override {}
     void SetViewports(std::span<const Viewport>) override {}
