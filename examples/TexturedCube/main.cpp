@@ -230,7 +230,7 @@ int main() {
         VRHI::SamplerDesc samplerDesc{};
         samplerDesc.minFilter = VRHI::FilterMode::Linear;
         samplerDesc.magFilter = VRHI::FilterMode::Linear;
-        samplerDesc.mipmapMode = VRHI::FilterMode::Linear;
+        // Note: Not setting mipmapMode since texture has mipLevels = 1 (no mipmaps)
         samplerDesc.addressModeU = VRHI::AddressMode::Repeat;
         samplerDesc.addressModeV = VRHI::AddressMode::Repeat;
         samplerDesc.addressModeW = VRHI::AddressMode::Repeat;

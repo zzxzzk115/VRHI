@@ -68,6 +68,8 @@ OpenGL33Sampler::Create(const SamplerDesc& desc) {
     GLenum magFilter = GetGLFilterMode(desc.magFilter);
     
     // Combine min filter with mipmap mode
+    // Note: The texture itself should be created with appropriate filters based on mipLevels
+    // This sampler configuration will be overridden by texture's own filter settings
     if (desc.mipmapMode == FilterMode::Linear) {
         if (minFilter == GL_NEAREST) {
             minFilter = GL_NEAREST_MIPMAP_LINEAR;
