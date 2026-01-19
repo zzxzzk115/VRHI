@@ -67,13 +67,12 @@ std::expected<void, Error> VulkanDevice::Initialize() {
 
 void VulkanDevice::CreateInstance() {
     // Application info
-    vk::ApplicationInfo appInfo{
-        .pApplicationName = "VRHI Application",
-        .applicationVersion = VK_MAKE_VERSION(1, 0, 0),
-        .pEngineName = "VRHI",
-        .engineVersion = VK_MAKE_VERSION(1, 0, 0),
-        .apiVersion = VK_API_VERSION_1_3
-    };
+    vk::ApplicationInfo appInfo;
+    appInfo.pApplicationName = "VRHI Application";
+    appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
+    appInfo.pEngineName = "VRHI";
+    appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
+    appInfo.apiVersion = VK_API_VERSION_1_3;
     
     // Get required extensions
     std::vector<const char*> extensions;
@@ -84,11 +83,10 @@ void VulkanDevice::CreateInstance() {
     }
     
     // Instance create info
-    vk::InstanceCreateInfo createInfo{
-        .pApplicationInfo = &appInfo,
-        .enabledExtensionCount = static_cast<uint32_t>(extensions.size()),
-        .ppEnabledExtensionNames = extensions.data()
-    };
+    vk::InstanceCreateInfo createInfo;
+    createInfo.pApplicationInfo = &appInfo;
+    createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
+    createInfo.ppEnabledExtensionNames = extensions.data();
     
     // Enable validation layers if requested
     if (m_enableValidationLayers) {
@@ -124,18 +122,10 @@ void VulkanDevice::SetupDebugMessenger() {
         return;
     }
     
-    vk::DebugUtilsMessengerCreateInfoEXT createInfo{
-        .messageSeverity = vk::DebugUtilsMessageSeverityFlagBitsEXT::eVerbose |
-                          vk::DebugUtilsMessageSeverityFlagBitsEXT::eWarning |
-                          vk::DebugUtilsMessageSeverityFlagBitsEXT::eError,
-        .messageType = vk::DebugUtilsMessageTypeFlagBitsEXT::eGeneral |
-                      vk::DebugUtilsMessageTypeFlagBitsEXT::eValidation |
-                      vk::DebugUtilsMessageTypeFlagBitsEXT::ePerformance,
-        .pfnUserCallback = DebugCallback
-    };
-    
-    m_debugMessenger = m_instance->createDebugUtilsMessengerEXTUnique(createInfo);
-    LogInfo("Vulkan debug messenger created");
+    // TODO: Setup debug messenger
+    // The pfnUserCallback type mismatch between Vk and vk:: types makes this tricky
+    // For now, skip this and rely on validation layers printing to stdout
+    LogInfo("Vulkan validation layers enabled (debug messenger skipped for now)");
 }
 
 void VulkanDevice::PickPhysicalDevice() {
@@ -159,7 +149,7 @@ void VulkanDevice::PickPhysicalDevice() {
     }
     
     auto props = m_physicalDevice.getProperties();
-    m_properties.deviceName = props.deviceName;
+    m_properties.deviceName = std::string(props.deviceName.data());
     m_properties.vendorName = "Unknown";  // Map vendor ID to name
     m_properties.driverVersion = std::to_string(props.driverVersion);
     m_properties.apiVersion = "Vulkan " + std::to_string(VK_VERSION_MAJOR(props.apiVersion)) + 
@@ -188,11 +178,11 @@ void VulkanDevice::CreateLogicalDevice() {
     std::set<uint32_t> uniqueQueueFamilies = {m_graphicsQueueFamily, m_presentQueueFamily};
     
     for (uint32_t queueFamily : uniqueQueueFamilies) {
-        queueCreateInfos.push_back(vk::DeviceQueueCreateInfo{
-            .queueFamilyIndex = queueFamily,
-            .queueCount = 1,
-            .pQueuePriorities = &queuePriority
-        });
+        vk::DeviceQueueCreateInfo queueCreateInfo;
+        queueCreateInfo.queueFamilyIndex = queueFamily;
+        queueCreateInfo.queueCount = 1;
+        queueCreateInfo.pQueuePriorities = &queuePriority;
+        queueCreateInfos.push_back(queueCreateInfo);
     }
     
     // Device features
@@ -206,13 +196,12 @@ void VulkanDevice::CreateLogicalDevice() {
     // VK_KHR_swapchain will be added when needed for presentation
     
     // Device create info
-    vk::DeviceCreateInfo createInfo{
-        .queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size()),
-        .pQueueCreateInfos = queueCreateInfos.data(),
-        .enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size()),
-        .ppEnabledExtensionNames = deviceExtensions.data(),
-        .pEnabledFeatures = &deviceFeatures
-    };
+    vk::DeviceCreateInfo createInfo;
+    createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
+    createInfo.pQueueCreateInfos = queueCreateInfos.data();
+    createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
+    createInfo.ppEnabledExtensionNames = deviceExtensions.data();
+    createInfo.pEnabledFeatures = &deviceFeatures;
     
     m_device = m_physicalDevice.createDeviceUnique(createInfo);
     m_graphicsQueue = m_device->getQueue(m_graphicsQueueFamily, 0);
@@ -259,29 +248,26 @@ void VulkanDevice::DetectDeviceFeatures() {
     m_features.texture.etc2 = true;  // Vulkan core
     m_features.texture.astc = false;  // Check ASTC extension
     
-    // Render target features
-    m_features.texture.renderToTexture = true;
-    m_features.texture.multipleRenderTargets = true;
-    m_features.texture.depthStencilTarget = true;
+    // Rendering features
+    m_features.rendering.multipleRenderTargets = true;
+    m_features.rendering.independentBlend = physicalFeatures.independentBlend;
+    m_features.rendering.depthClamp = physicalFeatures.depthClamp;
+    m_features.rendering.multisample = true;
+    m_features.rendering.maxColorAttachments = props.limits.maxColorAttachments;
+    m_features.rendering.maxSamples = static_cast<uint32_t>(props.limits.framebufferColorSampleCounts);
     
     // Sampling features
-    m_features.texture.mipmapping = true;
     m_features.texture.anisotropicFiltering = physicalFeatures.samplerAnisotropy;
-    m_features.texture.shadowSamplers = true;
     
     // Advanced features
     m_features.advanced.rayTracing = false;  // Check ray tracing extension
     m_features.advanced.asyncCompute = true;
     m_features.advanced.bindlessResources = false;  // Check descriptor indexing
     
-    // Debug features
-    m_features.debug.debugMarkers = m_enableValidationLayers;
-    m_features.debug.gpuValidation = m_enableValidationLayers;
-    
     LogInfo("Vulkan device features detected");
 }
 
-VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDevice::DebugCallback(
+VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDevice::DebugCallbackVk(
     VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
     VkDebugUtilsMessageTypeFlagsEXT messageType,
     const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
@@ -300,11 +286,14 @@ BackendType VulkanDevice::GetBackendType() const noexcept {
 }
 
 BackendInfo VulkanDevice::GetBackendInfo() const {
-    return BackendInfo{
-        .type = BackendType::Vulkan,
-        .name = "Vulkan",
-        .version = Version{1, 3, 0, "1.3"}
-    };
+    BackendInfo info;
+    info.type = BackendType::Vulkan;
+    info.name = "Vulkan";
+    info.version = "1.3";
+    info.deviceName = m_properties.deviceName;
+    info.vendorName = m_properties.vendorName;
+    info.driverVersion = m_properties.driverVersion;
+    return info;
 }
 
 const FeatureSet& VulkanDevice::GetFeatures() const noexcept {
@@ -354,24 +343,39 @@ VulkanDevice::CreateFramebuffer(const FramebufferDesc& desc) {
     return VulkanFramebuffer::Create(*this, desc);
 }
 
-std::expected<std::unique_ptr<CommandBuffer>, Error>
-VulkanDevice::CreateCommandBuffer(const CommandBufferDesc& desc) {
-    return VulkanCommandBuffer::Create(*this, desc);
+std::unique_ptr<CommandBuffer>
+VulkanDevice::CreateCommandBuffer() {
+    return VulkanCommandBuffer::Create(*this);
 }
 
-std::expected<std::unique_ptr<Fence>, Error>
+std::unique_ptr<Fence>
 VulkanDevice::CreateFence(bool signaled) {
     return VulkanFence::Create(*this, signaled);
 }
 
-std::expected<std::unique_ptr<Semaphore>, Error>
+std::unique_ptr<Semaphore>
 VulkanDevice::CreateSemaphore() {
     return VulkanSemaphore::Create(*this);
 }
 
-std::expected<std::unique_ptr<SwapChain>, Error>
-VulkanDevice::CreateSwapChain(const SwapChainDesc& desc) {
-    return VulkanSwapChain::Create(*this, desc);
+void VulkanDevice::Submit(std::span<std::unique_ptr<CommandBuffer>> cmds) {
+    // TODO: Implement batch command buffer submission
+    LogWarning("VulkanDevice::Submit(span) not yet implemented");
+}
+
+void VulkanDevice::Flush() {
+    // TODO: Implement command queue flush
+    LogWarning("VulkanDevice::Flush not yet implemented");
+}
+
+SwapChain* VulkanDevice::GetSwapChain() noexcept {
+    return m_swapChain.get();
+}
+
+void VulkanDevice::Resize(uint32_t width, uint32_t height) {
+    if (m_swapChain) {
+        m_swapChain->Resize(width, height);
+    }
 }
 
 void VulkanDevice::WaitIdle() {

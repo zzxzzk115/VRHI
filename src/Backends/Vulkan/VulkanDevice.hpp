@@ -48,22 +48,21 @@ public:
     std::expected<std::unique_ptr<Framebuffer>, Error>
     CreateFramebuffer(const FramebufferDesc& desc) override;
     
-    std::expected<std::unique_ptr<CommandBuffer>, Error>
-    CreateCommandBuffer(const CommandBufferDesc& desc) override;
-    
-    std::expected<std::unique_ptr<Fence>, Error>
-    CreateFence(bool signaled = false) override;
-    
-    std::expected<std::unique_ptr<Semaphore>, Error>
-    CreateSemaphore() override;
-    
-    std::expected<std::unique_ptr<SwapChain>, Error>
-    CreateSwapChain(const SwapChainDesc& desc) override;
-    
-    // Device operations
-    void WaitIdle() override;
+    // Command execution
+    std::unique_ptr<CommandBuffer> CreateCommandBuffer() override;
     void Submit(std::unique_ptr<CommandBuffer> cmd) override;
+    void Submit(std::span<std::unique_ptr<CommandBuffer>> cmds) override;
+    void WaitIdle() override;
+    
+    // Synchronization
+    std::unique_ptr<Fence> CreateFence(bool signaled = false) override;
+    std::unique_ptr<Semaphore> CreateSemaphore() override;
+    void Flush() override;
+    
+    // Swap chain
+    SwapChain* GetSwapChain() noexcept override;
     void Present() override;
+    void Resize(uint32_t width, uint32_t height) override;
     
     // Vulkan-specific accessors
     vk::Instance GetVulkanInstance() const noexcept { return m_instance.get(); }
@@ -79,7 +78,7 @@ private:
     void CreateLogicalDevice();
     void DetectDeviceFeatures();
     
-    static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
+    static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallbackVk(
         VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
         VkDebugUtilsMessageTypeFlagsEXT messageType,
         const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
@@ -100,6 +99,9 @@ private:
     vk::Queue m_presentQueue;
     uint32_t m_graphicsQueueFamily = 0;
     uint32_t m_presentQueueFamily = 0;
+    
+    // Swap chain
+    std::unique_ptr<SwapChain> m_swapChain;
     
     // Validation layers
     static constexpr const char* s_validationLayers[] = {

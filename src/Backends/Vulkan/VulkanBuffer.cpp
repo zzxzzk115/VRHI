@@ -3,6 +3,7 @@
 
 #include "VulkanBuffer.hpp"
 #include "VulkanDevice.hpp"
+#include <VRHI/VRHI.hpp>
 #include <VRHI/Logging.hpp>
 
 namespace VRHI {
@@ -49,11 +50,10 @@ VulkanBuffer::Create(VulkanDevice& device, const BufferDesc& desc) {
         usage |= vk::BufferUsageFlagBits::eTransferDst | vk::BufferUsageFlagBits::eTransferSrc;
         
         // Create buffer
-        vk::BufferCreateInfo bufferInfo{
-            .size = desc.size,
-            .usage = usage,
-            .sharingMode = vk::SharingMode::eExclusive
-        };
+        vk::BufferCreateInfo bufferInfo;
+        bufferInfo.size = desc.size;
+        bufferInfo.usage = usage;
+        bufferInfo.sharingMode = vk::SharingMode::eExclusive;
         
         auto buffer = device.GetVulkanDevice().createBufferUnique(bufferInfo);
         
@@ -61,10 +61,9 @@ VulkanBuffer::Create(VulkanDevice& device, const BufferDesc& desc) {
         auto memRequirements = device.GetVulkanDevice().getBufferMemoryRequirements(buffer.get());
         
         // Allocate memory (simple host-visible allocation for now)
-        vk::MemoryAllocateInfo allocInfo{
-            .allocationSize = memRequirements.size,
-            .memoryTypeIndex = 0  // TODO: Find appropriate memory type
-        };
+        vk::MemoryAllocateInfo allocInfo;
+        allocInfo.allocationSize = memRequirements.size;
+        allocInfo.memoryTypeIndex = 0;  // Will be set below
         
         // Find memory type
         auto memProps = device.GetPhysicalDevice().getMemoryProperties();
@@ -87,7 +86,7 @@ VulkanBuffer::Create(VulkanDevice& device, const BufferDesc& desc) {
         
     } catch (const vk::SystemError& e) {
         return std::unexpected(Error{
-            Error::Code::ResourceCreationFailed,
+            Error::Code::OutOfMemory,
             std::string("Failed to create Vulkan buffer: ") + e.what()
         });
     }

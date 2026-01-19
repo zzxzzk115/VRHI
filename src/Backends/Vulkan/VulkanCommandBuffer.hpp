@@ -14,8 +14,8 @@ class VulkanCommandBuffer : public CommandBuffer {
 public:
     ~VulkanCommandBuffer() override = default;
     
-    static std::expected<std::unique_ptr<CommandBuffer>, Error>
-    Create(VulkanDevice& device, const CommandBufferDesc& desc);
+    static std::unique_ptr<CommandBuffer>
+    Create(VulkanDevice& device);
     
 private:
     VulkanCommandBuffer(VulkanDevice& device) : m_device(device) {}

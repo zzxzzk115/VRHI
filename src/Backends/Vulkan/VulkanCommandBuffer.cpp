@@ -6,8 +6,8 @@
 
 namespace VRHI {
 
-std::expected<std::unique_ptr<CommandBuffer>, Error>
-VulkanCommandBuffer::Create(VulkanDevice& device, const CommandBufferDesc& desc) {
+std::unique_ptr<CommandBuffer>
+VulkanCommandBuffer::Create(VulkanDevice& device) {
     return std::unique_ptr<CommandBuffer>(new VulkanCommandBuffer(device));
 }
 

@@ -81,24 +81,21 @@ void VulkanBackend::DetectFeatures() {
     m_features.texture.etc2 = true;  // Core in Vulkan
     m_features.texture.astc = false;  // Optional
     
-    // Render target features
-    m_features.texture.renderToTexture = true;
-    m_features.texture.multipleRenderTargets = true;
-    m_features.texture.depthStencilTarget = true;
+    // Rendering features
+    m_features.rendering.multipleRenderTargets = true;
+    m_features.rendering.independentBlend = true;
+    m_features.rendering.depthClamp = false;  // Requires feature
+    m_features.rendering.multisample = true;
+    m_features.rendering.maxColorAttachments = 8;  // Common minimum
+    m_features.rendering.maxSamples = 4;  // Conservative default
     
     // Sampling features
-    m_features.texture.mipmapping = true;
     m_features.texture.anisotropicFiltering = true;  // Usually supported
-    m_features.texture.shadowSamplers = true;
     
     // Advanced features - require extensions or higher versions
     m_features.advanced.rayTracing = false;  // Requires ray tracing extensions
     m_features.advanced.asyncCompute = true;  // Multiple queue families
     m_features.advanced.bindlessResources = false;  // Requires descriptor indexing
-    
-    // Debug features
-    m_features.debug.debugMarkers = true;  // VK_EXT_debug_utils
-    m_features.debug.gpuValidation = true;  // Validation layers
     
     m_featuresDetected = true;
     LogInfo("Vulkan backend features detected");
@@ -135,8 +132,8 @@ bool VulkanBackend::IsFeatureSupported(Feature feature) const noexcept {
         case Feature::MeshShading: return m_features.core.meshShader;
         case Feature::AsyncCompute: return m_features.advanced.asyncCompute;
         case Feature::BindlessResources: return m_features.advanced.bindlessResources;
-        case Feature::DebugMarkers: return m_features.debug.debugMarkers;
-        case Feature::GPUValidation: return m_features.debug.gpuValidation;
+        case Feature::DebugMarkers: return false;  // Available via validation layers in device
+        case Feature::GPUValidation: return false;  // Available via validation layers in device
         default: return false;
     }
 }
@@ -147,7 +144,7 @@ float VulkanBackend::CalculateScore(const FeatureRequirements& requirements) con
     }
     
     // Use the standard scoring algorithm from BackendScoring
-    return CalculateBackendScore(*this, m_features, requirements);
+    return BackendScorer::CalculateScore(BackendType::Vulkan, m_features, requirements);
 }
 
 std::expected<std::unique_ptr<Device>, Error>
