@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <VRHI/VRHI.hpp>
 #include <VRHI/Shader.hpp>
 #include <vulkan/vulkan.hpp>
 
@@ -18,6 +19,8 @@ public:
     Create(VulkanDevice& device, const ShaderDesc& desc);
     
     ShaderStage GetStage() const noexcept override { return m_desc.stage; }
+    ShaderLanguage GetLanguage() const noexcept override { return ShaderLanguage::SPIRV; }  // Vulkan uses SPIR-V
+    std::string_view GetEntryPoint() const noexcept override { return "main"; }  // TODO: from desc
     
 private:
     VulkanShader(VulkanDevice& device, const ShaderDesc& desc)

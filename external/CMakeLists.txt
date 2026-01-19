@@ -102,6 +102,15 @@ if(VRHI_ENABLE_VULKAN)
     # Vulkan-Headers is a header-only library
     add_subdirectory(Vulkan-Headers-vulkan-sdk-1.4.335)
     
+    # Disable warnings for Vulkan headers (they contain old-style casts and conversion warnings)
+    if(TARGET Vulkan-Headers)
+        target_compile_options(Vulkan-Headers INTERFACE
+            $<$<CXX_COMPILER_ID:GNU,Clang>:-Wno-old-style-cast>
+            $<$<CXX_COMPILER_ID:GNU,Clang>:-Wno-conversion>
+            $<$<CXX_COMPILER_ID:GNU,Clang>:-Wno-sign-conversion>
+        )
+    endif()
+    
     # Note: Don't add to VRHI_EXTERNAL_TARGETS as it's linked privately
 endif()
 

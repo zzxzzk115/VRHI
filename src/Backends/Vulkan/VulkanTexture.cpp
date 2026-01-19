@@ -3,6 +3,7 @@
 
 #include "VulkanTexture.hpp"
 #include "VulkanDevice.hpp"
+#include <VRHI/VRHI.hpp>
 
 namespace VRHI {
 

@@ -219,8 +219,24 @@ else()
     
     # Backend-specific libraries
     if(VRHI_ENABLE_VULKAN)
-        # Link to Vulkan-Headers (interface library)
         target_link_libraries(VRHI PRIVATE Vulkan-Headers)
+        
+        # Disable specific warnings for Vulkan backend files (vulkan.hpp has these issues)
+        set_source_files_properties(
+            Backends/Vulkan/VulkanBackend.cpp
+            Backends/Vulkan/VulkanDevice.cpp
+            Backends/Vulkan/VulkanBuffer.cpp
+            Backends/Vulkan/VulkanTexture.cpp
+            Backends/Vulkan/VulkanSampler.cpp
+            Backends/Vulkan/VulkanShader.cpp
+            Backends/Vulkan/VulkanPipeline.cpp
+            Backends/Vulkan/VulkanRenderPass.cpp
+            Backends/Vulkan/VulkanFramebuffer.cpp
+            Backends/Vulkan/VulkanCommandBuffer.cpp
+            Backends/Vulkan/VulkanSync.cpp
+            Backends/Vulkan/VulkanSwapChain.cpp
+            PROPERTIES COMPILE_FLAGS "-Wno-old-style-cast -Wno-conversion -Wno-sign-conversion -Wno-unused-parameter"
+        )
     endif()
     
     if(VRHI_ENABLE_OPENGL)

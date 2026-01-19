@@ -17,6 +17,8 @@ public:
     static std::expected<std::unique_ptr<Pipeline>, Error>
     Create(VulkanDevice& device, const PipelineDesc& desc);
     
+    PipelineType GetType() const noexcept override { return PipelineType::Graphics; }  // TODO: from desc
+    
 private:
     VulkanPipeline(VulkanDevice& device) : m_device(device) {}
     VulkanDevice& m_device;
