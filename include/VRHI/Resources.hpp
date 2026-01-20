@@ -5,11 +5,14 @@
 
 #include <cstdint>
 #include <cstddef>
+#include <expected>
+#include <memory>
 
 namespace VRHI {
 
 // Forward declarations
 class CommandBuffer;
+struct Error;
 
 // ============================================================================
 // Buffer

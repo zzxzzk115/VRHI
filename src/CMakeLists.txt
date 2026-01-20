@@ -30,10 +30,19 @@ set(VRHI_BACKEND_SOURCES)
 # Vulkan backend
 if(VRHI_ENABLE_VULKAN)
     list(APPEND VRHI_BACKEND_SOURCES
-        # Backends/Vulkan/VulkanBackend.cpp
-        # Backends/Vulkan/VulkanDevice.cpp
-        # Backends/Vulkan/VulkanResources.cpp
-        # Backends/Vulkan/VulkanCommands.cpp
+        Backends/Vulkan/VulkanBackend.cpp
+        Backends/Vulkan/VulkanDevice.cpp
+        Backends/Vulkan/VulkanBuffer.cpp
+        Backends/Vulkan/VulkanTexture.cpp
+        Backends/Vulkan/VulkanSampler.cpp
+        Backends/Vulkan/VulkanShader.cpp
+        Backends/Vulkan/VulkanPipeline.cpp
+        Backends/Vulkan/VulkanRenderPass.cpp
+        Backends/Vulkan/VulkanFramebuffer.cpp
+        Backends/Vulkan/VulkanCommandBuffer.cpp
+        Backends/Vulkan/VulkanSync.cpp
+        Backends/Vulkan/VulkanSwapChain.cpp
+        Backends/Vulkan/VulkanSurface.cpp
     )
     message(STATUS "Vulkan backend enabled")
 endif()
@@ -210,6 +219,37 @@ else()
     )
     
     # Backend-specific libraries
+    if(VRHI_ENABLE_VULKAN)
+        if(TARGET Vulkan::Headers)
+            target_link_libraries(VRHI PRIVATE Vulkan::Headers)
+        elseif(TARGET Vulkan-Headers)
+            target_link_libraries(VRHI PRIVATE Vulkan-Headers)
+        endif()
+        
+        # Link GLFW for surface creation
+        if(TARGET glfw)
+            target_link_libraries(VRHI PRIVATE glfw)
+        endif()
+        
+        # Disable specific warnings for Vulkan backend files (vulkan.hpp has these issues)
+        set_source_files_properties(
+            Backends/Vulkan/VulkanBackend.cpp
+            Backends/Vulkan/VulkanDevice.cpp
+            Backends/Vulkan/VulkanBuffer.cpp
+            Backends/Vulkan/VulkanTexture.cpp
+            Backends/Vulkan/VulkanSampler.cpp
+            Backends/Vulkan/VulkanShader.cpp
+            Backends/Vulkan/VulkanPipeline.cpp
+            Backends/Vulkan/VulkanRenderPass.cpp
+            Backends/Vulkan/VulkanFramebuffer.cpp
+            Backends/Vulkan/VulkanCommandBuffer.cpp
+            Backends/Vulkan/VulkanSync.cpp
+            Backends/Vulkan/VulkanSwapChain.cpp
+            Backends/Vulkan/VulkanSurface.cpp
+            PROPERTIES COMPILE_FLAGS "-Wno-old-style-cast -Wno-conversion -Wno-sign-conversion -Wno-unused-parameter"
+        )
+    endif()
+    
     if(VRHI_ENABLE_OPENGL)
         target_link_libraries(VRHI PRIVATE glad::gl33)
     endif()
