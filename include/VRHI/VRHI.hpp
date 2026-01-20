@@ -103,6 +103,7 @@ struct Error {
         CompilationError,
         ShaderCompilationFailed,
         UnsupportedFeature,
+        Unsupported = UnsupportedFeature,  // Alias for compatibility
     };
     
     Code code = Code::Success;
@@ -257,12 +258,30 @@ struct DeviceConfig {
     bool enableValidation = false;
     bool enableDebugMarkers = false;
     
-    void* windowHandle = nullptr;
+    // Window integration (for backends that need it like Vulkan)
+    void* windowHandle = nullptr;  // Native window handle (GLFWwindow*, SDL_Window*, etc.)
+    void* displayHandle = nullptr; // Display handle (for X11, Wayland, etc.)
+    enum class WindowSystem {
+        None,
+        GLFW,
+        SDL2,
+        SDL3,
+        Win32,
+        Xlib,
+        Xcb,
+        Wayland,
+        Android,
+        Metal
+    } windowSystem = WindowSystem::None;
+    
     uint32_t width = 1280;
     uint32_t height = 720;
     
     bool vsync = true;
     uint32_t backBufferCount = 2;
+    
+    // Dynamic Rendering support (Vulkan 1.3+)
+    bool useDynamicRendering = true;  // Prefer dynamic rendering over RenderPass
     
     LogLevel logLevel = LogLevel::Info;
 };

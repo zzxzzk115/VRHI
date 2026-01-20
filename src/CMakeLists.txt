@@ -42,6 +42,7 @@ if(VRHI_ENABLE_VULKAN)
         Backends/Vulkan/VulkanCommandBuffer.cpp
         Backends/Vulkan/VulkanSync.cpp
         Backends/Vulkan/VulkanSwapChain.cpp
+        Backends/Vulkan/VulkanSurface.cpp
     )
     message(STATUS "Vulkan backend enabled")
 endif()
@@ -244,6 +245,7 @@ else()
             Backends/Vulkan/VulkanCommandBuffer.cpp
             Backends/Vulkan/VulkanSync.cpp
             Backends/Vulkan/VulkanSwapChain.cpp
+            Backends/Vulkan/VulkanSurface.cpp
             PROPERTIES COMPILE_FLAGS "-Wno-old-style-cast -Wno-conversion -Wno-sign-conversion -Wno-unused-parameter"
         )
     endif()

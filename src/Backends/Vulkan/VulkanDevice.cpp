@@ -13,17 +13,10 @@
 #include "VulkanCommandBuffer.hpp"
 #include "VulkanSync.hpp"
 #include "VulkanSwapChain.hpp"
+#include "VulkanSurface.hpp"
 #include <VRHI/Logging.hpp>
 #include <VRHI/BackendScoring.hpp>
 #include <set>
-
-// Forward declare GLFW types and function
-struct GLFWwindow;
-extern "C" {
-    VkResult glfwCreateWindowSurface(VkInstance instance, GLFWwindow* window,
-                                     const VkAllocationCallbacks* allocator,
-                                     VkSurfaceKHR* surface);
-}
 
 namespace VRHI {
 
@@ -150,29 +143,6 @@ void VulkanDevice::CreateInstance() {
     LogInfo("Vulkan instance created");
 }
 
-void VulkanDevice::CreateSurface() {
-    // Skip surface creation if no window handle is provided
-    if (!m_config.windowHandle) {
-        LogInfo("No window handle provided, skipping surface creation");
-        return;
-    }
-    
-    VkSurfaceKHR surface;
-    GLFWwindow* window = static_cast<GLFWwindow*>(m_config.windowHandle);
-    VkResult result = glfwCreateWindowSurface(
-        static_cast<VkInstance>(m_instance.get()),
-        window,
-        nullptr,
-        &surface
-    );
-    
-    if (result != VK_SUCCESS) {
-        throw std::runtime_error("Failed to create window surface");
-    }
-    
-    m_surface = vk::UniqueSurfaceKHR(surface, m_instance.get());
-    LogInfo("Vulkan surface created");
-}
 
 void VulkanDevice::SetupDebugMessenger() {
     if (!m_enableValidationLayers) {
