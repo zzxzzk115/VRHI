@@ -91,12 +91,20 @@ void VulkanSwapChain::CreateSwapChain() {
     m_height = extent.height;
     
     // Convert Vulkan format to VRHI format
-    if (surfaceFormat.format == vk::Format::eB8G8R8A8Srgb ||
-        surfaceFormat.format == vk::Format::eR8G8B8A8Srgb) {
-        m_format = TextureFormat::RGBA8_SRGB;
-    } else if (surfaceFormat.format == vk::Format::eB8G8R8A8Unorm ||
-               surfaceFormat.format == vk::Format::eR8G8B8A8Unorm) {
-        m_format = TextureFormat::RGBA8_UNorm;
+    switch (surfaceFormat.format) {
+        case vk::Format::eB8G8R8A8Srgb:
+        case vk::Format::eR8G8B8A8Srgb:
+            m_format = TextureFormat::RGBA8_SRGB;
+            break;
+        case vk::Format::eB8G8R8A8Unorm:
+        case vk::Format::eR8G8B8A8Unorm:
+            m_format = TextureFormat::RGBA8_UNorm;
+            break;
+        default:
+            // Default to SRGB for unknown formats
+            m_format = TextureFormat::RGBA8_SRGB;
+            LogWarning("Unknown swapchain format, defaulting to RGBA8_SRGB");
+            break;
     }
     
     LogInfo("Swapchain created: {}x{}, {} images", m_width, m_height, m_images.size());
@@ -149,6 +157,10 @@ VulkanSwapChain::SwapChainSupportDetails VulkanSwapChain::QuerySwapChainSupport(
 vk::SurfaceFormatKHR VulkanSwapChain::ChooseSwapSurfaceFormat(
     const std::vector<vk::SurfaceFormatKHR>& availableFormats) {
     
+    if (availableFormats.empty()) {
+        throw std::runtime_error("No surface formats available");
+    }
+    
     // Prefer SRGB format
     for (const auto& format : availableFormats) {
         if (format.format == vk::Format::eB8G8R8A8Srgb &&
@@ -181,7 +193,12 @@ vk::Extent2D VulkanSwapChain::ChooseSwapExtent(
     if (capabilities.currentExtent.width != UINT32_MAX) {
         return capabilities.currentExtent;
     } else {
-        // Use configured dimensions
+        // Query actual window dimensions if not set
+        if (m_width == 0 || m_height == 0) {
+            m_width = capabilities.minImageExtent.width;
+            m_height = capabilities.minImageExtent.height;
+        }
+        
         vk::Extent2D actualExtent = {m_width, m_height};
         
         actualExtent.width = std::clamp(actualExtent.width,
@@ -292,13 +309,11 @@ Texture* VulkanSwapChain::GetImage(uint32_t index) {
         return nullptr;
     }
     
-    // Create texture wrappers on demand
-    if (m_textures.empty()) {
-        m_textures.resize(m_images.size());
-    }
-    
-    // Note: This is a simplified implementation
-    // In a full implementation, we'd create proper VulkanTexture wrappers
+    // Note: Returning nullptr for now as creating VulkanTexture wrappers for swapchain images
+    // requires additional implementation. Swapchain images are primarily accessed via
+    // GetCurrentImageIndex() in command buffer recording, so this limitation doesn't
+    // affect basic rendering functionality.
+    // TODO: Implement VulkanTexture wrappers for swapchain images when needed for advanced use cases
     return nullptr;
 }
 

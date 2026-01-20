@@ -192,10 +192,8 @@ void VulkanDevice::PickPhysicalDevice() {
         throw std::runtime_error("Failed to find GPUs with Vulkan support");
     }
     
-    // For now, pick the first discrete GPU, or fallback to the first device
-    for (const auto& device : devices) {
-        auto props = device.getProperties();
-        
+    // Helper lambda to check if a device is suitable
+    auto isDeviceSuitable = [this](const vk::PhysicalDevice& device) -> bool {
         // If we have a surface, check if the device supports presentation
         if (m_surface) {
             auto queueFamilies = device.getQueueFamilyProperties();
@@ -209,21 +207,43 @@ void VulkanDevice::PickPhysicalDevice() {
                 if (device.getSurfaceSupportKHR(i, m_surface.get())) {
                     hasPresentQueue = true;
                 }
+                
+                // Early exit if we found both
+                if (hasGraphicsQueue && hasPresentQueue) {
+                    break;
+                }
             }
             
-            if (!hasGraphicsQueue || !hasPresentQueue) {
-                continue; // Skip devices without required queues
-            }
+            return hasGraphicsQueue && hasPresentQueue;
+        }
+        return true; // No surface requirements
+    };
+    
+    // For now, pick the first discrete GPU that meets requirements, or fallback to first suitable device
+    vk::PhysicalDevice suitableDevice;
+    for (const auto& device : devices) {
+        if (!isDeviceSuitable(device)) {
+            continue;
         }
         
+        auto props = device.getProperties();
         if (props.deviceType == vk::PhysicalDeviceType::eDiscreteGpu) {
             m_physicalDevice = device;
             break;
         }
+        
+        // Remember first suitable device as fallback
+        if (!suitableDevice) {
+            suitableDevice = device;
+        }
     }
     
     if (!m_physicalDevice) {
-        m_physicalDevice = devices[0];
+        m_physicalDevice = suitableDevice;
+    }
+    
+    if (!m_physicalDevice) {
+        throw std::runtime_error("Failed to find a suitable GPU");
     }
     
     auto props = m_physicalDevice.getProperties();
