@@ -21,6 +21,8 @@ public:
     void Reset() override;
     CommandBufferState GetState() const noexcept override { return m_state; }
     
+    vk::CommandBuffer GetVulkanCommandBuffer() const noexcept { return m_commandBuffer.get(); }
+    
     void BeginRenderPass(RenderPass*, Framebuffer*, const Rect2D&) override;
     void EndRenderPass() override;
     void BindPipeline(Pipeline*) override;
@@ -65,8 +67,6 @@ public:
     void BeginDebugMarker(const char*, const float[4] = nullptr) override;
     void EndDebugMarker() override;
     void InsertDebugMarker(const char*, const float[4] = nullptr) override;
-    
-    vk::CommandBuffer GetVulkanCommandBuffer() const noexcept { return m_commandBuffer.get(); }
 
 private:
     VulkanCommandBuffer(VulkanDevice& device, vk::UniqueCommandBuffer commandBuffer);
