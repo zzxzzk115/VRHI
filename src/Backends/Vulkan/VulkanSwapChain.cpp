@@ -135,7 +135,6 @@ void VulkanSwapChain::CreateImageViews() {
 }
 
 void VulkanSwapChain::CleanupSwapChain() {
-    m_textures.clear();
     m_imageViews.clear();
     m_swapChain.reset();
     m_images.clear();
@@ -158,7 +157,7 @@ vk::SurfaceFormatKHR VulkanSwapChain::ChooseSwapSurfaceFormat(
     const std::vector<vk::SurfaceFormatKHR>& availableFormats) {
     
     if (availableFormats.empty()) {
-        throw std::runtime_error("No surface formats available");
+        throw std::runtime_error("Failed to query surface formats: no formats available for the selected device and surface");
     }
     
     // Prefer SRGB format
@@ -193,13 +192,11 @@ vk::Extent2D VulkanSwapChain::ChooseSwapExtent(
     if (capabilities.currentExtent.width != UINT32_MAX) {
         return capabilities.currentExtent;
     } else {
-        // Query actual window dimensions if not set
-        if (m_width == 0 || m_height == 0) {
-            m_width = capabilities.minImageExtent.width;
-            m_height = capabilities.minImageExtent.height;
-        }
+        // Use current dimensions or fallback to minimum if not initialized
+        uint32_t width = (m_width > 0) ? m_width : capabilities.minImageExtent.width;
+        uint32_t height = (m_height > 0) ? m_height : capabilities.minImageExtent.height;
         
-        vk::Extent2D actualExtent = {m_width, m_height};
+        vk::Extent2D actualExtent = {width, height};
         
         actualExtent.width = std::clamp(actualExtent.width,
                                        capabilities.minImageExtent.width,

@@ -10,7 +10,6 @@
 namespace VRHI {
 
 class VulkanDevice;
-class VulkanTexture;
 
 class VulkanSwapChain : public SwapChain {
 public:
@@ -65,7 +64,6 @@ private:
     vk::UniqueSwapchainKHR m_swapChain;
     std::vector<vk::Image> m_images;
     std::vector<vk::UniqueImageView> m_imageViews;
-    std::vector<std::unique_ptr<VulkanTexture>> m_textures;
     
     vk::Format m_vkFormat;
     vk::Extent2D m_extent;

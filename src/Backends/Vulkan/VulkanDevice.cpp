@@ -285,9 +285,14 @@ void VulkanDevice::CreateLogicalDevice() {
         }
     }
     
-    // If we have a surface but didn't find present queue, use graphics queue
+    // If we have a surface but didn't find present queue, verify graphics queue supports presentation
     if (m_surface && !foundPresent) {
-        m_presentQueueFamily = m_graphicsQueueFamily;
+        if (m_physicalDevice.getSurfaceSupportKHR(m_graphicsQueueFamily, m_surface.get())) {
+            m_presentQueueFamily = m_graphicsQueueFamily;
+            LogInfo("Using graphics queue for presentation");
+        } else {
+            throw std::runtime_error("No queue family supports presentation on this surface");
+        }
     }
     
     // Queue create info
