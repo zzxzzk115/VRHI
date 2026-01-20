@@ -219,7 +219,16 @@ else()
     
     # Backend-specific libraries
     if(VRHI_ENABLE_VULKAN)
-        target_link_libraries(VRHI PRIVATE Vulkan-Headers)
+        if(TARGET Vulkan::Headers)
+            target_link_libraries(VRHI PRIVATE Vulkan::Headers)
+        elseif(TARGET Vulkan-Headers)
+            target_link_libraries(VRHI PRIVATE Vulkan-Headers)
+        endif()
+        
+        # Link GLFW for surface creation
+        if(TARGET glfw)
+            target_link_libraries(VRHI PRIVATE glfw)
+        endif()
         
         # Disable specific warnings for Vulkan backend files (vulkan.hpp has these issues)
         set_source_files_properties(

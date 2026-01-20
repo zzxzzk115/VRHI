@@ -69,10 +69,14 @@ public:
     vk::PhysicalDevice GetPhysicalDevice() const noexcept { return m_physicalDevice; }
     vk::Device GetVulkanDevice() const noexcept { return m_device.get(); }
     vk::Queue GetGraphicsQueue() const noexcept { return m_graphicsQueue; }
+    vk::Queue GetPresentQueue() const noexcept { return m_presentQueue; }
     uint32_t GetGraphicsQueueFamily() const noexcept { return m_graphicsQueueFamily; }
+    uint32_t GetPresentQueueFamily() const noexcept { return m_presentQueueFamily; }
+    vk::SurfaceKHR GetSurface() const noexcept { return m_surface.get(); }
     
 private:
     void CreateInstance();
+    void CreateSurface();
     void SetupDebugMessenger();
     void PickPhysicalDevice();
     void CreateLogicalDevice();
@@ -93,6 +97,7 @@ private:
     // Vulkan handles
     vk::UniqueInstance m_instance;
     vk::UniqueDebugUtilsMessengerEXT m_debugMessenger;
+    vk::UniqueSurfaceKHR m_surface;
     vk::PhysicalDevice m_physicalDevice;
     vk::UniqueDevice m_device;
     vk::Queue m_graphicsQueue;

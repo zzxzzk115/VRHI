@@ -10,6 +10,7 @@
 namespace VRHI {
 
 class VulkanDevice;
+class VulkanTexture;
 
 class VulkanSwapChain : public SwapChain {
 public:
@@ -32,17 +33,42 @@ public:
     uint32_t GetHeight() const noexcept override { return m_height; }
     TextureFormat GetFormat() const noexcept override { return m_format; }
     uint32_t GetImageCount() const noexcept override { return static_cast<uint32_t>(m_images.size()); }
-    Texture* GetImage(uint32_t index) override { return nullptr; }  // TODO
+    Texture* GetImage(uint32_t index) override;
     uint32_t GetCurrentImageIndex() const noexcept override { return m_currentImageIndex; }
     
     void* GetNativeHandle() const noexcept override { return (void*)m_swapChain.get(); }
     
+    // Vulkan-specific accessors
+    vk::SwapchainKHR GetVulkanSwapChain() const noexcept { return m_swapChain.get(); }
+    vk::Format GetVulkanFormat() const noexcept { return m_vkFormat; }
+    vk::Extent2D GetExtent() const noexcept { return m_extent; }
+    
 private:
     VulkanSwapChain(VulkanDevice& device);
+    
+    void CreateSwapChain();
+    void CreateImageViews();
+    void CleanupSwapChain();
+    
+    struct SwapChainSupportDetails {
+        vk::SurfaceCapabilitiesKHR capabilities;
+        std::vector<vk::SurfaceFormatKHR> formats;
+        std::vector<vk::PresentModeKHR> presentModes;
+    };
+    
+    SwapChainSupportDetails QuerySwapChainSupport();
+    vk::SurfaceFormatKHR ChooseSwapSurfaceFormat(const std::vector<vk::SurfaceFormatKHR>& availableFormats);
+    vk::PresentModeKHR ChooseSwapPresentMode(const std::vector<vk::PresentModeKHR>& availablePresentModes);
+    vk::Extent2D ChooseSwapExtent(const vk::SurfaceCapabilitiesKHR& capabilities);
     
     VulkanDevice& m_device;
     vk::UniqueSwapchainKHR m_swapChain;
     std::vector<vk::Image> m_images;
+    std::vector<vk::UniqueImageView> m_imageViews;
+    std::vector<std::unique_ptr<VulkanTexture>> m_textures;
+    
+    vk::Format m_vkFormat;
+    vk::Extent2D m_extent;
     uint32_t m_width = 0;
     uint32_t m_height = 0;
     TextureFormat m_format = TextureFormat::RGBA8_SRGB;

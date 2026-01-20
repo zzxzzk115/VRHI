@@ -96,7 +96,7 @@ endif()
 # ============================================================================
 # Vulkan-Headers (Vulkan API Headers)
 # ============================================================================
-if(VRHI_ENABLE_VULKAN)
+if(VRHI_ENABLE_VULKAN AND NOT TARGET Vulkan::Headers)
     message(STATUS "  Adding Vulkan-Headers")
     
     # Vulkan-Headers is a header-only library
@@ -112,6 +112,8 @@ if(VRHI_ENABLE_VULKAN)
     endif()
     
     # Note: Don't add to VRHI_EXTERNAL_TARGETS as it's linked privately
+elseif(VRHI_ENABLE_VULKAN)
+    message(STATUS "  Vulkan::Headers already exists (from system Vulkan package)")
 endif()
 
 # ============================================================================

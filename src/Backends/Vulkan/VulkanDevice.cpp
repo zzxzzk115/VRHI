@@ -17,6 +17,14 @@
 #include <VRHI/BackendScoring.hpp>
 #include <set>
 
+// Forward declare GLFW types and function
+struct GLFWwindow;
+extern "C" {
+    VkResult glfwCreateWindowSurface(VkInstance instance, GLFWwindow* window,
+                                     const VkAllocationCallbacks* allocator,
+                                     VkSurfaceKHR* surface);
+}
+
 namespace VRHI {
 
 VulkanDevice::VulkanDevice(const DeviceConfig& config, VulkanBackend* backend)
@@ -43,10 +51,19 @@ std::expected<void, Error> VulkanDevice::Initialize() {
     
     try {
         CreateInstance();
+        CreateSurface();
         SetupDebugMessenger();
         PickPhysicalDevice();
         CreateLogicalDevice();
         DetectDeviceFeatures();
+        
+        // Create swapchain if we have a surface
+        if (m_surface) {
+            m_swapChain = VulkanSwapChain::Create(*this);
+            if (!m_swapChain) {
+                LogWarning("Failed to create swapchain");
+            }
+        }
         
         m_initialized = true;
         LogInfo("Vulkan device initialized successfully");
@@ -76,6 +93,22 @@ void VulkanDevice::CreateInstance() {
     
     // Get required extensions
     std::vector<const char*> extensions;
+    
+    // Add surface extensions if we have a window handle
+    if (m_config.windowHandle) {
+        extensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
+        
+        // Add platform-specific surface extensions
+#if defined(_WIN32)
+        extensions.push_back("VK_KHR_win32_surface");
+#elif defined(__APPLE__)
+        extensions.push_back("VK_EXT_metal_surface");
+#elif defined(__linux__)
+        extensions.push_back("VK_KHR_xcb_surface");
+        extensions.push_back("VK_KHR_xlib_surface");
+        extensions.push_back("VK_KHR_wayland_surface");
+#endif
+    }
     
     // Add validation layer extensions if enabled
     if (m_enableValidationLayers) {
@@ -117,6 +150,30 @@ void VulkanDevice::CreateInstance() {
     LogInfo("Vulkan instance created");
 }
 
+void VulkanDevice::CreateSurface() {
+    // Skip surface creation if no window handle is provided
+    if (!m_config.windowHandle) {
+        LogInfo("No window handle provided, skipping surface creation");
+        return;
+    }
+    
+    VkSurfaceKHR surface;
+    GLFWwindow* window = static_cast<GLFWwindow*>(m_config.windowHandle);
+    VkResult result = glfwCreateWindowSurface(
+        static_cast<VkInstance>(m_instance.get()),
+        window,
+        nullptr,
+        &surface
+    );
+    
+    if (result != VK_SUCCESS) {
+        throw std::runtime_error("Failed to create window surface");
+    }
+    
+    m_surface = vk::UniqueSurfaceKHR(surface, m_instance.get());
+    LogInfo("Vulkan surface created");
+}
+
 void VulkanDevice::SetupDebugMessenger() {
     if (!m_enableValidationLayers) {
         return;
@@ -138,6 +195,27 @@ void VulkanDevice::PickPhysicalDevice() {
     // For now, pick the first discrete GPU, or fallback to the first device
     for (const auto& device : devices) {
         auto props = device.getProperties();
+        
+        // If we have a surface, check if the device supports presentation
+        if (m_surface) {
+            auto queueFamilies = device.getQueueFamilyProperties();
+            bool hasGraphicsQueue = false;
+            bool hasPresentQueue = false;
+            
+            for (uint32_t i = 0; i < queueFamilies.size(); i++) {
+                if (queueFamilies[i].queueFlags & vk::QueueFlagBits::eGraphics) {
+                    hasGraphicsQueue = true;
+                }
+                if (device.getSurfaceSupportKHR(i, m_surface.get())) {
+                    hasPresentQueue = true;
+                }
+            }
+            
+            if (!hasGraphicsQueue || !hasPresentQueue) {
+                continue; // Skip devices without required queues
+            }
+        }
+        
         if (props.deviceType == vk::PhysicalDeviceType::eDiscreteGpu) {
             m_physicalDevice = device;
             break;
@@ -163,19 +241,43 @@ void VulkanDevice::CreateLogicalDevice() {
     // Find queue families
     auto queueFamilies = m_physicalDevice.getQueueFamilyProperties();
     
-    // Find graphics queue family
+    // Find graphics and present queue families
+    bool foundGraphics = false;
+    bool foundPresent = false;
+    
     for (uint32_t i = 0; i < queueFamilies.size(); i++) {
         if (queueFamilies[i].queueFlags & vk::QueueFlagBits::eGraphics) {
             m_graphicsQueueFamily = i;
-            m_presentQueueFamily = i;  // For now, assume same queue
-            break;
+            foundGraphics = true;
         }
+        
+        // Check for present support if we have a surface
+        if (m_surface && m_physicalDevice.getSurfaceSupportKHR(i, m_surface.get())) {
+            m_presentQueueFamily = i;
+            foundPresent = true;
+        }
+        
+        // If we found both and they're the same, we're done
+        if (foundGraphics && (!m_surface || foundPresent)) {
+            if (!m_surface || m_graphicsQueueFamily == m_presentQueueFamily) {
+                break;
+            }
+        }
+    }
+    
+    // If we have a surface but didn't find present queue, use graphics queue
+    if (m_surface && !foundPresent) {
+        m_presentQueueFamily = m_graphicsQueueFamily;
     }
     
     // Queue create info
     float queuePriority = 1.0f;
     std::vector<vk::DeviceQueueCreateInfo> queueCreateInfos;
-    std::set<uint32_t> uniqueQueueFamilies = {m_graphicsQueueFamily, m_presentQueueFamily};
+    std::set<uint32_t> uniqueQueueFamilies = {m_graphicsQueueFamily};
+    
+    if (m_surface) {
+        uniqueQueueFamilies.insert(m_presentQueueFamily);
+    }
     
     for (uint32_t queueFamily : uniqueQueueFamilies) {
         vk::DeviceQueueCreateInfo queueCreateInfo;
@@ -193,7 +295,11 @@ void VulkanDevice::CreateLogicalDevice() {
     
     // Device extensions
     std::vector<const char*> deviceExtensions;
-    // VK_KHR_swapchain will be added when needed for presentation
+    
+    // Add swapchain extension if we have a surface
+    if (m_surface) {
+        deviceExtensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
+    }
     
     // Device create info
     vk::DeviceCreateInfo createInfo;
@@ -205,7 +311,10 @@ void VulkanDevice::CreateLogicalDevice() {
     
     m_device = m_physicalDevice.createDeviceUnique(createInfo);
     m_graphicsQueue = m_device->getQueue(m_graphicsQueueFamily, 0);
-    m_presentQueue = m_device->getQueue(m_presentQueueFamily, 0);
+    
+    if (m_surface) {
+        m_presentQueue = m_device->getQueue(m_presentQueueFamily, 0);
+    }
     
     LogInfo("Vulkan logical device created");
 }
@@ -390,8 +499,9 @@ void VulkanDevice::Submit(std::unique_ptr<CommandBuffer> cmd) {
 }
 
 void VulkanDevice::Present() {
-    // TODO: Implement presentation
-    LogWarning("VulkanDevice::Present not yet implemented");
+    if (m_swapChain) {
+        m_swapChain->Present(nullptr, 0);
+    }
 }
 
 } // namespace VRHI
