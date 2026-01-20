@@ -129,14 +129,18 @@ void VulkanCommandBuffer::BindVertexBuffers(uint32_t firstBinding, std::span<Buf
     vkOffsets.reserve(buffers.size());
     
     for (size_t i = 0; i < buffers.size(); ++i) {
-        if (buffers[i]) {
-            auto* vkBuffer = static_cast<VulkanBuffer*>(buffers[i]);
-            vkBuffers.push_back(vkBuffer->GetVulkanBuffer());
-            vkOffsets.push_back(i < offsets.size() ? offsets[i] : 0);
+        if (!buffers[i]) {
+            LogWarning("BindVertexBuffers: null buffer at index {}", i);
+            continue;
         }
+        auto* vkBuffer = static_cast<VulkanBuffer*>(buffers[i]);
+        vkBuffers.push_back(vkBuffer->GetVulkanBuffer());
+        vkOffsets.push_back(i < offsets.size() ? offsets[i] : 0);
     }
     
-    m_commandBuffer->bindVertexBuffers(firstBinding, vkBuffers, vkOffsets);
+    if (!vkBuffers.empty()) {
+        m_commandBuffer->bindVertexBuffers(firstBinding, vkBuffers, vkOffsets);
+    }
 }
 
 void VulkanCommandBuffer::BindIndexBuffer(Buffer* buffer, uint64_t offset, bool use16BitIndices) {
@@ -390,7 +394,8 @@ void VulkanCommandBuffer::CopyTexture(Texture* src, Texture* dst, uint32_t srcMi
 }
 
 void VulkanCommandBuffer::PipelineBarrier() {
-    // Insert a simple memory barrier
+    // TODO: The VRHI interface should be extended to accept pipeline stage and access mask parameters
+    // For now, use a conservative barrier that works for all cases but may be suboptimal
     vk::MemoryBarrier memoryBarrier;
     memoryBarrier.srcAccessMask = vk::AccessFlagBits::eMemoryWrite;
     memoryBarrier.dstAccessMask = vk::AccessFlagBits::eMemoryRead;
