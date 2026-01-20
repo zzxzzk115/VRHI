@@ -73,6 +73,8 @@ public:
     uint32_t GetGraphicsQueueFamily() const noexcept { return m_graphicsQueueFamily; }
     uint32_t GetPresentQueueFamily() const noexcept { return m_presentQueueFamily; }
     vk::SurfaceKHR GetSurface() const noexcept { return m_surface.get(); }
+    vk::CommandPool GetCommandPool() const noexcept { return m_commandPool.get(); }
+    const DeviceConfig& GetConfig() const noexcept { return m_config; }
     
 private:
     void CreateInstance();
@@ -80,6 +82,7 @@ private:
     void SetupDebugMessenger();
     void PickPhysicalDevice();
     void CreateLogicalDevice();
+    void CreateCommandPool();
     void DetectDeviceFeatures();
     
     static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallbackVk(
@@ -107,6 +110,9 @@ private:
     
     // Swap chain
     std::unique_ptr<SwapChain> m_swapChain;
+    
+    // Command pool
+    vk::UniqueCommandPool m_commandPool;
     
     // Validation layers
     static constexpr const char* s_validationLayers[] = {

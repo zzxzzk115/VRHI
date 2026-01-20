@@ -48,6 +48,7 @@ std::expected<void, Error> VulkanDevice::Initialize() {
         SetupDebugMessenger();
         PickPhysicalDevice();
         CreateLogicalDevice();
+        CreateCommandPool();
         DetectDeviceFeatures();
         
         // Create swapchain if we have a surface
@@ -141,6 +142,23 @@ void VulkanDevice::CreateInstance() {
     
     m_instance = vk::createInstanceUnique(createInfo);
     LogInfo("Vulkan instance created");
+}
+
+void VulkanDevice::CreateSurface() {
+    // Only create surface if we have a window handle
+    if (!m_config.windowHandle) {
+        LogInfo("No window handle provided, skipping surface creation");
+        return;
+    }
+    
+    auto surfaceResult = VulkanSurfaceCreator::CreateSurface(m_instance.get(), m_config);
+    if (!surfaceResult) {
+        LogWarning("Failed to create Vulkan surface: {}", surfaceResult.error().message);
+        return;
+    }
+    
+    m_surface = std::move(*surfaceResult);
+    LogInfo("Vulkan surface created");
 }
 
 
@@ -312,6 +330,15 @@ void VulkanDevice::CreateLogicalDevice() {
     }
     
     LogInfo("Vulkan logical device created");
+}
+
+void VulkanDevice::CreateCommandPool() {
+    vk::CommandPoolCreateInfo poolInfo;
+    poolInfo.flags = vk::CommandPoolCreateFlagBits::eResetCommandBuffer;
+    poolInfo.queueFamilyIndex = m_graphicsQueueFamily;
+    
+    m_commandPool = m_device->createCommandPoolUnique(poolInfo);
+    LogInfo("Vulkan command pool created");
 }
 
 void VulkanDevice::DetectDeviceFeatures() {
